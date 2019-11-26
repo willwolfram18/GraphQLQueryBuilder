@@ -89,5 +89,27 @@ namespace GraphQLQueryBuilder.Tests
 
             Snapshot.Match(query);
         }
+
+        [Fact]
+        public void ThenChildCollectionPropertiesArePresent()
+        {
+            var customerQuery = new QueryBuilder<Customer>("customer")
+                .AddProperty(c => c.Id)
+                .AddProperty(
+                    c => c.CustomerContact,
+                    contactQuery => contactQuery.AddCollectionProperty(
+                        contact => contact.PhoneNumbers,
+                        phoneNumberQuery => phoneNumberQuery
+                            .AddProperty(p => p.Number)
+                            .AddProperty(p => p.Extension)
+                    )
+                );
+
+            var query = new QueryRootBuilder()
+                .AddQuery(customerQuery)
+                .Build();
+
+            Snapshot.Match(query);
+        }
     }
 }
