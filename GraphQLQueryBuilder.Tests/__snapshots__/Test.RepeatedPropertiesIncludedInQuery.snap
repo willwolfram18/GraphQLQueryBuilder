@@ -1,11 +1,11 @@
 query {
     address {
-        street1,
-        street1,
-        street1,
-        street2,
-        city,
-        state,
-        zipCode
+        Street1,
+        Street1,
+        Street1,
+        Street2,
+        City,
+        State,
+        ZipCode
     }
 }
