@@ -60,5 +60,34 @@ namespace GraphQLQueryBuilder.Tests
 
             Snapshot.Match(query);
         }
+
+        [Fact]
+        public void ThenChildQueryOfChildQueryIsConfigured()
+        {
+            var customerQuery = new QueryBuilder<Customer>("customer")
+                .AddProperty(c => c.Id)
+                .AddProperty(c => c.AccountNumber)
+                .AddProperty(
+                    c => c.CustomerContact,
+                    contactQuery => contactQuery
+                        .AddProperty(contact => contact.FirstName)
+                        .AddProperty(contact => contact.LastName)
+                        .AddProperty(
+                            contact => contact.Address,
+                            addressQuery => addressQuery
+                                .AddProperty(address => address.Street1)
+                                .AddProperty(address => address.Street2)
+                                .AddProperty(address => address.City)
+                                .AddProperty(address => address.State)
+                                .AddProperty(address => address.ZipCode)
+                        )
+                );
+
+            var query = new QueryRootBuilder()
+                .AddQuery(customerQuery)
+                .Build();
+
+            Snapshot.Match(query);
+        }
     }
 }
