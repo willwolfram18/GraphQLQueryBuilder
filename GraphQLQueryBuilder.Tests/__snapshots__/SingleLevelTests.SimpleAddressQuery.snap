@@ -1,7 +1,5 @@
-﻿query {
+query {
     address {
-        Street1,
-        Street1,
         Street1,
         Street2,
         City,

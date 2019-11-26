@@ -1,4 +1,4 @@
-﻿query {
+query {
     address {
         Street1,
         Street1,

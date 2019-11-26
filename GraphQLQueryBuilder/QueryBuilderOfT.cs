@@ -11,7 +11,7 @@ namespace GraphQLQueryBuilder
         private readonly List<string> _properties = new List<string>();
 
         public QueryBuilder<T> AddQuery(string queryName) {
-            // throw new NotImplementedException();
+            // TODO: Create a context that requies recursion in some way.
             return this;
         }
 
