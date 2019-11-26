@@ -8,9 +8,6 @@ namespace GraphQLQueryBuilder
 {
     public abstract class QueryBuilder
     {
-        protected const char IndentCharacter = ' ';
-        protected const int IndentWidth = 4;
-
         protected QueryBuilder()
         {
         }
@@ -22,30 +19,13 @@ namespace GraphQLQueryBuilder
 
         protected List<QueryBuilder> ChildQueries { get; } = new List<QueryBuilder>();
 
-        protected string QueryName { get; }
+        public string QueryName { get; }
 
         protected void AddChildQuery(QueryBuilder query)
         {
             ChildQueries.Add(query);
         }
 
-        protected abstract string Build(uint indentationLevel);
-
-        protected string BuildChildQueries(uint indentationLevel)
-        {
-            var query = new StringBuilder();
-
-            foreach (var childQuery in ChildQueries)
-            {
-                query.Append(childQuery.Build(indentationLevel + 1));
-            }
-
-            return query.ToString();
-        }
-
-        protected string IndentationString(uint indentationLevel)
-        {
-            return new string(IndentCharacter, (int)indentationLevel * IndentWidth);
-        }
+        internal abstract string Build(uint indentationLevel);
     }
 }

@@ -20,22 +20,16 @@ namespace GraphQLQueryBuilder
             return Build(0);
         }
 
-        protected override string Build(uint indentationLevel)
+        internal override string Build(uint indentationLevel)
         {
-            var indentation = IndentationString(indentationLevel);
-            var query = new StringBuilder()
-                .AppendLine(indentation + QueryName + " {");
+            var queryAppender = new QueryAppender(QueryName, indentationLevel);
 
-            var childQueries = BuildChildQueries(indentationLevel);
-
-            if (!string.IsNullOrWhiteSpace(childQueries))
+            foreach (var query in ChildQueries)
             {
-                query.Append(childQueries);
+                queryAppender.AppendChildQuery(query);
             }
 
-            query.AppendLine(indentation + "}");
-
-            return query.ToString();
+            return queryAppender.Build();
         }
     }
 }

@@ -38,45 +38,21 @@ namespace GraphQLQueryBuilder
             throw new InvalidOperationException("Not a member");
         }
 
-        protected override string Build(uint indentationLevel)
+        internal override string Build(uint indentationLevel)
         {
-            var indentation = IndentationString(indentationLevel);
-            var query = new StringBuilder()
-                .AppendLine(indentation + QueryName + " {");
+            var queryAppender = new QueryAppender(QueryName, indentationLevel);
 
-            var childQueries = BuildChildQueries(indentationLevel);
-            var properties = BuildProperties(IndentationString(indentationLevel + 1));
-
-            var propertiesIsEmpty = string.IsNullOrWhiteSpace(properties);
-            var childQueriesAreEmpty = string.IsNullOrWhiteSpace(childQueries);
-
-            if (!propertiesIsEmpty)
+            foreach (var property in _properties)
             {
-                var propertiesToAppend = properties;
-                if (!childQueriesAreEmpty)
-                {
-                    propertiesToAppend += ",";
-                }
-                query.AppendLine(propertiesToAppend);
-            }
-            if (!string.IsNullOrWhiteSpace(childQueries))
-            {
-                query.Append(childQueries);
+                queryAppender.AppendProperty(property);
             }
 
-            query.AppendLine(indentation + "}");
+            foreach (var query in ChildQueries)
+            {
+                queryAppender.AppendChildQuery(query);
+            }
 
-            return query.ToString();
-        }
-
-        private string BuildProperties(string indentation)
-        {
-            var properties = string.Join(
-                $",{Environment.NewLine}",
-                _properties.Select(p => $"{indentation}{p}")
-            );
-
-            return properties;
+            return queryAppender.Build();
         }
     }
 }
