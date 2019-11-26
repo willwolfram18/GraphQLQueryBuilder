@@ -1,0 +1,9 @@
+query {
+    address {
+        street1,
+        street2,
+        city,
+        state,
+        zipCode
+    }
+}
