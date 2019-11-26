@@ -10,18 +10,13 @@ namespace GraphQLQueryBuilder
     {
         private readonly List<string> _properties = new List<string>();
 
-        public QueryBuilder() : base("query")
-        {
-        }
-
         public QueryBuilder(string name) : base(name)
         {
         }
 
-
         public QueryBuilder<T> AddQuery(QueryBuilder query)
         {
-            ChildQueries.Add(query);
+            AddChildQuery(query);
 
             return this;
         }
@@ -43,11 +38,6 @@ namespace GraphQLQueryBuilder
             throw new InvalidOperationException("Not a member");
         }
 
-        public string Build()
-        {
-            return Build(0);
-        }
-
         protected override string Build(uint indentationLevel)
         {
             var indentation = IndentationString(indentationLevel);
@@ -57,9 +47,17 @@ namespace GraphQLQueryBuilder
             var childQueries = BuildChildQueries(indentationLevel);
             var properties = BuildProperties(IndentationString(indentationLevel + 1));
 
-            if (!string.IsNullOrEmpty(properties))
+            var propertiesIsEmpty = string.IsNullOrWhiteSpace(properties);
+            var childQueriesAreEmpty = string.IsNullOrWhiteSpace(childQueries);
+
+            if (!propertiesIsEmpty)
             {
-                query.AppendLine(properties);
+                var propertiesToAppend = properties;
+                if (!childQueriesAreEmpty)
+                {
+                    propertiesToAppend += ",";
+                }
+                query.AppendLine(propertiesToAppend);
             }
             if (!string.IsNullOrWhiteSpace(childQueries))
             {

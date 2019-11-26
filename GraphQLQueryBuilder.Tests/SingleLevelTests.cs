@@ -9,7 +9,7 @@ namespace GraphQLQueryBuilder.Tests
         [Fact]
         public void EmptyQuery()
         {
-            var query = new QueryBuilder<Customer>()
+            var query = new QueryRootBuilder()
                 .Build();
 
             Snapshot.Match(query);
@@ -25,7 +25,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddProperty(address => address.State)
                 .AddProperty(address => address.ZipCode);
 
-            var query = new QueryBuilder<Customer>()
+            var query = new QueryRootBuilder()
                 .AddQuery(addressQuery)
                 .Build();
 
@@ -44,7 +44,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddProperty(address => address.State)
                 .AddProperty(address => address.ZipCode);
 
-            var query = new QueryBuilder<Customer>()
+            var query = new QueryRootBuilder()
                 .AddQuery(addressQuery)
                 .Build();
 

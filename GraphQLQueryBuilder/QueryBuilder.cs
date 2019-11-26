@@ -24,6 +24,11 @@ namespace GraphQLQueryBuilder
 
         protected string QueryName { get; }
 
+        protected void AddChildQuery(QueryBuilder query)
+        {
+            ChildQueries.Add(query);
+        }
+
         protected abstract string Build(uint indentationLevel);
 
         protected string BuildChildQueries(uint indentationLevel)

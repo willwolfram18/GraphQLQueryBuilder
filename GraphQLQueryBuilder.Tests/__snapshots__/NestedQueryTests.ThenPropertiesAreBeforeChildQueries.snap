@@ -1,0 +1,13 @@
+query {
+    customer {
+        Id,
+        AccountNumber,
+        address {
+            Street1,
+            Street2,
+            City,
+            State,
+            ZipCode
+        }
+    }
+}
