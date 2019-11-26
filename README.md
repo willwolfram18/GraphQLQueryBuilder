@@ -4,5 +4,6 @@
 * [x] Select properties from a collection
 * [ ] Use of fragments on properties
     * [ ] Only on objects
-* [ ] Specifying non-null types for a query?
-* [ ] Parameters
+* [ ] Query Parameters
+    * [ ] Specifying non-null types for a query
+* [ ] Query aliasing
