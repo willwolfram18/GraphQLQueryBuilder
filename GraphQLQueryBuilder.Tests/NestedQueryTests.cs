@@ -41,5 +41,24 @@ namespace GraphQLQueryBuilder.Tests
 
             Snapshot.Match(query);
         }
+
+        [Fact]
+        public void ThenAddPropertyIncludesConfiguredQuery()
+        {
+            var customerQuery = new QueryBuilder<Customer>("customer")
+                .AddProperty(c => c.Id)
+                .AddProperty(c => c.AccountNumber)
+                .AddProperty(
+                    c => c.CustomerContact,
+                    contactQuery => contactQuery.AddProperty(c => c.FirstName)
+                        .AddProperty(c => c.LastName)
+                );
+
+            var query = new QueryRootBuilder()
+                .AddQuery(customerQuery)
+                .Build();
+
+            Snapshot.Match(query);
+        }
     }
 }
