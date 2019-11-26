@@ -6,12 +6,23 @@ using System.Text;
 
 namespace GraphQLQueryBuilder
 {
-    public class QueryBuilder<T> where T : class
+    public class QueryBuilder<T> : QueryBuilder where T : class
     {
         private readonly List<string> _properties = new List<string>();
 
-        public QueryBuilder<T> AddQuery(string queryName) {
-            // TODO: Create a context that requies recursion in some way.
+        public QueryBuilder() : base("query")
+        {
+        }
+
+        public QueryBuilder(string name) : base(name)
+        {
+        }
+
+
+        public QueryBuilder<T> AddQuery(QueryBuilder query)
+        {
+            ChildQueries.Add(query);
+
             return this;
         }
 
@@ -34,20 +45,40 @@ namespace GraphQLQueryBuilder
 
         public string Build()
         {
+            return Build(0);
+        }
+
+        protected override string Build(uint indentationLevel)
+        {
+            var indentation = IndentationString(indentationLevel);
             var query = new StringBuilder()
-                .AppendLine("query {")
-                .AppendLine("    address {");
+                .AppendLine(indentation + QueryName + " {");
 
-            var properties = string.Join(
-                $",{Environment.NewLine}",
-                _properties.Select(p => $"        {p}")
-            );
+            var childQueries = BuildChildQueries(indentationLevel);
+            var properties = BuildProperties(IndentationString(indentationLevel + 1));
 
-            query.AppendLine(properties)
-                .AppendLine("    }")
-                .AppendLine("}");
+            if (!string.IsNullOrEmpty(properties))
+            {
+                query.AppendLine(properties);
+            }
+            if (!string.IsNullOrWhiteSpace(childQueries))
+            {
+                query.Append(childQueries);
+            }
+
+            query.AppendLine(indentation + "}");
 
             return query.ToString();
+        }
+
+        private string BuildProperties(string indentation)
+        {
+            var properties = string.Join(
+                $",{Environment.NewLine}",
+                _properties.Select(p => $"{indentation}{p}")
+            );
+
+            return properties;
         }
     }
 }

@@ -4,18 +4,29 @@ using Xunit;
 
 namespace GraphQLQueryBuilder.Tests
 {
-    public class Test
+    public class SingleLevelTests
     {
+        [Fact]
+        public void EmptyQuery()
+        {
+            var query = new QueryBuilder<Customer>()
+                .Build();
+
+            Snapshot.Match(query);
+        }
+
         [Fact]
         public void SimpleAddressQuery()
         {
-            var query = new QueryBuilder<Address>()
-                .AddQuery("address")
+            var addressQuery = new QueryBuilder<Address>("address")
                 .AddProperty(address => address.Street1)
                 .AddProperty(address => address.Street2)
                 .AddProperty(address => address.City)
                 .AddProperty(address => address.State)
-                .AddProperty(address => address.ZipCode)
+                .AddProperty(address => address.ZipCode);
+
+            var query = new QueryBuilder<Customer>()
+                .AddQuery(addressQuery)
                 .Build();
 
             Snapshot.Match(query);
@@ -24,15 +35,17 @@ namespace GraphQLQueryBuilder.Tests
         [Fact]
         public void RepeatedPropertiesIncludedInQuery()
         {
-            var query = new QueryBuilder<Address>()
-                .AddQuery("address")
+            var addressQuery = new QueryBuilder<Address>("address")
                 .AddProperty(address => address.Street1)
                 .AddProperty(address => address.Street1)
                 .AddProperty(address => address.Street1)
                 .AddProperty(address => address.Street2)
                 .AddProperty(address => address.City)
                 .AddProperty(address => address.State)
-                .AddProperty(address => address.ZipCode)
+                .AddProperty(address => address.ZipCode);
+
+            var query = new QueryBuilder<Customer>()
+                .AddQuery(addressQuery)
                 .Build();
 
             Snapshot.Match(query);
