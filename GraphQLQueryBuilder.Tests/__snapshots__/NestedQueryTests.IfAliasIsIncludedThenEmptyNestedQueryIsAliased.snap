@@ -1,8 +1,8 @@
 ﻿query {
-	customer {
-		primaryAddress: address {
-		},
-		billingAddress: address {
-		}
-	}
+    customer {
+        primaryAddress: address {
+        },
+        billingAddress: address {
+        }
+    }
 }

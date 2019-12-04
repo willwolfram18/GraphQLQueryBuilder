@@ -23,7 +23,9 @@ namespace GraphQLQueryBuilder
 
         public QueryBuilder<T> AddQuery(string alias, QueryBuilder query)
         {
-            return AddQuery(query);
+            AddChildQuery(alias, query);
+
+            return this;
         }
 
         public QueryBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> expression)
@@ -54,7 +56,7 @@ namespace GraphQLQueryBuilder
 
             foreach (var query in ChildQueries)
             {
-                queryAppender.AppendChildQuery(query);
+                queryAppender.AppendChildQuery(query.Alias, query.Query);
             }
 
             return queryAppender.Build();

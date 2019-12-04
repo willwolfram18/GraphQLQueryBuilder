@@ -17,13 +17,18 @@ namespace GraphQLQueryBuilder
             QueryName = name;
         }
 
-        protected List<QueryBuilder> ChildQueries { get; } = new List<QueryBuilder>();
+        protected List<ChildQuery> ChildQueries { get; } = new List<ChildQuery>();
 
         public string QueryName { get; }
 
         protected void AddChildQuery(QueryBuilder query)
         {
-            ChildQueries.Add(query);
+            ChildQueries.Add(new ChildQuery(query));
+        }
+
+        protected void AddChildQuery(string alias, QueryBuilder query)
+        {
+            ChildQueries.Add(new ChildQuery(alias, query));
         }
 
         internal abstract string Build(uint indentationLevel);

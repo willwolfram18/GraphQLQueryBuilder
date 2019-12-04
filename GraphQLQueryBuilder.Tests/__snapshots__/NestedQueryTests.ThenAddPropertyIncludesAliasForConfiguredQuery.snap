@@ -1,10 +1,10 @@
 ﻿query {
-	customer {
-		Id,
-		AccountNumber,
-		theContact: customerContact {
-			FirstName,
-			LastName
-		}
-	}
+    customer {
+        Id,
+        AccountNumber,
+        theContact: CustomerContact {
+            FirstName,
+            LastName
+        }
+    }
 }

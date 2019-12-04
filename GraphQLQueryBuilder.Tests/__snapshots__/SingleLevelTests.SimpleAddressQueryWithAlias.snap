@@ -1,9 +1,9 @@
 ﻿query {
-	primaryAddress: address {
-		Street1,
-		Street2,
-		City,
-		State,
-		ZipCode
-	}
+    primaryAddress: address {
+        Street1,
+        Street2,
+        City,
+        State,
+        ZipCode
+    }
 }

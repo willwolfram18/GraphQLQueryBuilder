@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace GraphQLQueryBuilder
 {
@@ -28,11 +29,11 @@ namespace GraphQLQueryBuilder
             return this;
         }
 
-        internal QueryContentAppender AppendChildQuery(QueryBuilder query)
+        internal QueryContentAppender AppendChildQuery(string alias, QueryBuilder query)
         {
             var childQueryContent = query.Build(_indentationLevel + 1);
 
-            AppendToContent(childQueryContent);
+            AppendToContent(alias, childQueryContent);
 
             return this;
         }
@@ -55,15 +56,31 @@ namespace GraphQLQueryBuilder
 
         private void AppendToContent(string content)
         {
+            AppendToContent(string.Empty, content);
+        }
+
+        private void AppendToContent(string alias, string content)
+        {
             if (_content.Length != 0)
             {
                 _content.Append(",\n");
             }
 
             var indentation = BuildIndentation(_indentationLevel + 1);
-            if (!content.StartsWith(indentation))
+            var prefix = indentation;
+
+            if (!string.IsNullOrWhiteSpace(alias))
             {
-                content = indentation + content;
+                prefix += $"{alias}: ";
+            }
+
+            if (content.StartsWith(indentation))
+            {
+                content = Regex.Replace(content, $"^{indentation}", prefix);
+            }
+            else
+            {
+                content = prefix + content;
             }
 
             _content.Append(content);

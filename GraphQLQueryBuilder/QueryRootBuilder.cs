@@ -17,7 +17,9 @@ namespace GraphQLQueryBuilder
 
         public QueryRootBuilder AddQuery(string alias, QueryBuilder query)
         {
-            return AddQuery(query);
+            AddChildQuery(alias, query);
+
+            return this;
         }
 
         public string Build()
@@ -31,7 +33,7 @@ namespace GraphQLQueryBuilder
 
             foreach (var query in ChildQueries)
             {
-                queryAppender.AppendChildQuery(query);
+                queryAppender.AppendChildQuery(query.Alias, query.Query);
             }
 
             return queryAppender.Build();
