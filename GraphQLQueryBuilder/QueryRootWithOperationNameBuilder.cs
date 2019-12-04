@@ -23,6 +23,20 @@ namespace GraphQLQueryBuilder
 
         public string OperationName { get; }
 
+        public QueryRootWithOperationNameBuilder AddQuery(QueryBuilder query)
+        {
+            AddChildQuery(query);
+
+            return this;
+        }
+
+        public QueryRootWithOperationNameBuilder AddQuery(string alias, QueryBuilder query)
+        {
+            AddChildQuery(alias, query);
+
+            return this;
+        }
+
         internal override string Build(uint indentationLevel)
         {
             var queryWithOperationName = CreateQueryOperation();
