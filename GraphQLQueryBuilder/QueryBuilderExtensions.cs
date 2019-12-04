@@ -27,6 +27,17 @@ namespace GraphQLQueryBuilder
             throw new InvalidOperationException();
         }
 
+        public static QueryBuilder<T> AddField<T, TProperty>(
+            this QueryBuilder<T> builder,
+            string alias,
+            Expression<Func<T, TProperty>> expression,
+            Action<QueryBuilder<TProperty>> configurePropertyQuery)
+            where T : class
+            where TProperty : class
+        {
+            return builder.AddField(expression, configurePropertyQuery);
+        }
+
         public static QueryBuilder<T> AddCollectionField<T, TProperty>(
             this QueryBuilder<T> builder,
             Expression<Func<T, IEnumerable<TProperty>>> expression,

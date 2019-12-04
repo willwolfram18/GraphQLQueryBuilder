@@ -33,6 +33,23 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Fact]
+        public void SimpleAddressQueryWithAlias()
+        {
+            var addressQuery = new QueryBuilder<Address>("address")
+                .AddField(address => address.Street1)
+                .AddField(address => address.Street2)
+                .AddField(address => address.City)
+                .AddField(address => address.State)
+                .AddField(address => address.ZipCode);
+
+            var query = new QueryRootBuilder()
+                .AddQuery("primaryAddress", addressQuery)
+                .Build();
+
+            Snapshot.Match(query);
+        }
+
+        [Fact]
         public void RepeatedPropertiesIncludedInQuery()
         {
             var addressQuery = new QueryBuilder<Address>("address")

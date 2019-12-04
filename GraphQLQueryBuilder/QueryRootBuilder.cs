@@ -15,6 +15,11 @@ namespace GraphQLQueryBuilder
             return this;
         }
 
+        public QueryRootBuilder AddQuery(string alias, QueryBuilder query)
+        {
+            return AddQuery(query);
+        }
+
         public string Build()
         {
             return Build(0);

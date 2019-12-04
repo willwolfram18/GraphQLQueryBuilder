@@ -21,6 +21,11 @@ namespace GraphQLQueryBuilder
             return this;
         }
 
+        public QueryBuilder<T> AddQuery(string alias, QueryBuilder query)
+        {
+            return AddQuery(query);
+        }
+
         public QueryBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> expression)
         {
             if (expression == null)
