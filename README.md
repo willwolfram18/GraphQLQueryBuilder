@@ -6,4 +6,4 @@
     * [ ] Only on objects
 * [ ] Query Parameters
     * [ ] Specifying non-null types for a query
-* [ ] Query aliasing
+* [x] Query aliasing

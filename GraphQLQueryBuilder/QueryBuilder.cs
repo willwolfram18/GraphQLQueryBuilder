@@ -21,6 +21,11 @@ namespace GraphQLQueryBuilder
 
         public string QueryName { get; }
 
+        public string Build()
+        {
+            return Build(0);
+        }
+
         protected void AddChildQuery(QueryBuilder query)
         {
             ChildQueries.Add(new ChildQuery(query));

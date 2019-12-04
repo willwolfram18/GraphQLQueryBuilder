@@ -15,16 +15,16 @@ namespace GraphQLQueryBuilder
             return this;
         }
 
+        public QueryRootWithOperationNameBuilder AddOperationName(string name)
+        {
+            return new QueryRootWithOperationNameBuilder(name, ChildQueries);
+        }
+
         public QueryRootBuilder AddQuery(string alias, QueryBuilder query)
         {
             AddChildQuery(alias, query);
 
             return this;
-        }
-
-        public string Build()
-        {
-            return Build(0);
         }
 
         internal override string Build(uint indentationLevel)
