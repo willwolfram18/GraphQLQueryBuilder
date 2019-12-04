@@ -1,0 +1,2 @@
+﻿fragment EmptyAddress on Address {
+}
