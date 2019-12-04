@@ -144,5 +144,28 @@ namespace GraphQLQueryBuilder.Tests
 
             Snapshot.Match(query);
         }
+
+        [Fact]
+        public void ThenChildCollectionsWithAliasArePresent()
+        {
+            var customerQuery = new QueryBuilder<Customer>("customer")
+                .AddField(c => c.Id)
+                .AddField(
+                    c => c.CustomerContact,
+                    contactQuery => contactQuery.AddCollectionField(
+                        "phones",
+                        contact => contact.PhoneNumbers,
+                        phoneNumberQuery => phoneNumberQuery
+                            .AddField(p => p.Number)
+                            .AddField(p => p.Extension)
+                    )
+                );
+
+            var query = new QueryRootBuilder()
+                .AddQuery(customerQuery)
+                .Build();
+
+            Snapshot.Match(query);
+        }
     }
 }

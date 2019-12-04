@@ -1,0 +1,11 @@
+query {
+    customer {
+        Id,
+        CustomerContact {
+            phones: PhoneNumbers {
+                Number,
+                Extension
+            }
+        }
+    }
+}

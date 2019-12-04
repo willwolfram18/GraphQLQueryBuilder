@@ -13,18 +13,7 @@ namespace GraphQLQueryBuilder
             where T : class
             where TProperty : class
         {
-            if (expression.Body is MemberExpression member)
-            {
-                var propertyQuery = new QueryBuilder<TProperty>(member.Member.Name);
-
-                configurePropertyQuery(propertyQuery);
-
-                builder.AddQuery(propertyQuery);
-
-                return builder;
-            }
-
-            throw new InvalidOperationException();
+            return builder.AddField(string.Empty, expression, configurePropertyQuery);
         }
 
         public static QueryBuilder<T> AddField<T, TProperty>(
@@ -35,11 +24,33 @@ namespace GraphQLQueryBuilder
             where T : class
             where TProperty : class
         {
-            return builder.AddField(expression, configurePropertyQuery);
+            if (expression.Body is MemberExpression member)
+            {
+                var propertyQuery = new QueryBuilder<TProperty>(member.Member.Name);
+
+                configurePropertyQuery(propertyQuery);
+
+                builder.AddQuery(alias, propertyQuery);
+
+                return builder;
+            }
+
+            throw new InvalidOperationException();
         }
 
         public static QueryBuilder<T> AddCollectionField<T, TProperty>(
             this QueryBuilder<T> builder,
+            Expression<Func<T, IEnumerable<TProperty>>> expression,
+            Action<QueryBuilder<TProperty>> configurePropertyQuery)
+            where T : class
+            where TProperty : class
+        {
+            return builder.AddCollectionField(string.Empty, expression, configurePropertyQuery);
+        }
+
+        public static QueryBuilder<T> AddCollectionField<T, TProperty>(
+            this QueryBuilder<T> builder,
+            string alias,
             Expression<Func<T, IEnumerable<TProperty>>> expression,
             Action<QueryBuilder<TProperty>> configurePropertyQuery)
             where T : class
@@ -51,7 +62,7 @@ namespace GraphQLQueryBuilder
 
                 configurePropertyQuery(propertyQuery);
 
-                builder.AddQuery(propertyQuery);
+                builder.AddQuery(alias, propertyQuery);
 
                 return builder;
             }
