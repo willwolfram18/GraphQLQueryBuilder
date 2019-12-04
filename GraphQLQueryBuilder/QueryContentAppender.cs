@@ -38,7 +38,7 @@ namespace GraphQLQueryBuilder
             return this;
         }
 
-        internal string Build()
+        public override string ToString()
         {
             var indentation = BuildIndentation(_indentationLevel);
             var result = new StringBuilder()

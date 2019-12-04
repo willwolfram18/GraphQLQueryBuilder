@@ -59,7 +59,7 @@ namespace GraphQLQueryBuilder
                 queryAppender.AppendChildQuery(query.Alias, query.Query);
             }
 
-            return queryAppender.Build();
+            return queryAppender.ToString();
         }
     }
 }

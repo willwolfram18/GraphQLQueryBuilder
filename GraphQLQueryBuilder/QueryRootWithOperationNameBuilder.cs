@@ -8,7 +8,7 @@ namespace GraphQLQueryBuilder
 {
     public class QueryRootWithOperationNameBuilder : QueryBuilder
     {
-        public QueryRootWithOperationNameBuilder(string operationName) : base($"query")
+        public QueryRootWithOperationNameBuilder(string operationName)
         {
             OperationName = operationName;
         }
@@ -25,7 +25,20 @@ namespace GraphQLQueryBuilder
 
         internal override string Build(uint indentationLevel)
         {
-            throw new NotImplementedException();
+            var queryWithOperationName = CreateQueryOperation();
+            var queryAppender = new QueryContentAppender(queryWithOperationName, indentationLevel);
+
+            foreach (var childQuery in ChildQueries)
+            {
+                queryAppender.AppendChildQuery(childQuery.Alias, childQuery.Query);
+            }
+
+            return queryAppender.ToString();
+        }
+
+        private string CreateQueryOperation()
+        {
+            return $"query {OperationName}";
         }
     }
 }
