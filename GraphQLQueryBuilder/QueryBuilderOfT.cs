@@ -21,7 +21,7 @@ namespace GraphQLQueryBuilder
             return this;
         }
 
-        public QueryBuilder<T> AddProperty<TProperty>(Expression<Func<T, TProperty>> expression)
+        public QueryBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> expression)
         {
             if (expression == null)
             {
@@ -40,7 +40,7 @@ namespace GraphQLQueryBuilder
 
         internal override string Build(uint indentationLevel)
         {
-            var queryAppender = new QueryAppender(QueryName, indentationLevel);
+            var queryAppender = new QueryContentAppender(QueryName, indentationLevel);
 
             foreach (var property in _properties)
             {

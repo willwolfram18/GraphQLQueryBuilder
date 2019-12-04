@@ -6,7 +6,7 @@ namespace GraphQLQueryBuilder
 {
     public static class QueryBuilderExtensions
     {
-        public static QueryBuilder<T> AddProperty<T, TProperty>(
+        public static QueryBuilder<T> AddField<T, TProperty>(
             this QueryBuilder<T> builder,
             Expression<Func<T, TProperty>> expression,
             Action<QueryBuilder<TProperty>> configurePropertyQuery)
@@ -27,7 +27,7 @@ namespace GraphQLQueryBuilder
             throw new InvalidOperationException();
         }
 
-        public static QueryBuilder<T> AddCollectionProperty<T, TProperty>(
+        public static QueryBuilder<T> AddCollectionField<T, TProperty>(
             this QueryBuilder<T> builder,
             Expression<Func<T, IEnumerable<TProperty>>> expression,
             Action<QueryBuilder<TProperty>> configurePropertyQuery)

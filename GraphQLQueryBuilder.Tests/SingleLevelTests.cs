@@ -19,11 +19,11 @@ namespace GraphQLQueryBuilder.Tests
         public void SimpleAddressQuery()
         {
             var addressQuery = new QueryBuilder<Address>("address")
-                .AddProperty(address => address.Street1)
-                .AddProperty(address => address.Street2)
-                .AddProperty(address => address.City)
-                .AddProperty(address => address.State)
-                .AddProperty(address => address.ZipCode);
+                .AddField(address => address.Street1)
+                .AddField(address => address.Street2)
+                .AddField(address => address.City)
+                .AddField(address => address.State)
+                .AddField(address => address.ZipCode);
 
             var query = new QueryRootBuilder()
                 .AddQuery(addressQuery)
@@ -36,13 +36,13 @@ namespace GraphQLQueryBuilder.Tests
         public void RepeatedPropertiesIncludedInQuery()
         {
             var addressQuery = new QueryBuilder<Address>("address")
-                .AddProperty(address => address.Street1)
-                .AddProperty(address => address.Street1)
-                .AddProperty(address => address.Street1)
-                .AddProperty(address => address.Street2)
-                .AddProperty(address => address.City)
-                .AddProperty(address => address.State)
-                .AddProperty(address => address.ZipCode);
+                .AddField(address => address.Street1)
+                .AddField(address => address.Street1)
+                .AddField(address => address.Street1)
+                .AddField(address => address.Street2)
+                .AddField(address => address.City)
+                .AddField(address => address.State)
+                .AddField(address => address.ZipCode);
 
             var query = new QueryRootBuilder()
                 .AddQuery(addressQuery)

@@ -22,7 +22,7 @@ namespace GraphQLQueryBuilder
 
         internal override string Build(uint indentationLevel)
         {
-            var queryAppender = new QueryAppender(QueryName, indentationLevel);
+            var queryAppender = new QueryContentAppender(QueryName, indentationLevel);
 
             foreach (var query in ChildQueries)
             {

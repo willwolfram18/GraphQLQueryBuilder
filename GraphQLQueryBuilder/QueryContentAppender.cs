@@ -5,7 +5,7 @@ using System.Text;
 
 namespace GraphQLQueryBuilder
 {
-    internal class QueryAppender
+    internal class QueryContentAppender
     {
         private const char IndentCharacter = ' ';
         private const uint IndentWidth = 4;
@@ -14,21 +14,21 @@ namespace GraphQLQueryBuilder
         private readonly StringBuilder _content;
         private readonly string _queryStart;
 
-        internal QueryAppender(string queryName, uint indentationLevel)
+        internal QueryContentAppender(string queryName, uint indentationLevel)
         {
             _indentationLevel = indentationLevel;
             _queryStart = BuildIndentation(_indentationLevel) + queryName + " {";
             _content = new StringBuilder();
         }
 
-        internal QueryAppender AppendProperty(string property)
+        internal QueryContentAppender AppendProperty(string property)
         {
             AppendToContent(property);
 
             return this;
         }
 
-        internal QueryAppender AppendChildQuery(QueryBuilder query)
+        internal QueryContentAppender AppendChildQuery(QueryBuilder query)
         {
             var childQueryContent = query.Build(_indentationLevel + 1);
 

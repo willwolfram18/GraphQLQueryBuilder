@@ -24,16 +24,16 @@ namespace GraphQLQueryBuilder.Tests
         public void ThenPropertiesAreBeforeChildQueries()
         {
             var addressQuery = new QueryBuilder<Address>("address")
-                .AddProperty(address => address.Street1)
-                .AddProperty(address => address.Street2)
-                .AddProperty(address => address.City)
-                .AddProperty(address => address.State)
-                .AddProperty(address => address.ZipCode);
+                .AddField(address => address.Street1)
+                .AddField(address => address.Street2)
+                .AddField(address => address.City)
+                .AddField(address => address.State)
+                .AddField(address => address.ZipCode);
 
             var customerQuery = new QueryBuilder<Customer>("customer")
                 .AddQuery(addressQuery)
-                .AddProperty(c => c.Id)
-                .AddProperty(c => c.AccountNumber);
+                .AddField(c => c.Id)
+                .AddField(c => c.AccountNumber);
 
             var query = new QueryRootBuilder()
                 .AddQuery(customerQuery)
@@ -46,12 +46,12 @@ namespace GraphQLQueryBuilder.Tests
         public void ThenAddPropertyIncludesConfiguredQuery()
         {
             var customerQuery = new QueryBuilder<Customer>("customer")
-                .AddProperty(c => c.Id)
-                .AddProperty(c => c.AccountNumber)
-                .AddProperty(
+                .AddField(c => c.Id)
+                .AddField(c => c.AccountNumber)
+                .AddField(
                     c => c.CustomerContact,
-                    contactQuery => contactQuery.AddProperty(c => c.FirstName)
-                        .AddProperty(c => c.LastName)
+                    contactQuery => contactQuery.AddField(c => c.FirstName)
+                        .AddField(c => c.LastName)
                 );
 
             var query = new QueryRootBuilder()
@@ -65,21 +65,19 @@ namespace GraphQLQueryBuilder.Tests
         public void ThenChildQueryOfChildQueryIsConfigured()
         {
             var customerQuery = new QueryBuilder<Customer>("customer")
-                .AddProperty(c => c.Id)
-                .AddProperty(c => c.AccountNumber)
-                .AddProperty(
+                .AddField(c => c.Id)
+                .AddField(c => c.AccountNumber)
+                .AddField(
                     c => c.CustomerContact,
-                    contactQuery => contactQuery
-                        .AddProperty(contact => contact.FirstName)
-                        .AddProperty(contact => contact.LastName)
-                        .AddProperty(
-                            contact => contact.Address,
+                    contactQuery => QueryBuilderExtensions.AddField(contactQuery
+                                .AddField(contact => contact.FirstName)
+                                .AddField(contact => contact.LastName), contact => contact.Address,
                             addressQuery => addressQuery
-                                .AddProperty(address => address.Street1)
-                                .AddProperty(address => address.Street2)
-                                .AddProperty(address => address.City)
-                                .AddProperty(address => address.State)
-                                .AddProperty(address => address.ZipCode)
+                                .AddField(address => address.Street1)
+                                .AddField(address => address.Street2)
+                                .AddField(address => address.City)
+                                .AddField(address => address.State)
+                                .AddField(address => address.ZipCode)
                         )
                 );
 
@@ -94,14 +92,14 @@ namespace GraphQLQueryBuilder.Tests
         public void ThenChildCollectionPropertiesArePresent()
         {
             var customerQuery = new QueryBuilder<Customer>("customer")
-                .AddProperty(c => c.Id)
-                .AddProperty(
+                .AddField(c => c.Id)
+                .AddField(
                     c => c.CustomerContact,
-                    contactQuery => contactQuery.AddCollectionProperty(
+                    contactQuery => contactQuery.AddCollectionField(
                         contact => contact.PhoneNumbers,
                         phoneNumberQuery => phoneNumberQuery
-                            .AddProperty(p => p.Number)
-                            .AddProperty(p => p.Extension)
+                            .AddField(p => p.Number)
+                            .AddField(p => p.Extension)
                     )
                 );
 
