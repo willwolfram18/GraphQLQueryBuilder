@@ -1,4 +1,4 @@
-﻿query EmptyQueryOperation {
+﻿query {
 }
 
 fragment CompleteAddress on Address {

@@ -14,12 +14,14 @@ namespace GraphQLQueryBuilder
         private readonly uint _indentationLevel;
         private readonly StringBuilder _content;
         private readonly string _queryStart;
+        private readonly List<FragmentBuilder> _fragmentDefinitions;
 
         internal QueryContentAppender(string queryName, uint indentationLevel)
         {
             _indentationLevel = indentationLevel;
             _queryStart = BuildIndentation(_indentationLevel) + queryName + " {";
             _content = new StringBuilder();
+            _fragmentDefinitions = new List<FragmentBuilder>();
         }
 
         internal QueryContentAppender AppendProperty(string property)
@@ -38,6 +40,26 @@ namespace GraphQLQueryBuilder
             return this;
         }
 
+        internal QueryContentAppender AddFragmentName(string fragmentName)
+        {
+            AppendToContent($"...{fragmentName}");
+
+            return this;
+        }
+
+        internal QueryContentAppender AddFragmentDefinition(FragmentBuilder fragment)
+        {
+            if (_indentationLevel != 0)
+            {
+                // TODO message
+                throw new InvalidOperationException();
+            }
+            
+            _fragmentDefinitions.Add(fragment);
+
+            return this;
+        }
+
         public override string ToString()
         {
             var indentation = BuildIndentation(_indentationLevel);
@@ -50,6 +72,13 @@ namespace GraphQLQueryBuilder
             }
 
             result.Append(indentation + "}");
+
+            foreach (var fragment in _fragmentDefinitions)
+            {
+                result.AppendLine()
+                    .AppendLine()
+                    .Append(fragment.Build());
+            }
 
             return result.ToString();
         }

@@ -39,7 +39,9 @@ namespace GraphQLQueryBuilder
 
         public QueryRootWithOperationNameBuilder AddFragment(FragmentBuilder fragment)
         {
-            throw new NotImplementedException();
+            AddFragmentDefinition(fragment);
+
+            return this;
         }
 
         internal override string Build(uint indentationLevel)
@@ -50,6 +52,11 @@ namespace GraphQLQueryBuilder
             foreach (var childQuery in ChildQueries)
             {
                 queryAppender.AppendChildQuery(childQuery.Alias, childQuery.Query);
+            }
+
+            foreach (var fragment in FragmentDefinitions.Values)
+            {
+                queryAppender.AddFragmentDefinition(fragment);
             }
 
             return queryAppender.ToString();

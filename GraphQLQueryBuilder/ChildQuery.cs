@@ -8,10 +8,6 @@ namespace GraphQLQueryBuilder
 {
     public class ChildQuery
     {
-        internal ChildQuery(QueryBuilder query) : this(string.Empty, query)
-        {
-        }
-
         internal ChildQuery(string alias, QueryBuilder query)
         {
             Query = query;
