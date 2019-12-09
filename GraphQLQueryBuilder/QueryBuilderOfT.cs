@@ -45,6 +45,11 @@ namespace GraphQLQueryBuilder
             throw new InvalidOperationException("Not a member");
         }
 
+        public QueryRootBuilder AddFragment(FragmentBuilder fragment)
+        {
+            throw new NotImplementedException();
+        }
+
         internal override string Build(uint indentationLevel)
         {
             var queryAppender = new QueryContentAppender(QueryName, indentationLevel);

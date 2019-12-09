@@ -37,6 +37,11 @@ namespace GraphQLQueryBuilder
             return this;
         }
 
+        public QueryRootWithOperationNameBuilder AddFragment(FragmentBuilder fragment)
+        {
+            throw new NotImplementedException();
+        }
+
         internal override string Build(uint indentationLevel)
         {
             var queryWithOperationName = CreateQueryOperation();

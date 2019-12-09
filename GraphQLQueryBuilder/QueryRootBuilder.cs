@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 
 namespace GraphQLQueryBuilder
@@ -25,6 +26,11 @@ namespace GraphQLQueryBuilder
             AddChildQuery(alias, query);
 
             return this;
+        }
+
+        public QueryRootBuilder AddFragment(FragmentBuilder fragment)
+        {
+            throw new NotImplementedException();
         }
 
         internal override string Build(uint indentationLevel)
