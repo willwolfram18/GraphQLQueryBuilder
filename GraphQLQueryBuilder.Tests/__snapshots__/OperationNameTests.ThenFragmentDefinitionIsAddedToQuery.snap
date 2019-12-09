@@ -1,0 +1,10 @@
+﻿query EmptyQueryOperation {
+}
+
+fragment CompleteAddressFragment on Address {
+    Street1,
+    Street2,
+    City,
+    State,
+    ZipCode
+}

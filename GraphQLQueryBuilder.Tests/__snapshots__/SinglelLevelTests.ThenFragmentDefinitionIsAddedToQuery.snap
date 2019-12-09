@@ -1,0 +1,10 @@
+﻿query {
+}
+
+fragment CompleteAddress on Address {
+    Street1,
+    Street2,
+    City,
+    State,
+    ZipCode
+}
