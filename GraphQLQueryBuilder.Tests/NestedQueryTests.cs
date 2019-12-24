@@ -1,12 +1,12 @@
 using GraphQLQueryBuilder.Tests.Models;
-using Snapshooter.Xunit;
-using Xunit;
+using NUnit.Framework;
+using Snapshooter.Json;
 
 namespace GraphQLQueryBuilder.Tests
 {
-    public class NestedQueryTests
+    public class NestedQueryTests : TestClass
     {
-        [Fact]
+        [Test]
         public void ThenNestedQueryIsEmpty()
         {
             var addressQuery = new QueryBuilder<Address>("address");
@@ -17,10 +17,10 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void IfAliasIsIncludedThenEmptyNestedQueryIsAliased()
         {
             var addressQuery = new QueryBuilder<Address>("address");
@@ -32,10 +32,10 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void ThenPropertiesAreBeforeChildQueries()
         {
             var addressQuery = new QueryBuilder<Address>("address")
@@ -54,10 +54,10 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void ThenAddPropertyIncludesConfiguredQuery()
         {
             var customerQuery = new QueryBuilder<Customer>("customer")
@@ -73,10 +73,10 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void ThenAddPropertyIncludesAliasForConfiguredQuery()
         {
             var customerQuery = new QueryBuilder<Customer>("customer")
@@ -92,10 +92,10 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void ThenChildQueryOfChildQueryIsConfigured()
         {
             var customerQuery = new QueryBuilder<Customer>("customer")
@@ -120,10 +120,10 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void ThenChildCollectionPropertiesArePresent()
         {
             var customerQuery = new QueryBuilder<Customer>("customer")
@@ -142,10 +142,10 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void ThenChildCollectionsWithAliasArePresent()
         {
             var customerQuery = new QueryBuilder<Customer>("customer")
@@ -165,7 +165,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
     }
 }

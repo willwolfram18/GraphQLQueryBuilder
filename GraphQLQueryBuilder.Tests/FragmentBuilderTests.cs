@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GraphQLQueryBuilder.Tests.Models;
-using Snapshooter.Xunit;
-using Xunit;
+﻿using GraphQLQueryBuilder.Tests.Models;
+using NUnit.Framework;
+using Snapshooter.Json;
 
 namespace GraphQLQueryBuilder.Tests
 {
-    public class FragmentBuilderTests
+    public class FragmentBuilderTests : TestClass
     {
-        [Fact]
+        [Test]
         public void IfNoFieldsSpecifiedThenEmptyFragmentIsCreated()
         {
             var fragment = new FragmentBuilder<Address>("EmptyAddress")
                 .Build();
 
-            Snapshot.Match(fragment);
+            Snapshot.Match(fragment, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void ThenOnlySpecifiedFieldsInFragment()
         {
             var fragment = new FragmentBuilder<Address>("PartialAddress")
@@ -29,10 +24,10 @@ namespace GraphQLQueryBuilder.Tests
                 .AddField(address => address.ZipCode)
                 .Build();
 
-            Snapshot.Match(fragment);
+            Snapshot.Match(fragment, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void ThenFieldsIncludedInFragment()
         {
             var fragment = new FragmentBuilder<Address>("CompleteAddress")
@@ -43,7 +38,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddField(address => address.ZipCode)
                 .Build();
 
-            Snapshot.Match(fragment);
+            Snapshot.Match(fragment, GetSnapshotName());
         }
     }
 }

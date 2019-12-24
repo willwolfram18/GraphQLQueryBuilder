@@ -1,11 +1,11 @@
-using System;
 using GraphQLQueryBuilder.Tests.Models;
-using Snapshooter.Xunit;
-using Xunit;
+using NUnit.Framework;
+using Snapshooter.Json;
+using System;
 
 namespace GraphQLQueryBuilder.Tests
 {
-    public class SingleLevelTests
+    public class SingleLevelTests : TestClass
     {
         private const string DuplicateFragmentSkipReason = "Determine duplicate fragment resolution.";
         private QueryBuilder<Address> _addressQuery;
@@ -15,36 +15,36 @@ namespace GraphQLQueryBuilder.Tests
             _addressQuery = AddressQueries.CreateCompleteAddressQueryWithoutFragment();
         }
 
-        [Fact]
+        [Test]
         public void EmptyQuery()
         {
             var query = new QueryRootBuilder()
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void SimpleAddressQuery()
         {
             var query = new QueryRootBuilder()
                 .AddQuery(_addressQuery)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void SimpleAddressQueryWithAlias()
         {
             var query = new QueryRootBuilder()
                 .AddQuery("primaryAddress", _addressQuery)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void RepeatedPropertiesIncludedInQuery()
         {
             _addressQuery = AddressQueries.AddAllAddressPropertiesToQueryBuilder(_addressQuery);
@@ -53,10 +53,10 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(_addressQuery)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void ThenFragmentDefinitionIsAddedToQuery()
         {
             var addressFragment = AddressQueries.CreateCompleteAddressFragment();
@@ -65,10 +65,10 @@ namespace GraphQLQueryBuilder.Tests
                 .AddFragment(addressFragment)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void IfTheSameFragmentNameIsAddedTwiceThenInvalidOperationExceptionIsThrown()
         {
             var addressFragment = AddressQueries.CreateCompleteAddressFragment();
@@ -79,10 +79,10 @@ namespace GraphQLQueryBuilder.Tests
 
             Assert.Throws<InvalidOperationException>(() => query.AddFragment(customerFragment));
 
-            // TODO check error message
+                        Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void IfSameFragmentWithDifferentNameIsAddedThenQueryIsBuilt()
         {
             var completeAddressFragment = AddressQueries.CreateCompleteAddressFragment();
@@ -93,10 +93,10 @@ namespace GraphQLQueryBuilder.Tests
                 .AddFragment(otherCompleteAddressFragment)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void ThenFragmentDefinitionIsUsedInQuery()
         {
             var completeAddressFragment = AddressQueries.CreateCompleteAddressFragment();
@@ -108,10 +108,10 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(addressQuery)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact]
+        [Test]
         public void IfFragmentAndFieldsAreSpecifiedThenBothAreUsedInTheQuery()
         {
             var addressQuery = AddressQueries.CreateCompleteAddressQueryWithoutFragment();
@@ -123,10 +123,11 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(addressQuery)
                 .Build();
 
-            Snapshot.Match(query);
+            Snapshot.Match(query, GetSnapshotName());
         }
 
-        [Fact(Skip = DuplicateFragmentSkipReason)]
+        [Test]
+        [Ignore(DuplicateFragmentSkipReason)]
         public void IfIdenticalFragmentIsAddedToQueryAndQueryRootThenTODO()
         {
             var queryAddressFragment = AddressQueries.CreateCompleteAddressFragment();
@@ -143,7 +144,8 @@ namespace GraphQLQueryBuilder.Tests
             Assert.False(true, DuplicateFragmentSkipReason);
         }
 
-        [Fact(Skip = DuplicateFragmentSkipReason)]
+        [Test]
+        [Ignore(DuplicateFragmentSkipReason)]
         public void IfDifferentFragmentsWithIdenticalNamesAreAddedToQueryAndQueryRootThenTODO()
         {
             var completeAddressFragment = AddressQueries.CreateCompleteAddressFragment();
