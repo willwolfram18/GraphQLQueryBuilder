@@ -7,6 +7,8 @@ namespace GraphQLQueryBuilder.Tests
     [TestFixture]
     public abstract class TestClass
     {
+        protected const string DuplicateFragmentSkipReason = "Determine duplicate fragment resolution.";
+
         protected string GetSnapshotName([CallerMemberName] string methodName = "")
         {
             var typeOfThisTest = GetType();

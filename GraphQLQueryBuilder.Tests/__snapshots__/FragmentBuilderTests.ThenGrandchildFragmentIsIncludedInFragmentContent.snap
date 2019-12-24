@@ -1,0 +1,6 @@
+﻿fragment PartialCustomer on Customer {
+	Id,
+	CustomerContact {
+		...PartialContact
+	}
+}

@@ -7,7 +7,6 @@ namespace GraphQLQueryBuilder.Tests
 {
     public class OperationNameTests : TestClass
     {
-        private const string DuplicateFragmentSkipReason = "Determine duplicate fragment resolution.";
         private const string DefaultOperationName = "CompleteAddressOperation";
 
         [Test]

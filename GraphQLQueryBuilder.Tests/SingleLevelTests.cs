@@ -7,7 +7,6 @@ namespace GraphQLQueryBuilder.Tests
 {
     public class SingleLevelTests : TestClass
     {
-        private const string DuplicateFragmentSkipReason = "Determine duplicate fragment resolution.";
         private QueryBuilder<Address> _addressQuery;
 
         public SingleLevelTests()
