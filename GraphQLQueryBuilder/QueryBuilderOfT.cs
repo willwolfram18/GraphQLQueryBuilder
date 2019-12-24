@@ -45,11 +45,18 @@ namespace GraphQLQueryBuilder
             throw new InvalidOperationException("Not a member");
         }
 
-        public QueryBuilder<T> AddFragment(FragmentBuilder fragment)
+        public QueryBuilder<T> AddFragment(FragmentBuilder<T> fragment)
         {
             AddFragmentDefinition(fragment);
 
             return this;
+        }
+
+        public QueryBuilder<T> AddFragment<TProperty>(Expression<Func<T, TProperty>> expression,
+            FragmentBuilder<TProperty> fragment)
+            where TProperty : class
+        {
+            throw new NotImplementedException();
         }
 
         internal override string Build(uint indentationLevel)
