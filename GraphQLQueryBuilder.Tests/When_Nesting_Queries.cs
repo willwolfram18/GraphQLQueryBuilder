@@ -4,10 +4,10 @@ using Snapshooter.Json;
 
 namespace GraphQLQueryBuilder.Tests
 {
-    public class NestedQueryTests : TestClass
+    public class When_Nesting_Queries : TestClass
     {
         [Test]
-        public void ThenNestedQueryIsEmpty()
+        public void If_Nested_Query_Is_Empty_Then_Query_Content_Has_An_Empty_Nested_Query()
         {
             var addressQuery = new QueryBuilder<Address>("address");
             var customerQuery = new QueryBuilder<Customer>("customer")
@@ -21,7 +21,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void IfAliasIsIncludedThenEmptyNestedQueryIsAliased()
+        public void If_Nested_Query_Uses_An_Alias_Then_Aliased_Query_Is_Included_In_Query_Content()
         {
             var addressQuery = new QueryBuilder<Address>("address");
             var customerQuery = new QueryBuilder<Customer>("customer")
@@ -36,7 +36,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void ThenPropertiesAreBeforeChildQueries()
+        public void If_Fields_Are_Included_With_A_Nested_Query_Then_Both_The_Nested_Query_And_Fields_Are_Included_In_Query_Content()
         {
             var addressQuery = new QueryBuilder<Address>("address")
                 .AddField(address => address.Street1)
@@ -58,7 +58,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void ThenAddPropertyIncludesConfiguredQuery()
+        public void If_A_Field_Is_Added_With_A_Nested_Query_Builder_Func_Then_The_Nested_Query_Is_Included_In_The_Query_Content()
         {
             var customerQuery = new QueryBuilder<Customer>("customer")
                 .AddField(c => c.Id)
@@ -77,7 +77,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void ThenAddPropertyIncludesAliasForConfiguredQuery()
+        public void If_A_Field_With_An_Alias_Is_Added_With_A_Nested_Query_Builder_Function_Then_Nested_Query_With_Alias_Is_Included_In_Query_Content()
         {
             var customerQuery = new QueryBuilder<Customer>("customer")
                 .AddField(customer => customer.Id)
@@ -96,7 +96,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void ThenChildQueryOfChildQueryIsConfigured()
+        public void If_A_Nested_Query_Uses_A_Nested_Query_Then_Both_Nested_Queries_Are_Included_In_The_Query_Content()
         {
             var customerQuery = new QueryBuilder<Customer>("customer")
                 .AddField(c => c.Id)
@@ -124,7 +124,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void ThenChildCollectionPropertiesArePresent()
+        public void If_A_Nested_Query_For_A_Collection_Field_Is_Added_Then_Nested_Query_Is_Included_In_Content()
         {
             var customerQuery = new QueryBuilder<Customer>("customer")
                 .AddField(c => c.Id)
@@ -146,7 +146,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void ThenChildCollectionsWithAliasArePresent()
+        public void If_A_Collection_Field_With_An_Alias_Is_Added_Then_Nested_Query_Is_Included_In_Content()
         {
             var customerQuery = new QueryBuilder<Customer>("customer")
                 .AddField(c => c.Id)
