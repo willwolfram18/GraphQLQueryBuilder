@@ -5,12 +5,12 @@ using Snapshooter.Json;
 
 namespace GraphQLQueryBuilder.Tests
 {
-    public class OperationNameTests : TestClass
+    public class When_Building_A_Query_Root_With_An_Operation_Name : TestClass
     {
         private const string DefaultOperationName = "CompleteAddressOperation";
 
         [Test]
-        public void IfOperationNameIsAddedToQueryRootBuilderThenOperationNameIsInQueryDefinition()
+        public void If_Operation_Name_Is_Added_To_A_Query_Root_Builder_Then_The_Operation_Name_Is_In_The_Query_Content()
         {
             var query = new QueryRootBuilder()
                 .AddOperationName("ExampleOperation")
@@ -20,7 +20,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void IfQueryRootWithOperationNameBuilderIsUsedThenOperationNameIsInTheQueryDefinition()
+        public void If_Query_Root_Builder_With_Operation_Name_Is_Created_Then_Operation_Name_Is_In_The_Query_Content()
         {
             var query = new QueryRootWithOperationNameBuilder("NamedOperation")
                 .Build();
@@ -29,7 +29,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void IfQueryRootWithOperationNameBuilderIsUsedThenChildQueriesAppear()
+        public void If_A_Query_Is_Added_Then_The_Added_Query_Is_Included_In_The_Content()
         {
             var addressQuery = CreateCompleteAddressQueryWithoutFragment();
 
@@ -41,7 +41,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void IfQueryRootWithOperationNameBuilderIsUsedWithAliasedChildQueryThenAliasedChildQueryAppears()
+        public void If_A_Query_Is_Added_With_An_Alias_The_Aliased_Query_Is_Included_In_The_Content()
         {
             var addressQuery = CreateCompleteAddressQueryWithoutFragment();
 
@@ -53,7 +53,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void ThenFragmentDefinitionIsAddedToQuery()
+        public void If_Fragment_Is_Added_To_Query_Root_Then_Fragment_Definition_Is_Included_In_Query_Content()
         {
             var addressFragment = CreateCompleteAddressFragment();
 
@@ -65,7 +65,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void IfTheSameFragmentNameIsAddedTwiceThenInvalidOperationExceptionIsThrown()
+        public void If_Fragment_With_The_Same_Name_Is_Added_Twice_Then_An_InvalidOperationException_Is_Thrown()
         {
             var addressFragment = CreateCompleteAddressFragment();
             var customerFragment = new FragmentBuilder<Customer>(addressFragment.Name);
@@ -74,12 +74,10 @@ namespace GraphQLQueryBuilder.Tests
                 .AddFragment(addressFragment);
 
             Assert.Throws<InvalidOperationException>(() => query.AddFragment(customerFragment));
-
-                                    Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
         }
 
         [Test]
-        public void IfSameFragmentWithDifferentNameIsAddedThenQueryIsBuilt()
+        public void If_The_Same_Fragment_With_A_Different_Name_Is_Added_To_The_Query_Then_Both_Fragments_Are_In_The_Query_Content()
         {
             var completeAddressFragment = CreateCompleteAddressFragment();
             var otherCompleteAddressFragment = CreateNamedCompleteAddressFragment("OtherFragment");
@@ -93,7 +91,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void ThenFragmentDefinitionIsUsedInQuery()
+        public void If_Query_Uses_A_Fragment_Then_The_Fragment_Is_Used_In_The_Query()
         {
             var completeAddressFragment = CreateCompleteAddressFragment();
             var addressQuery = new QueryBuilder<Address>("address");
@@ -108,7 +106,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void IfFragmentAndFieldsAreSpecifiedThenBothAreUsedInTheQuery()
+        public void If_A_Query_Includes_Both_A_Fragment_And_FieldsThen_Both_Are_Used_In_The_Query_Content()
         {
             var addressQuery = CreateCompleteAddressQueryWithoutFragment();
             var completeAddressFragment = CreateCompleteAddressFragment();
