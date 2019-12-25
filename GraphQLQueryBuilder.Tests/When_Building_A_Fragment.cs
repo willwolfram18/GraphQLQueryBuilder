@@ -14,7 +14,7 @@ namespace GraphQLQueryBuilder.Tests
             var fragment = new FragmentBuilder<Address>("EmptyAddress")
                 .Build();
 
-            Snapshot.Match(fragment, GetSnapshotName());
+            Snapshot.Match(fragment, GenerateSnapshotNameFromClassAndTestNames());
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddField(address => address.ZipCode)
                 .Build();
 
-            Snapshot.Match(fragment, GetSnapshotName());
+            Snapshot.Match(fragment, GenerateSnapshotNameFromClassAndTestNames());
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace GraphQLQueryBuilder.Tests
             var fragment = CreateCompleteAddressFragment()
                 .Build();
 
-            Snapshot.Match(fragment, GetSnapshotName());
+            Snapshot.Match(fragment, GenerateSnapshotNameFromClassAndTestNames());
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddFragment(customer => customer.CustomerContact, contactFragment)
                 .Build();
 
-            Snapshot.Match(fragment, GetSnapshotName());
+            Snapshot.Match(fragment, GenerateSnapshotNameFromClassAndTestNames());
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddFragment(customer => customer.CustomerContact, contactFragment)
                 .Build();
 
-            Snapshot.Match(fragment, GetSnapshotName());
+            Snapshot.Match(fragment, GenerateSnapshotNameFromClassAndTestNames());
         }
 
         [Test]

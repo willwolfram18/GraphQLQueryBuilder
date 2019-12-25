@@ -17,7 +17,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query, GetSnapshotName());
+            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query, GetSnapshotName());
+            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query, GetSnapshotName());
+            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query, GetSnapshotName());
+            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query, GetSnapshotName());
+            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
         }
 
         [Test]
@@ -120,7 +120,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query, GetSnapshotName());
+            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
         }
 
         [Test]
@@ -142,7 +142,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query, GetSnapshotName());
+            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
         }
 
         [Test]
@@ -165,7 +165,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(customerQuery)
                 .Build();
 
-            Snapshot.Match(query, GetSnapshotName());
+            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
         }
     }
 }
