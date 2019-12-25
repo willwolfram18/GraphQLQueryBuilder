@@ -4,12 +4,12 @@ using Snapshooter.Json;
 
 namespace GraphQLQueryBuilder.Tests
 {
-    public class FragmentBuilderTests : TestClass
+    public class When_Building_A_Fragment : TestClass
     {
         private const string CompleteAddressFragmentName = "CompleteAddress";
 
         [Test]
-        public void IfNoFieldsSpecifiedThenEmptyFragmentIsCreated()
+        public void If_Nothing_Is_Added_To_The_Fragment_Then_The_Fragment_Content_Is_Empty()
         {
             var fragment = new FragmentBuilder<Address>("EmptyAddress")
                 .Build();
@@ -18,7 +18,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void ThenOnlySpecifiedFieldsInFragment()
+        public void Then_Only_The_Added_Fields_Are_In_The_Fragment_Content()
         {
             var fragment = new FragmentBuilder<Address>("PartialAddress")
                 .AddField(address => address.Street1)
@@ -30,7 +30,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void ThenFieldsIncludedInFragment()
+        public void If_All_Fields_Added_To_Fragment_Then_Fragment_Includes_All_Fields()
         {
             var fragment = CreateCompleteAddressFragment()
                 .Build();
@@ -39,7 +39,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void ThenAddedFragmentIsIncludedInFragmentContent()
+        public void Then_Added_Fragment_Is_Included_In_Specified_Field()
         {
             var contactFragment = CreatePartialContactFragment();
             var fragment = new FragmentBuilder<Customer>("PartialCustomer")
@@ -51,7 +51,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void IfGrandchildFragmentIsIncludedInChildFragmentThenOnlyChildFragmentNameIsInFinalContent()
+        public void If_Grandchild_Fragment_Is_Included_In_Child_Fragment_Then_Only_The_Child_Fragment_Name_Is_In_The_Fragment_Content()
         {
             var addressFragment = CreateCompleteAddressFragment();
             var contactFragment = CreatePartialContactFragment()
