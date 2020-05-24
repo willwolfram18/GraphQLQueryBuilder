@@ -15,7 +15,7 @@ namespace GraphQLQueryBuilder.Tests
             Snapshot.Match(result, GenerateSnapshotNameFromClassAndTestNames(methodName));
         }
 
-        protected string GenerateSnapshotNameFromClassAndTestNames([CallerMemberName] string methodName = "")
+        private string GenerateSnapshotNameFromClassAndTestNames(string methodName)
         {
             var typeOfThisTest = GetType();
             var methodInfo = typeOfThisTest.GetMethod(methodName) ??

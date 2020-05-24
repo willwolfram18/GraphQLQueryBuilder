@@ -48,7 +48,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(_addressQuery)
                 .Build();
 
-            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery("primaryAddress", _addressQuery)
                 .Build();
 
-            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(_addressQuery)
                 .Build();
 
-            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddFragment(addressFragment)
                 .Build();
 
-            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace GraphQLQueryBuilder.Tests
 
             Assert.Throws<InvalidOperationException>(() => query.AddFragment(customerFragment));
 
-            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query.Build());
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddFragment(otherCompleteAddressFragment)
                 .Build();
 
-            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(addressQuery)
                 .Build();
 
-            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddQuery(addressQuery)
                 .Build();
 
-            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
         }
 
         [Test]

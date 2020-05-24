@@ -1,6 +1,5 @@
 ﻿using GraphQLQueryBuilder.Tests.Models;
 using NUnit.Framework;
-using Snapshooter.Json;
 
 namespace GraphQLQueryBuilder.Tests
 {
@@ -14,7 +13,7 @@ namespace GraphQLQueryBuilder.Tests
             var fragment = new FragmentBuilder<Address>("EmptyAddress")
                 .Build();
 
-            Snapshot.Match(fragment, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(fragment);
         }
 
         [Test]
@@ -26,7 +25,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddField(address => address.ZipCode)
                 .Build();
 
-            Snapshot.Match(fragment, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(fragment);
         }
 
         [Test]
@@ -35,7 +34,7 @@ namespace GraphQLQueryBuilder.Tests
             var fragment = CreateCompleteAddressFragment()
                 .Build();
 
-            Snapshot.Match(fragment, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(fragment);
         }
 
         [Test]
@@ -47,7 +46,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddFragment(customer => customer.CustomerContact, contactFragment)
                 .Build();
 
-            Snapshot.Match(fragment, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(fragment);
         }
 
         [Test]
@@ -61,7 +60,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddFragment(customer => customer.CustomerContact, contactFragment)
                 .Build();
 
-            Snapshot.Match(fragment, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(fragment);
         }
 
         [Test]
@@ -74,7 +73,7 @@ namespace GraphQLQueryBuilder.Tests
                 .AddFragment(contact => contact.Address, addressFragment)
                 .Build();
 
-            Assert.True(false, DuplicateFragmentSkipReason);
+            ResultMatchesSnapshotOfMatchingClassAndTestName(fragment);
         }
 
         [Test]
