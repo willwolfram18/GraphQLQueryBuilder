@@ -13,7 +13,5 @@ namespace GraphQLQueryBuilder
         IFragmentContentBuilder AddFragment(IFragmentContentBuilder fragment);
 
         IFragmentContentBuilder AddSelectionSet(ISelectionSet fieldSelection);
-
-        string Build();
     }
 }

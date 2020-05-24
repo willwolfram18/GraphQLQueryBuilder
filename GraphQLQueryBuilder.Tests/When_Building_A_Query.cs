@@ -18,10 +18,27 @@ namespace GraphQLQueryBuilder.Tests
         [Test]
         public void If_Nothing_Is_Added_To_The_Query_Then_An_Empty_Query_Is_Built()
         {
-            var query = new QueryRootBuilder()
+            var query = new QueryOperationBuilder()
                 .Build();
 
-            Snapshot.Match(query, GenerateSnapshotNameFromClassAndTestNames());
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+        }
+
+        [Test]
+        public void Then_The_Operation_Name_Is_Included_In_The_Query_Content()
+        {
+            const string expectedOperationName = "ThisIsTheOperationName";
+
+            var query = new QueryOperationBuilder(expectedOperationName)
+                .Build();
+
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+        }
+
+        [TestCase("todo")]
+        public void Then_Operation_Name_Adheres_To_GraphQL_Spec(string badOperationNames)
+        {
+            Assert.Fail("Not implemented");
         }
 
         [Test]
