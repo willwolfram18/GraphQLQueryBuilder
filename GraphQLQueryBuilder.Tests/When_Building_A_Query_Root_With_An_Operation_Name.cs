@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using Snapshooter.Json;
+using FluentAssertions;
 
 namespace GraphQLQueryBuilder.Tests
 {
@@ -73,7 +74,11 @@ namespace GraphQLQueryBuilder.Tests
             var query = new QueryRootWithOperationNameBuilder(DefaultOperationName)
                 .AddFragment(addressFragment);
 
-            Assert.Throws<InvalidOperationException>(() => query.AddFragment(customerFragment));
+            Action addingSameFragment = () => query.AddFragment(customerFragment);
+
+            addingSameFragment.Should().Throw<InvalidOperationException>(
+                "because you cannot add the same fragment twice"
+            );
         }
 
         [Test]

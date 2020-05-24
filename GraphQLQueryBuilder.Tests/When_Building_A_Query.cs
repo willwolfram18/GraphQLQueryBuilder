@@ -1,3 +1,4 @@
+using FluentAssertions;
 using GraphQLQueryBuilder.Tests.Models;
 using NUnit.Framework;
 using Snapshooter.Json;
@@ -94,7 +95,11 @@ namespace GraphQLQueryBuilder.Tests
             var query = new QueryRootBuilder()
                 .AddFragment(addressFragment);
 
-            Assert.Throws<InvalidOperationException>(() => query.AddFragment(customerFragment));
+            Action addingFragment = () => query.AddFragment(customerFragment);
+
+            addingFragment.Should().Throw<InvalidOperationException>(
+                "because you cannot add the same fragment twice"
+            );
 
             ResultMatchesSnapshotOfMatchingClassAndTestName(query.Build());
         }
