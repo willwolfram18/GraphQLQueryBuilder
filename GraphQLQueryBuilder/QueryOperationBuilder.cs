@@ -46,6 +46,11 @@ namespace GraphQLQueryBuilder
                 throw new ArgumentNullException(nameof(selectionSet));
             }
 
+            if (selectionSet is IQueryOperation)
+            {
+                throw new InvalidOperationException("A GraphQL query opteration cannot be added as a selection set.");
+            }
+
             throw new NotImplementedException();
         }
 
@@ -57,6 +62,11 @@ namespace GraphQLQueryBuilder
             if (selectionSet == null)
             {
                 throw new ArgumentNullException(nameof(selectionSet));
+            }
+
+            if (selectionSet is IQueryOperation)
+            {
+                throw new InvalidOperationException("A GraphQL query opteration cannot be added as a selection set.");
             }
 
             throw new NotImplementedException();

@@ -132,7 +132,7 @@ namespace GraphQLQueryBuilder.Tests
             addingSelectionSetFieldWithBadAlias.Should().Throw<ArgumentException>(becauseReason);
         }
 
-        [Test]
+        [TestCaseSource(nameof(BadGraphQLNames))]
         public void Then_Field_Name_For_Selection_Set_Must_Adhere_To_GraphQL_Spec(string badFieldName, string becauseReason)
         {
             var queryBuilder = new QueryOperationBuilder();
