@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace GraphQLQueryBuilder
@@ -6,6 +8,7 @@ namespace GraphQLQueryBuilder
     public class QueryOperationBuilder : IGraphQLQueryContentBuilder, IQueryOperation
     {
         private static readonly Regex GraphQLNameRegex = new Regex(@"^[_A-Za-z][_0-9A-Za-z]*$");
+        private readonly List<ISelectionSet> _selections = new List<ISelectionSet>();
 
         public QueryOperationBuilder()
         {
@@ -26,7 +29,9 @@ namespace GraphQLQueryBuilder
         {
             ThrowIfNameIsNotValid(field, "The field name is invalid.", nameof(field));
 
-            throw new NotImplementedException();
+            _selections.Add(SelectionSet.Create(field));
+
+            return this;
         }
 
         public IGraphQLQueryContentBuilder AddField(string alias, string field)
@@ -34,7 +39,9 @@ namespace GraphQLQueryBuilder
             ThrowIfNameIsNotValid(alias, "The alias is invalid.", nameof(alias));
             ThrowIfNameIsNotValid(field, "The field name is invalid.", nameof(field));
 
-            throw new NotImplementedException();
+            _selections.Add(SelectionSet.Create(alias, field));
+
+            return this;
         }
 
         public IGraphQLQueryContentBuilder AddField(string field, ISelectionSet selectionSet)
@@ -51,7 +58,9 @@ namespace GraphQLQueryBuilder
                 throw new InvalidOperationException("A GraphQL query opteration cannot be added as a selection set.");
             }
 
-            throw new NotImplementedException();
+            _selections.Add(SelectionSet.Create(field, selectionSet));
+
+            return this;
         }
 
         public IGraphQLQueryContentBuilder AddField(string alias, string field, ISelectionSet selectionSet)
@@ -69,7 +78,9 @@ namespace GraphQLQueryBuilder
                 throw new InvalidOperationException("A GraphQL query opteration cannot be added as a selection set.");
             }
 
-            throw new NotImplementedException();
+            _selections.Add(SelectionSet.Create(alias, field, selectionSet));
+
+            return this;
         }
 
         public IGraphQLQueryContentBuilder AddFragment(IFragmentContentBuilder fragment)
@@ -79,7 +90,27 @@ namespace GraphQLQueryBuilder
 
         public string Build()
         {
-            throw new NotImplementedException();
+            var content = new StringBuilder();
+
+            content.Append($"query ");
+
+            if (!string.IsNullOrWhiteSpace(OperationName))
+            {
+                content.Append($"{OperationName} ");
+            }
+
+            content.AppendLine("{");
+
+            var selectionSet = BuildSelectionSetContent();
+
+            if (!string.IsNullOrWhiteSpace(selectionSet))
+            {
+                content.AppendLine(selectionSet);
+            }
+
+            content.Append("}");
+
+            return content.ToString();
         }
 
         private static void ThrowIfNameIsNotValid(string value, string message, string argumentName)
@@ -88,6 +119,27 @@ namespace GraphQLQueryBuilder
             {
                 throw new ArgumentException(message, argumentName);
             }
+        }
+
+        private string BuildSelectionSetContent()
+        {
+            if (_selections.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            var selectionSetContent = new StringBuilder();
+
+            foreach (var selectionSet in _selections)
+            {
+                if (selectionSetContent.Length != 0)
+                {
+                    selectionSetContent.AppendLine(",");
+                }
+                selectionSetContent.Append($"  {selectionSet.Build()}");
+            }
+
+            return selectionSetContent.ToString();
         }
     }
 }

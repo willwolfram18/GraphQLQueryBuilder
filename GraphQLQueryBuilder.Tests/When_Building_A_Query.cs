@@ -121,7 +121,7 @@ namespace GraphQLQueryBuilder.Tests
             FluentActions.Invoking(() => queryBuilder.AddField("aliasA", "field1", null)).Should().Throw<ArgumentNullException>();
         }
 
-        [Test]
+        [TestCaseSource(nameof(BadGraphQLNames))]
         public void Then_Alias_For_Selection_Set_Field_Must_Adhere_To_GraphQL_Spec(string badAliasName, string becauseReason)
         {
             var queryBuilder = new QueryOperationBuilder();
