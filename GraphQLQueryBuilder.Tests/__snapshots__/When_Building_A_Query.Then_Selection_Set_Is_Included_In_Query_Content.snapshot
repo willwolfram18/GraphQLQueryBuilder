@@ -1,0 +1,4 @@
+query {
+    field1: { id, name },
+    aliasB: field2 { id, name }
+}

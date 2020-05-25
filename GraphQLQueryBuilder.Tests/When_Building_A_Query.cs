@@ -143,6 +143,18 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
+        public void Then_Selection_Set_Is_Included_In_Query_Content()
+        {
+            var fakeSelectionSet = Mock.Of<ISelectionSet>(selectionSet => selectionSet.Build() == "{ id, name }");
+            var query = new QueryOperationBuilder()
+                .AddField("field1", fakeSelectionSet)
+                .AddField("aliasB", "field2", fakeSelectionSet)
+                .Build();
+
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+        }
+
+        [Test]
         public void If_A_Query_Is_Added_To_The_Query_Root_Then_The_Query_Content_Includes_The_Child_Query_Content()
         {
             var query = new QueryRootBuilder()
@@ -303,12 +315,17 @@ namespace GraphQLQueryBuilder.Tests
                 throw new NotImplementedException();
             }
 
-            public IGraphQLQueryContentBuilder AddFragment(IFragmentContentBuilder fragment)
+            public IGraphQLQueryContentBuilder AddField(string field, ISelectionSet selectionSet)
             {
                 throw new NotImplementedException();
             }
 
-            public IGraphQLQueryContentBuilder AddSelectionSet(ISelectionSet selectionSet)
+            public IGraphQLQueryContentBuilder AddField(string alias, string field, ISelectionSet selectionSet)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IGraphQLQueryContentBuilder AddFragment(IFragmentContentBuilder fragment)
             {
                 throw new NotImplementedException();
             }

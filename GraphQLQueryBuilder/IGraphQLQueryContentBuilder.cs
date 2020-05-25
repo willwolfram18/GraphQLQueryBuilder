@@ -11,7 +11,5 @@ namespace GraphQLQueryBuilder
         IGraphQLQueryContentBuilder AddField(string alias, string field, ISelectionSet selectionSet);
 
         IGraphQLQueryContentBuilder AddFragment(IFragmentContentBuilder fragment);
-
-        IGraphQLQueryContentBuilder AddSelectionSet(ISelectionSet selectionSet);
     }
 }
