@@ -8,7 +8,9 @@ namespace GraphQLQueryBuilder
     public class QueryOperationBuilder : IGraphQLQueryContentBuilder, IQueryOperation
     {
         private static readonly Regex GraphQLNameRegex = new Regex(@"^[_A-Za-z][_0-9A-Za-z]*$");
+
         private readonly List<ISelectionSet> _selections = new List<ISelectionSet>();
+        private readonly Dictionary<string, IFragmentContentBuilder> _fragmentDefinitions = new Dictionary<string, IFragmentContentBuilder>();
 
         public QueryOperationBuilder()
         {

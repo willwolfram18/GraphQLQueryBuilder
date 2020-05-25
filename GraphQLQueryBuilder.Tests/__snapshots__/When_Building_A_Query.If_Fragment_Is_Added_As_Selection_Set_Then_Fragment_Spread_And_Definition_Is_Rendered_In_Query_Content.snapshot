@@ -1,0 +1,10 @@
+query {
+    field1 {
+        ...FakeFragment
+    },
+    aliasB: field2 {
+        ...FakeFragment
+    }
+}
+
+fragment FakeFragment on Thing { id, name }

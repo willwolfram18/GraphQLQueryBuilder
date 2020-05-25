@@ -4,6 +4,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace GraphQLQueryBuilder.Tests
 {
@@ -45,11 +46,10 @@ namespace GraphQLQueryBuilder.Tests
             const string expectedOperationName = "ThisIsTheOperationName";
 
             var queryBuilder = new QueryOperationBuilder(expectedOperationName);
-            var query = queryBuilder.Build();
 
             queryBuilder.OperationName.Should().Be(expectedOperationName);
 
-            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [TestCaseSource(nameof(BadGraphQLNames))]
@@ -63,11 +63,13 @@ namespace GraphQLQueryBuilder.Tests
         [Test]
         public void Then_Query_Operation_Cannot_Be_Added_As_A_Selection_Set([Values] GraphQLOperationTypes operationType)
         {
-            var query = new QueryOperationBuilder();
+            var queryBuilder = new QueryOperationBuilder();
 
-            Action addingOperation = () => query.AddField("bad", new FakeGraphQLOperation(operationType));
+            Action addingOperation = () => queryBuilder.AddField("bad", new FakeGraphQLOperation(operationType));
 
             addingOperation.Should().Throw<InvalidOperationException>("because you cannot add a query operation as a selection set");
+
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [Test]
@@ -89,6 +91,8 @@ namespace GraphQLQueryBuilder.Tests
             Action addingIllegalName = () => queryBuilder.AddField(badFieldName);
 
             addingIllegalName.Should().Throw<ArgumentException>(becauseReason);
+
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [Test]
@@ -110,6 +114,8 @@ namespace GraphQLQueryBuilder.Tests
             Action addingIllegalAlias = () => queryBuilder.AddField(badAliasName, "field1");
 
             addingIllegalAlias.Should().Throw<ArgumentException>(becauseReason);
+
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [Test]
@@ -119,6 +125,8 @@ namespace GraphQLQueryBuilder.Tests
 
             FluentActions.Invoking(() => queryBuilder.AddField("field1", selectionSet: null)).Should().Throw<ArgumentNullException>();
             FluentActions.Invoking(() => queryBuilder.AddField("aliasA", "field1", null)).Should().Throw<ArgumentNullException>();
+
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [TestCaseSource(nameof(BadGraphQLNames))]
@@ -130,6 +138,8 @@ namespace GraphQLQueryBuilder.Tests
             Action addingSelectionSetFieldWithBadAlias = () => queryBuilder.AddField(badAliasName, "field1", fakeSelectionSet);
 
             addingSelectionSetFieldWithBadAlias.Should().Throw<ArgumentException>(becauseReason);
+
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [TestCaseSource(nameof(BadGraphQLNames))]
@@ -140,6 +150,8 @@ namespace GraphQLQueryBuilder.Tests
 
             FluentActions.Invoking(() => queryBuilder.AddField(badFieldName, fakeSelectionSet)).Should().Throw<ArgumentException>(becauseReason);
             FluentActions.Invoking(() => queryBuilder.AddField("aliasA", badFieldName, fakeSelectionSet)).Should().Throw<ArgumentException>(becauseReason);
+
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [Test]
@@ -155,6 +167,17 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
+        public void Then_Fragment_Cannot_Be_Null()
+        {
+            var queryBuilder = new QueryOperationBuilder();
+
+            FluentActions.Invoking(() => queryBuilder.AddFragment(null)).Should()
+                .Throw<ArgumentNullException>();
+
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
+        }
+
+        [Test]
         public void If_Fragment_Is_Added_Then_Fragment_Spread_And_Definition_Is_Included_In_Query_Content()
         {
             var fakeFragment = Mock.Of<IFragmentContentBuilder>(fragment =>
@@ -164,6 +187,22 @@ namespace GraphQLQueryBuilder.Tests
 
             var query = new QueryOperationBuilder()
                 .AddFragment(fakeFragment)
+                .Build();
+
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+        }
+
+        [Test]
+        public void If_Fragment_Is_Added_As_Selection_Set_Then_Fragment_Spread_And_Definition_Is_Rendered_In_Query_Content()
+        {
+            var fakeFragment = Mock.Of<IFragmentContentBuilder>(fragment =>
+                fragment.Name == "FakeFragment" &&
+                fragment.Build() == "fragment FakeFragment on Thing { id, name }"
+            );
+
+            var query = new QueryOperationBuilder()
+                .AddField("field1", fakeFragment)
+                .AddField("aliasB", "field2", fakeFragment)
                 .Build();
 
             ResultMatchesSnapshotOfMatchingClassAndTestName(query);
@@ -309,6 +348,11 @@ namespace GraphQLQueryBuilder.Tests
                 .Build();
 
             Assert.False(true, DuplicateFragmentSkipReason);
+        }
+
+        private void QueryContentShouldMatchSnapshotForTest(IGraphQLQueryContentBuilder queryContentBuilder, [CallerMemberName] string methodName = "")
+        {
+            ResultMatchesSnapshotOfMatchingClassAndTestName(queryContentBuilder.Build(), methodName);
         }
 
         public class FakeGraphQLOperation : IGraphQLQueryContentBuilder, IQueryOperation
