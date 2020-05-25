@@ -155,6 +155,21 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
+        public void If_Fragment_Is_Added_Then_Fragment_Spread_And_Definition_Is_Included_In_Query_Content()
+        {
+            var fakeFragment = Mock.Of<IFragmentContentBuilder>(fragment =>
+                fragment.Name == "FakeFragment" &&
+                fragment.Build() == "fragment FakeFragment on Thing { id, name }"
+            );
+
+            var query = new QueryOperationBuilder()
+                .AddFragment(fakeFragment)
+                .Build();
+
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+        }
+
+        [Test]
         public void If_A_Query_Is_Added_To_The_Query_Root_Then_The_Query_Content_Includes_The_Child_Query_Content()
         {
             var query = new QueryRootBuilder()
