@@ -1,14 +1,28 @@
 using FluentAssertions;
 using GraphQLQueryBuilder.Tests.Models;
+using Moq;
 using NUnit.Framework;
-using Snapshooter.Json;
 using System;
+using System.Collections.Generic;
 
 namespace GraphQLQueryBuilder.Tests
 {
     public class When_Building_A_Query : TestClass
     {
         private QueryBuilder<Address> _addressQuery;
+
+        public static IEnumerable<string[]> BadGraphQLNames =>
+            new []
+            {
+                new [] { null, "because name is null" },
+                new [] { "", "because name is an empty" },
+                new [] { "", "because name is empty" },
+                new [] { "   ", "because name is only white space" },
+                new [] { "  \n \t ", "because name is only white space" },
+                new [] { "1BigQuery", "because name starts with a number" },
+                new [] { "Operation Name", "because name contains spaces"},
+                new [] { "Illegal+Characters&Stars*", "because name contains illegal characters"}
+            };
 
         [SetUp]
         public void SetUp()
@@ -30,16 +44,102 @@ namespace GraphQLQueryBuilder.Tests
         {
             const string expectedOperationName = "ThisIsTheOperationName";
 
-            var query = new QueryOperationBuilder(expectedOperationName)
+            var queryBuilder = new QueryOperationBuilder(expectedOperationName);
+            var query = queryBuilder.Build();
+
+            queryBuilder.OperationName.Should().Be(expectedOperationName);
+
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+        }
+
+        [TestCaseSource(nameof(BadGraphQLNames))]
+        public void Then_Operation_Name_Adheres_To_GraphQL_Spec(string badOperationName, string becauseReason)
+        {
+            Action constructor = () => _ = new QueryOperationBuilder(badOperationName);
+
+            constructor.Should().Throw<ArgumentException>(becauseReason);
+        }
+
+        [Test]
+        public void Then_Query_Operation_Cannot_Be_Added_As_A_Selection_Set([Values] GraphQLOperationTypes operationType)
+        {
+            var query = new QueryOperationBuilder();
+
+            Action addingOperation = () => query.AddField("bad", new FakeGraphQLOperation(operationType));
+
+            addingOperation.Should().Throw<InvalidOperationException>("because you cannot add a query operation as a selection set");
+        }
+
+        [Test]
+        public void Then_Added_Fields_Are_Included_In_Query()
+        {
+            var query = new QueryOperationBuilder()
+                .AddField("field1")
+                .AddField("field2")
                 .Build();
 
             ResultMatchesSnapshotOfMatchingClassAndTestName(query);
         }
 
-        [TestCase("todo")]
-        public void Then_Operation_Name_Adheres_To_GraphQL_Spec(string badOperationNames)
+        [TestCaseSource(nameof(BadGraphQLNames))]
+        public void Then_Added_Fields_Must_Adhere_To_GraphQL_Spec(string badFieldName, string becauseReason)
         {
-            Assert.Fail("Not implemented");
+            var queryBuilder = new QueryOperationBuilder();
+
+            Action addingIllegalName = () => queryBuilder.AddField(badFieldName);
+
+            addingIllegalName.Should().Throw<ArgumentException>(becauseReason);
+        }
+
+        [Test]
+        public void Then_Aliases_For_Added_Fields_Are_Included_In_Query()
+        {
+            var query = new QueryOperationBuilder()
+                .AddField("aliasA", "field1")
+                .AddField("aliasB", "field2")
+                .Build();
+
+            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+        }
+
+        [TestCaseSource(nameof(BadGraphQLNames))]
+        public void Then_Aliases_For_Added_Fields_Must_Adhere_To_GraphQL_Spec(string badAliasName, string becauseReason)
+        {
+            var queryBuilder = new QueryOperationBuilder();
+
+            Action addingIllegalAlias = () => queryBuilder.AddField(badAliasName, "field1");
+
+            addingIllegalAlias.Should().Throw<ArgumentException>(becauseReason);
+        }
+
+        [Test]
+        public void Then_Selection_Set_For_Fields_Cannot_Be_Null()
+        {
+            var queryBuilder = new QueryOperationBuilder();
+
+            FluentActions.Invoking(() => queryBuilder.AddField("field1", selectionSet: null)).Should().Throw<ArgumentNullException>();
+            FluentActions.Invoking(() => queryBuilder.AddField("aliasA", "field1", null)).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
+        public void Then_Alias_For_Selection_Set_Field_Must_Adhere_To_GraphQL_Spec(string badAliasName, string becauseReason)
+        {
+            var queryBuilder = new QueryOperationBuilder();
+            var fakeSelectionSet = Mock.Of<ISelectionSet>();
+
+            Action addingSelectionSetFieldWithBadAlias = () => queryBuilder.AddField(badAliasName, "field1", fakeSelectionSet);
+
+            addingSelectionSetFieldWithBadAlias.Should().Throw<ArgumentException>(becauseReason);
+        }
+
+        [Test]
+        public void Then_Field_Name_For_Selection_Set_Must_Adhere_To_GraphQL_Spec(string badFieldName, string becauseReason)
+        {
+            var queryBuilder = new QueryOperationBuilder();
+            var fakeSelectionSet = Mock.Of<ISelectionSet>();
+
+            FluentActions.Invoking(() => queryBuilder.AddField(badFieldName, fakeSelectionSet)).Should().Throw<ArgumentException>(becauseReason);
+            FluentActions.Invoking(() => queryBuilder.AddField("aliasA", badFieldName, fakeSelectionSet)).Should().Throw<ArgumentException>(becauseReason);
         }
 
         [Test]
@@ -182,6 +282,41 @@ namespace GraphQLQueryBuilder.Tests
                 .Build();
 
             Assert.False(true, DuplicateFragmentSkipReason);
+        }
+
+        public class FakeGraphQLOperation : IGraphQLQueryContentBuilder, IQueryOperation
+        {
+            public FakeGraphQLOperation(GraphQLOperationTypes operationType)
+            {
+                OperationType = operationType;
+            }
+
+            public GraphQLOperationTypes OperationType { get; }
+
+            public IGraphQLQueryContentBuilder AddField(string field)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IGraphQLQueryContentBuilder AddField(string alias, string field)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IGraphQLQueryContentBuilder AddFragment(IFragmentContentBuilder fragment)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IGraphQLQueryContentBuilder AddSelectionSet(ISelectionSet selectionSet)
+            {
+                throw new NotImplementedException();
+            }
+
+            public string Build()
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

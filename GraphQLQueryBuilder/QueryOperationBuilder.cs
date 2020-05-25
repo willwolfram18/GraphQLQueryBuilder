@@ -2,7 +2,7 @@ using System;
 
 namespace GraphQLQueryBuilder
 {
-    public class QueryOperationBuilder : IGraphQLQueryContentBuilder
+    public class QueryOperationBuilder : IGraphQLQueryContentBuilder, IQueryOperation
     {
         public QueryOperationBuilder()
         {
@@ -15,6 +15,8 @@ namespace GraphQLQueryBuilder
 
         public string OperationName { get; }
 
+        public GraphQLOperationTypes OperationType => GraphQLOperationTypes.Query;
+
         public IGraphQLQueryContentBuilder AddField(string field)
         {
             throw new NotImplementedException();
@@ -25,12 +27,17 @@ namespace GraphQLQueryBuilder
             throw new NotImplementedException();
         }
 
-        public IGraphQLQueryContentBuilder AddFragment(IFragmentContentBuilder fragment)
+        public IGraphQLQueryContentBuilder AddField(string field, ISelectionSet selectionSet)
         {
             throw new NotImplementedException();
         }
 
-        public IGraphQLQueryContentBuilder AddSelectionSet(ISelectionSet selectionSet)
+        public IGraphQLQueryContentBuilder AddField(string alias, string field, ISelectionSet selectionSet)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IGraphQLQueryContentBuilder AddFragment(IFragmentContentBuilder fragment)
         {
             throw new NotImplementedException();
         }
