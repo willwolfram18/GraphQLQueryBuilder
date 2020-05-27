@@ -21,7 +21,7 @@ namespace GraphQLQueryBuilder.Tests
             ShouldThrowArgumentException(() => queryBuilder.AddField(fieldName, fakeSelectionSet), becauseReason);
             ShouldThrowArgumentException(() => queryBuilder.AddField("aliasA", fieldName, fakeSelectionSet), becauseReason);
 
-            queryBuilder.Build().Should().Be(string.Empty);
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [Test]
@@ -49,6 +49,8 @@ namespace GraphQLQueryBuilder.Tests
             ShouldThrowArgumentNullException(() => queryBuilder.AddField<Contact>(propertyExpression: null));
             ShouldThrowArgumentNullException(() => queryBuilder.AddField<Contact>("aliasA", propertyExpression: null));
             ShouldThrowArgumentNullException(() => queryBuilder.AddField<Contact>("aliasA", propertyExpression: null, Mock.Of<ISelectionSet<Contact>>()));
+
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [Test]
@@ -65,7 +67,7 @@ namespace GraphQLQueryBuilder.Tests
             Invoking(() => queryBuilder.AddField(invalidPropertyExpression, fakeSelectionSet)).Should().Throw<InvalidOperationException>(becauseReason);
             Invoking(() => queryBuilder.AddField("aliasA", invalidPropertyExpression, fakeSelectionSet)).Should().Throw<InvalidOperationException>(becauseReason);
 
-            queryBuilder.Build().Should().Be(string.Empty);
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [BadGraphQLNamesTestCaseSource]
@@ -81,7 +83,7 @@ namespace GraphQLQueryBuilder.Tests
             ShouldThrowArgumentException(() => queryBuilder.AddField(aliasName, validFieldExpression), becauseReason);
             ShouldThrowArgumentException(() => queryBuilder.AddField(aliasName, validFieldExpression, fakeSelectionSet), becauseReason);
 
-            queryBuilder.Build().Should().Be(string.Empty);
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [Test]
@@ -96,7 +98,7 @@ namespace GraphQLQueryBuilder.Tests
             ShouldThrowArgumentNullException(() => queryBuilder.AddField(validFieldName, selectionSet: null));
             ShouldThrowArgumentNullException(() => queryBuilder.AddField("aliasA", validFieldName, null));
 
-            queryBuilder.Build().Should().Be(string.Empty);
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [Test]
