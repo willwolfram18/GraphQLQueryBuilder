@@ -14,6 +14,10 @@ namespace GraphQLQueryBuilder
 
         IFragmentContentBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> propertyExpression);
 
-        IFragmentContentBuilder<T> AddFragment(IFragmentContentBuilder<T> fragment);
+        IFragmentContentBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> propertyExpression, ISelectionSet<TProperty> selectionSet)
+            where TProperty : class;
+
+        IFragmentContentBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> propertyExpression, ISelectionSet<TProperty> selectionSet)
+            where TProperty : class;
     }
 }

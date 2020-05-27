@@ -167,32 +167,6 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void Then_Fragment_Cannot_Be_Null()
-        {
-            var queryBuilder = new QueryOperationBuilder();
-
-            FluentActions.Invoking(() => queryBuilder.AddFragment(null)).Should()
-                .Throw<ArgumentNullException>();
-
-            QueryContentShouldMatchSnapshotForTest(queryBuilder);
-        }
-
-        [Test]
-        public void If_Fragment_Is_Added_Then_Fragment_Spread_And_Definition_Is_Included_In_Query_Content()
-        {
-            var fakeFragment = Mock.Of<IFragmentContentBuilder>(fragment =>
-                fragment.Name == "FakeFragment" &&
-                fragment.Build() == "fragment FakeFragment on Thing { id, name }"
-            );
-
-            var query = new QueryOperationBuilder()
-                .AddFragment(fakeFragment)
-                .Build();
-
-            ResultMatchesSnapshotOfMatchingClassAndTestName(query);
-        }
-
-        [Test]
         public void If_Fragment_Is_Added_As_Selection_Set_Then_Fragment_Spread_And_Definition_Is_Rendered_In_Query_Content()
         {
             var fakeFragment = Mock.Of<IFragmentContentBuilder>(fragment =>

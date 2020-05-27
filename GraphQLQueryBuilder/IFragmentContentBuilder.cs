@@ -10,8 +10,6 @@ namespace GraphQLQueryBuilder
 
         IFragmentContentBuilder AddField(string alias, string field);
 
-        IFragmentContentBuilder AddFragment(IFragmentContentBuilder fragment);
-
         IFragmentContentBuilder AddSelectionSet(ISelectionSet fieldSelection);
     }
 }
