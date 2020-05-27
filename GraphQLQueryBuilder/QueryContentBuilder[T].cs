@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace GraphQLQueryBuilder
 {
@@ -105,7 +106,20 @@ namespace GraphQLQueryBuilder
 
         public string Build()
         {
-            return string.Empty;
+            var content = new StringBuilder();
+
+            content.AppendLine("{");
+
+            var selectionSetContent = BuildSelectionSetContent();
+
+            if (!string.IsNullOrWhiteSpace(selectionSetContent))
+            {
+                content.AppendLine(selectionSetContent);
+            }
+
+            content.Append("}");
+
+            return content.ToString();
         }
 
         private static void ThrowIfInvalidName(string value, string message, string parameterName)
@@ -160,6 +174,28 @@ namespace GraphQLQueryBuilder
             }
 
             throw new InvalidOperationException($"Expression is not a property of type {typeof(T).FullName}.");
+        }
+
+        private string BuildSelectionSetContent()
+        {
+            if (_selections.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            var content = new StringBuilder();
+
+            foreach (var selection in _selections)
+            {
+                if (content.Length != 0)
+                {
+                    content.AppendLine(",");
+                }
+
+                content.Append("  " + selection.Build());
+            }
+
+            return content.ToString();
         }
     }
 }
