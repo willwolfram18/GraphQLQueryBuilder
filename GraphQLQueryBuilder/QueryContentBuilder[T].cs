@@ -1,51 +1,86 @@
+using System;
+using System.Linq.Expressions;
+using System.Text.RegularExpressions;
+
 namespace GraphQLQueryBuilder
 {
-    public class QueryContentBuilder<T> : IGraphQLQueryContentBuilder<T>
+    public static class QueryContentBuilder
+    {
+        public static IGraphQLQueryContentBuilder<T> Of<T>()
+            where T : class
+        {
+            return new QueryContentBuilder<T>();
+        }
+    }
+
+    internal class QueryContentBuilder<T> : IGraphQLQueryContentBuilder<T>
         where T : class
     {
-        public IGraphQLQueryContentBuilder<T> AddField<TProperty>(System.Linq.Expressions.Expression<System.Func<T, TProperty>> propertyExpression)
+        private static readonly Regex GraphQLNameRegex = new Regex(@"^[_A-Za-z][_0-9A-Za-z]*$");
+
+        internal QueryContentBuilder()
+        {
+        }
+
+        public IGraphQLQueryContentBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
         {
             throw new System.NotImplementedException();
         }
 
-        public IGraphQLQueryContentBuilder<T> AddField<TProperty>(string alias, System.Linq.Expressions.Expression<System.Func<T, TProperty>> propertyExpression)
+        public IGraphQLQueryContentBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> propertyExpression)
+        {
+            ThrowIfInvalidName(alias, "The alias is invalid.", nameof(alias));
+            throw new System.NotImplementedException();
+        }
+
+        public IGraphQLQueryContentBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> propertyExpression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
             throw new System.NotImplementedException();
         }
 
-        public IGraphQLQueryContentBuilder<T> AddField<TProperty>(System.Linq.Expressions.Expression<System.Func<T, TProperty>> propertyExpression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        public IGraphQLQueryContentBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> propertyExpression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            throw new System.NotImplementedException();
-        }
-
-        public IGraphQLQueryContentBuilder<T> AddField<TProperty>(string alias, System.Linq.Expressions.Expression<System.Func<T, TProperty>> propertyExpression, ISelectionSet<TProperty> selectionSet) where TProperty : class
-        {
+            ThrowIfInvalidName(alias, "The alias is invalid.", nameof(alias));
             throw new System.NotImplementedException();
         }
 
         public IGraphQLQueryContentBuilder AddField(string field)
         {
+            ThrowIfInvalidName(field, "The field name is invalid.", nameof(field));
             throw new System.NotImplementedException();
         }
 
         public IGraphQLQueryContentBuilder AddField(string alias, string field)
         {
+            ThrowIfInvalidName(alias, "The alias is invalid.", nameof(alias));
+            ThrowIfInvalidName(field, "The field name is invalid.", nameof(field));
             throw new System.NotImplementedException();
         }
 
         public IGraphQLQueryContentBuilder AddField(string field, ISelectionSet selectionSet)
         {
+            ThrowIfInvalidName(field, "The field name is invalid.", nameof(field));
             throw new System.NotImplementedException();
         }
 
         public IGraphQLQueryContentBuilder AddField(string alias, string field, ISelectionSet selectionSet)
         {
+            ThrowIfInvalidName(alias, "The alias is invalid.", nameof(alias));
+            ThrowIfInvalidName(field, "The field name is invalid.", nameof(field));
             throw new System.NotImplementedException();
         }
 
         public string Build()
         {
-            throw new System.NotImplementedException();
+            return string.Empty;
+        }
+
+        private static void ThrowIfInvalidName(string value, string message, string parameterName)
+        {
+            if (string.IsNullOrWhiteSpace(value) || !GraphQLNameRegex.IsMatch(value))
+            {
+                throw new ArgumentException(message, parameterName);
+            }
         }
     }
 }

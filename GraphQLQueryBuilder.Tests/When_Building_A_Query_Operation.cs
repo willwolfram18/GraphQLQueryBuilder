@@ -12,19 +12,6 @@ namespace GraphQLQueryBuilder.Tests
     {
         private QueryBuilder<Address> _addressQuery;
 
-        public static IEnumerable<string[]> BadGraphQLNames =>
-            new []
-            {
-                new [] { null, "because name is null" },
-                new [] { "", "because name is an empty" },
-                new [] { "", "because name is empty" },
-                new [] { "   ", "because name is only white space" },
-                new [] { "  \n \t ", "because name is only white space" },
-                new [] { "1BigQuery", "because name starts with a number" },
-                new [] { "Operation Name", "because name contains spaces"},
-                new [] { "Illegal+Characters&Stars*", "because name contains illegal characters"}
-            };
-
         [SetUp]
         public void SetUp()
         {
@@ -52,7 +39,7 @@ namespace GraphQLQueryBuilder.Tests
             QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
-        [TestCaseSource(nameof(BadGraphQLNames))]
+        [BadGraphQLNamesTestCaseSource]
         public void Then_Operation_Name_Adheres_To_GraphQL_Spec(string badOperationName, string becauseReason)
         {
             Action constructor = () => _ = new QueryOperationBuilder(badOperationName);
@@ -83,7 +70,7 @@ namespace GraphQLQueryBuilder.Tests
             ResultMatchesSnapshotOfMatchingClassAndTestName(query);
         }
 
-        [TestCaseSource(nameof(BadGraphQLNames))]
+        [BadGraphQLNamesTestCaseSource]
         public void Then_Added_Fields_Must_Adhere_To_GraphQL_Spec(string badFieldName, string becauseReason)
         {
             var queryBuilder = new QueryOperationBuilder();
@@ -106,7 +93,7 @@ namespace GraphQLQueryBuilder.Tests
             ResultMatchesSnapshotOfMatchingClassAndTestName(query);
         }
 
-        [TestCaseSource(nameof(BadGraphQLNames))]
+        [BadGraphQLNamesTestCaseSource]
         public void Then_Aliases_For_Added_Fields_Must_Adhere_To_GraphQL_Spec(string badAliasName, string becauseReason)
         {
             var queryBuilder = new QueryOperationBuilder();
@@ -129,7 +116,7 @@ namespace GraphQLQueryBuilder.Tests
             QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
-        [TestCaseSource(nameof(BadGraphQLNames))]
+        [BadGraphQLNamesTestCaseSource]
         public void Then_Alias_For_Selection_Set_Field_Must_Adhere_To_GraphQL_Spec(string badAliasName, string becauseReason)
         {
             var queryBuilder = new QueryOperationBuilder();
@@ -142,7 +129,7 @@ namespace GraphQLQueryBuilder.Tests
             QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
-        [TestCaseSource(nameof(BadGraphQLNames))]
+        [BadGraphQLNamesTestCaseSource]
         public void Then_Field_Name_For_Selection_Set_Must_Adhere_To_GraphQL_Spec(string badFieldName, string becauseReason)
         {
             var queryBuilder = new QueryOperationBuilder();
