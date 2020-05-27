@@ -8,7 +8,7 @@ using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests
 {
-    public class When_Building_Query_Content
+    public class When_Building_Query_Content : TestClass
     {
         [BadGraphQLNamesTestCaseSource]
         public void Then_Field_Names_Must_Adhere_To_GraphQL_Spec(string fieldName, string becauseReason)
@@ -42,6 +42,16 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
+        public void Then_Property_Expression_Cannot_Be_Null()
+        {
+            var queryBuilder = QueryContentBuilder.Of<Customer>();
+
+            Invoking(() => queryBuilder.AddField<Contact>(propertyExpression: null)).Should().Throw<ArgumentNullException>();
+            Invoking(() => queryBuilder.AddField<Contact>("aliasA", propertyExpression: null)).Should().Throw<ArgumentNullException>();
+            Invoking(() => queryBuilder.AddField<Contact>("aliasA", propertyExpression: null, Mock.Of<ISelectionSet<Contact>>())).Should().Throw<ArgumentNullException>();
+        }
+
+        [Test]
         public void Then_Property_Expression_Must_Be_A_Field_On_The_Class()
         {
             Expression<Func<Customer, Address>> invalidPropertyExpression = customer => customer.CustomerContact.Address;
@@ -72,6 +82,21 @@ namespace GraphQLQueryBuilder.Tests
             ShouldThrowArgumentException(() => queryBuilder.AddField(aliasName, validFieldExpression, fakeSelectionSet), becauseReason);
 
             queryBuilder.Build().Should().Be(string.Empty);
+        }
+
+        [Test]
+        public void Then_Property_Expressions_Are_Included_In_Content()
+        {
+            var fakeContactSelectionSet = Mock.Of<ISelectionSet<Contact>>(contact =>
+                contact.Build() == "{ id, name }"
+            );
+            var queryBuilder = QueryContentBuilder.Of<Customer>()
+                .AddField(customer => customer.Id)
+                .AddField("aliasA", customer => customer.AccountNumber)
+                .AddField(customer => customer.CustomerContact, fakeContactSelectionSet)
+                .AddField("aliasB", customer => customer.CustomerContact, fakeContactSelectionSet);
+
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         private static void ShouldThrowArgumentException<T>(Func<T> action, string becauseReason)

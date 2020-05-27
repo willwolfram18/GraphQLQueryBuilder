@@ -319,11 +319,6 @@ namespace GraphQLQueryBuilder.Tests
             Assert.False(true, DuplicateFragmentSkipReason);
         }
 
-        private void QueryContentShouldMatchSnapshotForTest(IGraphQLQueryContentBuilder queryContentBuilder, [CallerMemberName] string methodName = "")
-        {
-            ResultMatchesSnapshotOfMatchingClassAndTestName(queryContentBuilder.Build(), methodName);
-        }
-
         public class FakeGraphQLOperation : IGraphQLQueryContentBuilder, IQueryOperation
         {
             public FakeGraphQLOperation(GraphQLOperationTypes operationType)

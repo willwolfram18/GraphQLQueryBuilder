@@ -1,0 +1,6 @@
+{
+    Id,
+    aliasA: AccountNumber,
+    CustomerContact { id, name },
+    aliasB: CustomerContact { id, name }
+}

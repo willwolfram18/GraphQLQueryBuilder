@@ -10,6 +10,11 @@ namespace GraphQLQueryBuilder.Tests
     {
         protected const string DuplicateFragmentSkipReason = "Determine duplicate fragment resolution.";
 
+        protected void QueryContentShouldMatchSnapshotForTest(IGraphQLQueryContentBuilder queryContentBuilder, [CallerMemberName] string methodName = "")
+        {
+            ResultMatchesSnapshotOfMatchingClassAndTestName(queryContentBuilder.Build(), methodName);
+        }
+
         protected void ResultMatchesSnapshotOfMatchingClassAndTestName(string result, [CallerMemberName] string methodName = "")
         {
             Snapshot.Match(result, GenerateSnapshotNameFromClassAndTestNames(methodName));
