@@ -8,11 +8,11 @@ namespace GraphQLQueryBuilder
         private readonly string _field;
         private readonly ISelectionSet _selectionSet;
 
-        private SelectionSet(string alias, string field, ISelectionSet fragment)
+        private SelectionSet(string alias, string field, ISelectionSet selectionSet)
         {
             _alias = alias;
             _field = field;
-            _selectionSet = fragment;
+            _selectionSet = selectionSet;
         }
 
         public static ISelectionSet Create(string field)
@@ -25,14 +25,14 @@ namespace GraphQLQueryBuilder
             return new SelectionSet(alias, field, null);
         }
 
-        public static ISelectionSet Create(string field, ISelectionSet fragment)
+        public static ISelectionSet Create(string field, ISelectionSet selectionSet)
         {
-            return new SelectionSet(string.Empty, field, fragment);
+            return new SelectionSet(string.Empty, field, selectionSet);
         }
 
-        public static ISelectionSet Create(string alias, string field, ISelectionSet fragment)
+        public static ISelectionSet Create(string alias, string field, ISelectionSet selectionSet)
         {
-            return new SelectionSet(alias, field, fragment);
+            return new SelectionSet(alias, field, selectionSet);
         }
 
         public string Build()

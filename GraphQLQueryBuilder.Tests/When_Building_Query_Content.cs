@@ -46,9 +46,9 @@ namespace GraphQLQueryBuilder.Tests
         {
             var queryBuilder = QueryContentBuilder.Of<Customer>();
 
-            Invoking(() => queryBuilder.AddField<Contact>(propertyExpression: null)).Should().Throw<ArgumentNullException>();
-            Invoking(() => queryBuilder.AddField<Contact>("aliasA", propertyExpression: null)).Should().Throw<ArgumentNullException>();
-            Invoking(() => queryBuilder.AddField<Contact>("aliasA", propertyExpression: null, Mock.Of<ISelectionSet<Contact>>())).Should().Throw<ArgumentNullException>();
+            ShouldThrowArgumentNullException(() => queryBuilder.AddField<Contact>(propertyExpression: null));
+            ShouldThrowArgumentNullException(() => queryBuilder.AddField<Contact>("aliasA", propertyExpression: null));
+            ShouldThrowArgumentNullException(() => queryBuilder.AddField<Contact>("aliasA", propertyExpression: null, Mock.Of<ISelectionSet<Contact>>()));
         }
 
         [Test]
@@ -85,6 +85,21 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
+        public void Then_Selection_Set_Cannot_Be_Null()
+        {
+            const string validFieldName = nameof(Customer.CustomerContact);
+            Expression<Func<Customer, Contact>> validFieldExpression = customer => customer.CustomerContact;
+            var queryBuilder = QueryContentBuilder.Of<Customer>();
+
+            ShouldThrowArgumentNullException(() => queryBuilder.AddField(validFieldExpression, null));
+            ShouldThrowArgumentNullException(() => queryBuilder.AddField("aliasA", validFieldExpression, null));
+            ShouldThrowArgumentNullException(() => queryBuilder.AddField(validFieldName, selectionSet: null));
+            ShouldThrowArgumentNullException(() => queryBuilder.AddField("aliasA", validFieldName, null));
+
+            queryBuilder.Build().Should().Be(string.Empty);
+        }
+
+        [Test]
         public void Then_Property_Expressions_Are_Included_In_Content()
         {
             var fakeContactSelectionSet = Mock.Of<ISelectionSet<Contact>>(contact =>
@@ -97,6 +112,11 @@ namespace GraphQLQueryBuilder.Tests
                 .AddField("aliasB", customer => customer.CustomerContact, fakeContactSelectionSet);
 
             QueryContentShouldMatchSnapshotForTest(queryBuilder);
+        }
+
+        private static void ShouldThrowArgumentNullException<T>(Func<T> action)
+        {
+            action.Should().Throw<ArgumentNullException>();
         }
 
         private static void ShouldThrowArgumentException<T>(Func<T> action, string becauseReason)
