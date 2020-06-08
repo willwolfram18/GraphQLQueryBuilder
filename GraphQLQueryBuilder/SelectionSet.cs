@@ -46,12 +46,21 @@ namespace GraphQLQueryBuilder
 
             content.Append(_field);
 
-            if (_selectionSet != null) {
-                content.AppendLine(" {");
+            if (_selectionSet != null)
+            {
+                //var isGenericSelectionSet = _selectionSet.GetType().IsGenericType;
+                //if (!isGenericSelectionSet)
+                //{
+                //    content.AppendLine(" {");
+                //}
 
                 // TODO indent
-                content.Append(_selectionSet.Build());
-                content.Append("}");
+                content.Append(" " + _selectionSet.Build());
+
+                //if (!isGenericSelectionSet)
+                //{
+                //    content.Append("}");
+                //}
             }
 
             return content.ToString();

@@ -5,7 +5,7 @@ using System;
 
 namespace GraphQLQueryBuilder.Tests
 {
-    public class When_Building_A_Query_Operation : TestClass
+    public class When_Building_A_Query : TestClass
     {
         [Test]
         public void If_Nothing_Is_Added_To_The_Query_Then_An_Empty_Query_Is_Built()
