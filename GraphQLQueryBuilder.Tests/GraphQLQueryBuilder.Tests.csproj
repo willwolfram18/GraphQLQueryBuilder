@@ -19,4 +19,14 @@
     <ProjectReference Include="../GraphQLQueryBuilder/GraphQLQueryBuilder.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="__snapshots__\**\*.snapshot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="RemoveSnapshotsFolder" BeforeTargets="BeforeBuild">
+    <RemoveDir Directories="$(OutDir)\__snapshots__" />
+  </Target>
+
 </Project>
