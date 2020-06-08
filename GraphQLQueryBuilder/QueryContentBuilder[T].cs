@@ -34,7 +34,7 @@ namespace GraphQLQueryBuilder
 
         public IGraphQLQueryContentBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> propertyExpression)
         {
-            ThrowIfInvalidName(alias, "The alias is invalid.", nameof(alias));
+            ThrowIfInvalidGraphQLName(alias, "The alias is invalid.", nameof(alias));
 
             var fieldName = ConvertExpressionToFieldName(propertyExpression);
 
@@ -55,7 +55,7 @@ namespace GraphQLQueryBuilder
 
         public IGraphQLQueryContentBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> propertyExpression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            ThrowIfInvalidName(alias, "The alias is invalid.", nameof(alias));
+            ThrowIfInvalidGraphQLName(alias, "The alias is invalid.", nameof(alias));
 
             if (selectionSet == null)
             {
@@ -69,14 +69,19 @@ namespace GraphQLQueryBuilder
 
         public IGraphQLQueryContentBuilder AddField(string field)
         {
-            ThrowIfInvalidName(field, "The field name is invalid.", nameof(field));
+            ThrowIfInvalidGraphQLName(field, "The field name is invalid.", nameof(field));
+
+            ThrowIfFieldNameIsNotAMemberOfTheClass(field);
             throw new System.NotImplementedException();
         }
 
         public IGraphQLQueryContentBuilder AddField(string alias, string field)
         {
-            ThrowIfInvalidName(alias, "The alias is invalid.", nameof(alias));
-            ThrowIfInvalidName(field, "The field name is invalid.", nameof(field));
+            ThrowIfInvalidGraphQLName(alias, "The alias is invalid.", nameof(alias));
+            ThrowIfInvalidGraphQLName(field, "The field name is invalid.", nameof(field));
+
+            ThrowIfFieldNameIsNotAMemberOfTheClass(field);
+
             throw new System.NotImplementedException();
         }
 
@@ -87,7 +92,9 @@ namespace GraphQLQueryBuilder
                 throw new ArgumentNullException(nameof(selectionSet));
             }
 
-            ThrowIfInvalidName(field, "The field name is invalid.", nameof(field));
+            ThrowIfInvalidGraphQLName(field, "The field name is invalid.", nameof(field));
+
+            ThrowIfFieldNameIsNotAMemberOfTheClass(field);
 
             throw new System.NotImplementedException();
         }
@@ -99,8 +106,11 @@ namespace GraphQLQueryBuilder
                 throw new ArgumentNullException(nameof(selectionSet));
             }
 
-            ThrowIfInvalidName(alias, "The alias is invalid.", nameof(alias));
-            ThrowIfInvalidName(field, "The field name is invalid.", nameof(field));
+            ThrowIfInvalidGraphQLName(alias, "The alias is invalid.", nameof(alias));
+            ThrowIfInvalidGraphQLName(field, "The field name is invalid.", nameof(field));
+
+            ThrowIfFieldNameIsNotAMemberOfTheClass(field);
+
             throw new System.NotImplementedException();
         }
 
@@ -122,7 +132,7 @@ namespace GraphQLQueryBuilder
             return content.ToString();
         }
 
-        private static void ThrowIfInvalidName(string value, string message, string parameterName)
+        private static void ThrowIfInvalidGraphQLName(string value, string message, string parameterName)
         {
             if (string.IsNullOrWhiteSpace(value) || !GraphQLNameRegex.IsMatch(value))
             {
@@ -174,6 +184,15 @@ namespace GraphQLQueryBuilder
             }
 
             throw new InvalidOperationException($"Expression is not a property of type {typeof(T).FullName}.");
+        }
+
+        private void ThrowIfFieldNameIsNotAMemberOfTheClass(string fieldName)
+        {
+            if (_properties.All(property => property.Name != fieldName))
+            {
+                throw new ArgumentException(
+                    $"Field name '{fieldName}' is not a property of type {typeof(T).FullName}.");
+            }
         }
 
         private string BuildSelectionSetContent()

@@ -1,9 +1,9 @@
-using System;
-using System.Linq.Expressions;
 using FluentAssertions;
 using GraphQLQueryBuilder.Tests.Models;
 using Moq;
 using NUnit.Framework;
+using System;
+using System.Linq.Expressions;
 using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests
@@ -38,7 +38,7 @@ namespace GraphQLQueryBuilder.Tests
             ShouldThrowArgumentException(() => queryBuilder.AddField(fieldName, fakeSelectionSet), becauseReason);
             ShouldThrowArgumentException(() => queryBuilder.AddField("aliasA", fieldName, fakeSelectionSet), becauseReason);
 
-            queryBuilder.Build().Should().Be(string.Empty);
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [Test]
@@ -112,6 +112,22 @@ namespace GraphQLQueryBuilder.Tests
                 .AddField("aliasA", customer => customer.AccountNumber)
                 .AddField(customer => customer.CustomerContact, fakeContactSelectionSet)
                 .AddField("aliasB", customer => customer.CustomerContact, fakeContactSelectionSet);
+
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
+        }
+
+        [Test]
+        public void Then_Added_Field_Names_Are_Included_In_Content()
+        {
+            var fakeContactSelectionSet = Mock.Of<ISelectionSet<Contact>>(contact =>
+                contact.Build() == "{ id, name }"
+            );
+
+            var queryBuilder = QueryContentBuilder.Of<Customer>()
+                .AddField(nameof(Customer.Id))
+                .AddField("aliasA", nameof(Customer.AccountNumber))
+                .AddField(nameof(Customer.CustomerContact), fakeContactSelectionSet)
+                .AddField("aliasB", nameof(Customer.CustomerContact), fakeContactSelectionSet);
 
             QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
