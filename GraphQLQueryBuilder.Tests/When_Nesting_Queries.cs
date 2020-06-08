@@ -1,6 +1,5 @@
 using GraphQLQueryBuilder.Tests.Models;
 using NUnit.Framework;
-using Snapshooter.Json;
 
 namespace GraphQLQueryBuilder.Tests
 {
@@ -9,75 +8,67 @@ namespace GraphQLQueryBuilder.Tests
         [Test]
         public void If_Nested_Query_Is_Empty_Then_Query_Content_Has_An_Empty_Nested_Query()
         {
-            Assert.Fail();
-            //var addressQuery = new QueryBuilder<Address>("address");
-            //var customerQuery = new QueryBuilder<Customer>("customer")
-            //    .AddQuery(addressQuery);
+            var addressQuery = QueryContentBuilder.Of<Address>();
+            var contactQuery = QueryContentBuilder.Of<Contact>()
+                .AddField(contact => contact.Address, addressQuery);
 
-            //var query = new QueryRootBuilder()
-            //    .AddQuery(customerQuery)
-            //    .Build();
+            var query = new QueryOperationBuilder()
+                .AddField("customer", contactQuery);
 
-            //ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+            QueryContentShouldMatchSnapshotForTest(query);
         }
 
         [Test]
         public void If_Nested_Query_Uses_An_Alias_Then_Aliased_Query_Is_Included_In_Query_Content()
         {
-            Assert.Fail();
-            //var addressQuery = new QueryBuilder<Address>("address");
-            //var customerQuery = new QueryBuilder<Customer>("customer")
-            //    .AddQuery("primaryAddress", addressQuery)
-            //    .AddQuery("billingAddress", addressQuery);
+            var addressQuery = QueryContentBuilder.Of<Address>();
+            var contactQuery = QueryContentBuilder.Of<Contact>()
+                .AddField("primaryAddress", addressQuery)
+                .AddField("billingAddress", addressQuery);
 
-            //var query = new QueryRootBuilder()
-            //    .AddQuery(customerQuery)
-            //    .Build();
+            var query = new QueryOperationBuilder()
+                .AddField("customer", contactQuery);
 
-            //ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+            QueryContentShouldMatchSnapshotForTest(query);
         }
 
         [Test]
         public void If_Fields_Are_Included_With_A_Nested_Query_Then_Both_The_Nested_Query_And_Fields_Are_Included_In_Query_Content()
         {
-            Assert.Fail();
-            //var addressQuery = new QueryBuilder<Address>("address")
-            //    .AddField(address => address.Street1)
-            //    .AddField(address => address.Street2)
-            //    .AddField(address => address.City)
-            //    .AddField(address => address.State)
-            //    .AddField(address => address.ZipCode);
+            var addressQuery = QueryContentBuilder.Of<Address>()
+                .AddField(address => address.Street1)
+                .AddField(address => address.Street2)
+                .AddField(address => address.City)
+                .AddField(address => address.State)
+                .AddField(address => address.ZipCode);
 
-            //var customerQuery = new QueryBuilder<Customer>("customer")
-            //    .AddQuery(addressQuery)
-            //    .AddField(c => c.Id)
-            //    .AddField(c => c.AccountNumber);
+            var contactQuery = QueryContentBuilder.Of<Contact>()
+                .AddField(contact => contact.FirstName)
+                .AddField(contact => contact.LastName)
+                .AddField(contact => contact.Address);
 
-            //var query = new QueryRootBuilder()
-            //    .AddQuery(customerQuery)
-            //    .Build();
+            var query = new QueryOperationBuilder()
+                .AddField("customer", contactQuery);
 
-            //ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+            QueryContentShouldMatchSnapshotForTest(query);
         }
 
         [Test]
         public void If_A_Field_Is_Added_With_A_Nested_Query_Builder_Func_Then_The_Nested_Query_Is_Included_In_The_Query_Content()
         {
-            Assert.Fail();
-            //var customerQuery = new QueryBuilder<Customer>("customer")
-            //    .AddField(c => c.Id)
-            //    .AddField(c => c.AccountNumber)
-            //    .AddField(
-            //        c => c.CustomerContact,
-            //        contactQuery => contactQuery.AddField(c => c.FirstName)
-            //            .AddField(c => c.LastName)
-            //    );
+            var customerQuery = QueryContentBuilder.Of<Customer>()
+                .AddField(c => c.Id)
+                .AddField(c => c.AccountNumber)
+                .AddField(
+                    c => c.CustomerContact,
+                    contactQuery => contactQuery.AddField(c => c.FirstName)
+                        .AddField(c => c.LastName)
+                );
 
-            //var query = new QueryRootBuilder()
-            //    .AddQuery(customerQuery)
-            //    .Build();
+            var queryBuilder = new QueryOperationBuilder()
+                .AddField("customer", customerQuery);
 
-            //ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+            QueryContentShouldMatchSnapshotForTest(queryBuilder);
         }
 
         [Test]

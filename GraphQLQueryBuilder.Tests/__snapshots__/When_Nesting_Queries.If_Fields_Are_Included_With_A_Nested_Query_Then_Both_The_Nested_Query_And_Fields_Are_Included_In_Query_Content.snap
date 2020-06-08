@@ -1,8 +1,8 @@
 query {
     customer {
-        Id,
-        AccountNumber,
-        address {
+        FirstName,
+        LastName
+        Address {
             Street1,
             Street2,
             City,

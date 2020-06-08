@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace GraphQLQueryBuilder
 {
-    public interface IGraphQLQueryContentBuilder<T> : IGraphQLQueryContentBuilder
+    public interface IGraphQLQueryContentBuilder<T> : IGraphQLQueryContentBuilder, ISelectionSet<T>
         where T : class
     {
         IGraphQLQueryContentBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> propertyExpression);

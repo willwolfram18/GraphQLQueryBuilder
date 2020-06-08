@@ -2,7 +2,7 @@
     customer {
         Id,
         AccountNumber,
-        theContact: CustomerContact {
+        CustomerContact {
             FirstName,
             LastName
         }
