@@ -72,7 +72,8 @@ namespace GraphQLQueryBuilder
             ThrowIfInvalidGraphQLName(field, "The field name is invalid.", nameof(field));
 
             ThrowIfFieldNameIsNotAMemberOfTheClass(field);
-            throw new System.NotImplementedException();
+
+            return AddValidField(field);
         }
 
         public IGraphQLQueryContentBuilder AddField(string alias, string field)
@@ -82,7 +83,7 @@ namespace GraphQLQueryBuilder
 
             ThrowIfFieldNameIsNotAMemberOfTheClass(field);
 
-            throw new System.NotImplementedException();
+            return AddValidField(alias, field);
         }
 
         public IGraphQLQueryContentBuilder AddField(string field, ISelectionSet selectionSet)
@@ -96,7 +97,7 @@ namespace GraphQLQueryBuilder
 
             ThrowIfFieldNameIsNotAMemberOfTheClass(field);
 
-            throw new System.NotImplementedException();
+            return AddValidField(field, selectionSet);
         }
 
         public IGraphQLQueryContentBuilder AddField(string alias, string field, ISelectionSet selectionSet)
@@ -111,7 +112,7 @@ namespace GraphQLQueryBuilder
 
             ThrowIfFieldNameIsNotAMemberOfTheClass(field);
 
-            throw new System.NotImplementedException();
+            return AddValidField(alias, field, selectionSet);
         }
 
         public string Build()
