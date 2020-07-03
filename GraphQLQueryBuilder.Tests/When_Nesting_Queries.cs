@@ -92,7 +92,7 @@ namespace GraphQLQueryBuilder.Tests
         [Test]
         public void If_A_Nested_Query_Uses_A_Nested_Query_Then_Both_Nested_Queries_Are_Included_In_The_Query_Content()
         {
-            Assert.Fail();
+            Assert.Fail("TODO");
             //var customerQuery = new QueryBuilder<Customer>("customer")
             //    .AddField(c => c.Id)
             //    .AddField(c => c.AccountNumber)
@@ -121,7 +121,7 @@ namespace GraphQLQueryBuilder.Tests
         [Test]
         public void If_A_Nested_Query_For_A_Collection_Field_Is_Added_Then_Nested_Query_Is_Included_In_Content()
         {
-            Assert.Fail();
+            Assert.Fail("TODO");
             //var customerQuery = new QueryBuilder<Customer>("customer")
             //    .AddField(c => c.Id)
             //    .AddField(
@@ -144,7 +144,7 @@ namespace GraphQLQueryBuilder.Tests
         [Test]
         public void If_A_Collection_Field_With_An_Alias_Is_Added_Then_Nested_Query_Is_Included_In_Content()
         {
-            Assert.Fail();
+            Assert.Fail("TODO");
             //var customerQuery = new QueryBuilder<Customer>("customer")
             //    .AddField(c => c.Id)
             //    .AddField(

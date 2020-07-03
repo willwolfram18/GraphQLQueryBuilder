@@ -164,35 +164,35 @@ namespace GraphQLQueryBuilder.Tests
         [Ignore("Still uses queryrootbuilder")]
         public void If_A_Fragment_Is_Added_To_The_Query_Root_Then_The_Fragment_Definition_Is_Included_In_The_Query_Content()
         {
-            Assert.Fail();
+            Assert.Fail("TODO");
         }
 
         [Test]
         [Ignore("Still uses queryrootbuilder")]
         public void If_The_Same_Query_Fragment_Name_Is_Added_Twice_Then_An_InvalidOperationException_Is_Thrown()
         {
-            Assert.Fail();
+            Assert.Fail("TODO");
         }
 
         [Test]
         [Ignore("Still uses queryrootbuilder")]
         public void If_The_Same_Fragment_With_A_Different_Name_Is_Added_To_Query_Root_Then_Both_Fragments_Are_In_The_Query_Content()
         {
-            Assert.Fail();
+            Assert.Fail("TODO");
         }
 
         [Test]
         [Ignore("Still uses queryrootbuilder")]
         public void If_A_Fragment_Is_Used_In_A_Query_Then_The_Fragment_Is_Part_Of_The_Query_Content()
         {
-            Assert.Fail();
+            Assert.Fail("TODO");
         }
 
         [Test]
         [Ignore("Still uses queryrootbuilder")]
         public void If_Fragment_And_Fields_Are_Added_To_A_Query_Then_Both_Are_Used_In_The_Query_Content()
         {
-            Assert.Fail();
+            Assert.Fail("TODO");
         }
 
         [Test]
