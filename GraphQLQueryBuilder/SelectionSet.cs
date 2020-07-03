@@ -46,10 +46,18 @@ namespace GraphQLQueryBuilder
 
             content.Append(_field);
 
-            if (_selectionSet != null)
+            // TODO indent
+            switch (_selectionSet)
             {
-                // TODO indent
-                content.Append(" " + _selectionSet.Build());
+                case null:
+                    // nothing to do/append
+                    break;
+                case IFragmentContentBuilder fragment:
+                    content.Append($" {{ ...{fragment.Name} }}");
+                    break;
+                default:
+                    content.Append(" " + _selectionSet.Build());
+                    break;
             }
 
             return content.ToString();
