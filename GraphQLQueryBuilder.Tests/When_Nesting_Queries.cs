@@ -23,8 +23,8 @@ namespace GraphQLQueryBuilder.Tests
         {
             var addressQuery = QueryContentBuilder.Of<Address>();
             var contactQuery = QueryContentBuilder.Of<Contact>()
-                .AddField("primaryAddress", addressQuery)
-                .AddField("billingAddress", addressQuery);
+                .AddField("primaryAddress", contact => contact.Address, addressQuery)
+                .AddField("billingAddress", contact => contact.Address, addressQuery);
 
             var query = new QueryOperationBuilder()
                 .AddField("customer", contactQuery);
@@ -74,21 +74,19 @@ namespace GraphQLQueryBuilder.Tests
         [Test]
         public void If_A_Field_With_An_Alias_Is_Added_With_A_Nested_Query_Builder_Function_Then_Nested_Query_With_Alias_Is_Included_In_Query_Content()
         {
-            Assert.Fail();
-            //var customerQuery = new QueryBuilder<Customer>("customer")
-            //    .AddField(customer => customer.Id)
-            //    .AddField(customer => customer.AccountNumber)
-            //    .AddField(
-            //        "theContact",
-            //        c => c.CustomerContact,
-            //        contactQuery => contactQuery.AddField(contact => contact.FirstName)
-            //            .AddField(contact => contact.LastName)
-            //    );
-            //var query = new QueryRootBuilder()
-            //    .AddQuery(customerQuery)
-            //    .Build();
+            var customerQuery = QueryContentBuilder.Of<Customer>()
+                .AddField(customer => customer.Id)
+                .AddField(customer => customer.AccountNumber)
+                .AddField(
+                    customer => customer.CustomerContact,
+                    contactQuery => contactQuery.AddField(contact => contact.FirstName)
+                        .AddField(contact => contact.LastName)
+                );
 
-            //ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+            var query = new QueryOperationBuilder()
+                .AddField("customer", customerQuery);
+
+            QueryContentShouldMatchSnapshotForTest(query);
         }
 
         [Test]

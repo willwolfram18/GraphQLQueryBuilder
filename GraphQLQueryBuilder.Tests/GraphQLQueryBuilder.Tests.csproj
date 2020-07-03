@@ -20,13 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="__snapshots__\**\*.snapshot">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <SnapshotFiles Include="$(ProjectDir)__snapshots__\*.*" />
   </ItemGroup>
 
-  <Target Name="RemoveSnapshotsFolder" BeforeTargets="BeforeBuild">
-    <RemoveDir Directories="$(OutDir)\__snapshots__" />
+  <Target Name="RemoveSnapshotsFolder" AfterTargets="BeforeBuild">
+    <!--<RemoveDir Directories="$(OutDir)__snapshots__" />
+    <Copy SourceFiles="@(SnapshotFiles)" DestinationFolder="$(OutDir)__snapshots__" />-->
   </Target>
 
 </Project>

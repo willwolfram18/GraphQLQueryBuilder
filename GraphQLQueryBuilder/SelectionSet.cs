@@ -48,19 +48,8 @@ namespace GraphQLQueryBuilder
 
             if (_selectionSet != null)
             {
-                //var isGenericSelectionSet = _selectionSet.GetType().IsGenericType;
-                //if (!isGenericSelectionSet)
-                //{
-                //    content.AppendLine(" {");
-                //}
-
                 // TODO indent
                 content.Append(" " + _selectionSet.Build());
-
-                //if (!isGenericSelectionSet)
-                //{
-                //    content.Append("}");
-                //}
             }
 
             return content.ToString();
