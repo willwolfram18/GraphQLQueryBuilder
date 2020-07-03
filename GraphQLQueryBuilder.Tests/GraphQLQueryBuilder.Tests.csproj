@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <IsPackable>false</IsPackable>
+        <SnapshotsFolder>__snapshots__</SnapshotsFolder>
     </PropertyGroup>
 
     <ItemGroup>
@@ -19,25 +20,33 @@
     </ItemGroup>
 
     <ItemGroup>
-        <SnapshotsFolder Include="$(ProjectDir)__snapshots__\**\*.snap" />
-        <SnapshotsOutputFolder Include="\\?\$(ProjectDir)$(OutDir)__snapshots__" Condition="'$(OS)' == 'Windows_NT'" />
-        <SnapshotsOutputFolder Include="$(ProjectDir)$(OutDir)__snapshots__" Condition="'$(OS)' != 'Windows_NT'" />
-        <None Include="@(SnapshotsFolder)">
+        <None Include="$(SnapshotsFolder)\**\*.snap">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
+        <SnapshotFiles Include="$(SnapshotsFolder)\**\*.snap" />
     </ItemGroup>
-
-    <Target Name="RemoveSnapshotsFolder">
-        <Message Text="Removing snapshots folder" Importance="high" />
-        <RemoveDir Directories="@(SnapshotsOutputFolder)" />
+    
+    <Target Name="FilePaths">
+        <PropertyGroup>
+            <SnapshotsOutputFolder Condition="'$(OS)' == 'Windows_NT'">\\?\$(ProjectDir)$(OutDir)$(SnapshotsFolder)\</SnapshotsOutputFolder>
+            <SnapshotsOutputFolder Condition="'$(OS)' != 'Windows_NT'">$(ProjectDir)$(OutDir)$(SnapshotsFolder)\</SnapshotsOutputFolder>
+        </PropertyGroup>
     </Target>
 
-    <Target Name="CopySnapshotsFolder">
-        <Message Text="Copying snapshots folder" Importance="high" />
-        <Copy SourceFiles="@(SnapshotsFolder)" DestinationFolder="@(SnapshotsOutputFolder)" />
+    <Target Name="RemoveSnapshotsFolder" DependsOnTargets="FilePaths">
+        <Message Text="Removing snapshots folder '$(SnapshotsOutputFolder)'" Importance="high" />
+        <RemoveDir Directories="$(SnapshotsOutputFolder)" />
+    </Target>
+
+    <Target Name="CopySnapshotsFolder" DependsOnTargets="FilePaths">
+        <Message Text="Copying snapshots folder '$(SnapshotsFolder)'" Importance="high" />
+        <Copy SourceFiles="@(SnapshotFiles)" DestinationFolder="$(SnapshotsOutputFolder)" />
     </Target>
 
     <Target Name="BuildDeps" BeforeTargets="BeforeBuild" DependsOnTargets="RemoveSnapshotsFolder;CopySnapshotsFolder">
+        <PropertyGroup>
+            
+        </PropertyGroup>
     </Target>
 
     <Target Name="CleanDeps" BeforeTargets="BeforeClean" DependsOnTargets="RemoveSnapshotsFolder">
