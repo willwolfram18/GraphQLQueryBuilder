@@ -130,22 +130,27 @@ namespace GraphQLQueryBuilder
 
         public string Build()
         {
-            var content = new StringBuilder();
+            var x = new QueryContentAppender(_settings);
 
-            content.AppendLine("{");
-            var updatedSettings = _settings?.IncreaseIndent();
+            x.Append(_selections);
 
-            var selectionSetContent = BuildSelectionSetContent(updatedSettings);
+            return x.ToString();
+            //var content = new StringBuilder();
 
-            if (!string.IsNullOrWhiteSpace(selectionSetContent))
-            {
-                content.AppendLine(selectionSetContent);
-            }
+            //content.AppendLine("{");
+            //var updatedSettings = _settings?.IncreaseIndent();
 
-            content.Append(_settings?.CreateIndentation());
-            content.Append("}");
+            //var selectionSetContent = BuildSelectionSetContent(updatedSettings);
 
-            return content.ToString();
+            //if (!string.IsNullOrWhiteSpace(selectionSetContent))
+            //{
+            //    content.AppendLine(selectionSetContent);
+            //}
+
+            //content.Append(_settings?.CreateIndentation());
+            //content.Append("}");
+
+            //return content.ToString();
         }
 
         private static void ThrowIfInvalidGraphQLName(string value, string message, string parameterName)

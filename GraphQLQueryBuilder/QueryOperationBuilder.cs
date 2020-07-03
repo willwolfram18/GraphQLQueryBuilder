@@ -93,29 +93,41 @@ namespace GraphQLQueryBuilder
 
         public string Build()
         {
-            var content = new StringBuilder();
+            var x = new QueryContentAppender(_settings);
 
-            content.Append($"query ");
+            x.Append("query ");
 
             if (!string.IsNullOrWhiteSpace(OperationName))
             {
-                content.Append($"{OperationName} ");
+                x.Append($"{OperationName} ");
             }
 
-            content.AppendLine("{");
-            var updatedSettings = _settings.IncreaseIndent();
+            x.Append(_selections);
 
-            var selectionSet = BuildSelectionSetContent(updatedSettings);
+            return x.ToString();
+            //var content = new StringBuilder();
 
-            if (!string.IsNullOrWhiteSpace(selectionSet))
-            {
-                content.AppendLine(selectionSet);
-            }
+            //content.Append("query ");
 
-            content.Append(_settings?.CreateIndentation());
-            content.Append("}");
+            //if (!string.IsNullOrWhiteSpace(OperationName))
+            //{
+            //    content.Append($"{OperationName} ");
+            //}
 
-            return content.ToString();
+            //content.AppendLine("{");
+            //var updatedSettings = _settings.IncreaseIndent();
+
+            //var selectionSet = BuildSelectionSetContent(updatedSettings);
+
+            //if (!string.IsNullOrWhiteSpace(selectionSet))
+            //{
+            //    content.AppendLine(selectionSet);
+            //}
+
+            //content.Append(_settings?.CreateIndentation());
+            //content.Append("}");
+
+            //return content.ToString();
         }
 
         private static void ThrowIfNameIsNotValid(string value, string message, string argumentName)
