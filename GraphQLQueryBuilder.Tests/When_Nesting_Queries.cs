@@ -33,7 +33,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void If_Fields_Are_Included_With_A_Nested_Query_Then_Both_The_Nested_Query_And_Fields_Are_Included_In_Query_Content()
+        public void Then_Nested_Query_Content_Is_Rendered()
         {
             var addressQuery = QueryContentBuilder.Of<Address>()
                 .AddField(address => address.Street1)
@@ -54,7 +54,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void If_A_Field_Is_Added_With_A_Nested_Query_Builder_Func_Then_The_Nested_Query_Is_Included_In_The_Query_Content()
+        public void If_A_Field_Is_Added_With_A_Nested_Query_Builder_Func_Then_The_Nested_Query_Is_Rendered()
         {
             var customerQuery = QueryContentBuilder.Of<Customer>()
                 .AddField(c => c.Id)
@@ -72,7 +72,7 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void If_A_Field_With_An_Alias_Is_Added_With_A_Nested_Query_Builder_Function_Then_Nested_Query_With_Alias_Is_Included_In_Query_Content()
+        public void If_An_Aliased_Field_Is_Added_With_A_Nested_Query_Builder_Func_Then_Aliased_Nested_Query_Is_Rendered()
         {
             var customerQuery = QueryContentBuilder.Of<Customer>()
                 .AddField(customer => customer.Id)
