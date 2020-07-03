@@ -14,7 +14,7 @@ namespace GraphQLQueryBuilder
             _settings = settings;
         }
 
-        public SelectionSetScope StartNewSelectionSet()
+        private SelectionSetScope StartNewSelectionSet()
         {
             return new SelectionSetScope(this);
         }
@@ -82,7 +82,7 @@ namespace GraphQLQueryBuilder
             _settings = _settings?.DecreaseIndent();
         }
 
-        internal class SelectionSetScope : IDisposable
+        private class SelectionSetScope : IDisposable
         {
             private readonly QueryContentAppender _appender;
 

@@ -135,22 +135,6 @@ namespace GraphQLQueryBuilder
             x.Append(_selections);
 
             return x.ToString();
-            //var content = new StringBuilder();
-
-            //content.AppendLine("{");
-            //var updatedSettings = _settings?.IncreaseIndent();
-
-            //var selectionSetContent = BuildSelectionSetContent(updatedSettings);
-
-            //if (!string.IsNullOrWhiteSpace(selectionSetContent))
-            //{
-            //    content.AppendLine(selectionSetContent);
-            //}
-
-            //content.Append(_settings?.CreateIndentation());
-            //content.Append("}");
-
-            //return content.ToString();
         }
 
         private static void ThrowIfInvalidGraphQLName(string value, string message, string parameterName)
@@ -214,39 +198,6 @@ namespace GraphQLQueryBuilder
                 throw new ArgumentException(
                     $"Field name '{fieldName}' is not a property of type {typeof(T).FullName}.");
             }
-        }
-
-        private string BuildSelectionSetContent(QuerySerializerSettings settings)
-        {
-            if (_selections.Count == 0)
-            {
-                return string.Empty;
-            }
-
-            var content = new StringBuilder();
-
-            foreach (var selection in _selections)
-            {
-                if (content.Length != 0)
-                {
-                    content.AppendLine(",");
-                }
-
-                content.Append(settings.CreateIndentation());
-                
-                if (selection is ISelectionSetWithSettings selectionSetWithSettings)
-                {
-                    selectionSetWithSettings = selectionSetWithSettings.UpdateSettings(settings);
-
-                    content.Append(selectionSetWithSettings.Build());
-                }
-                else
-                {
-                    content.Append(selection.Build());
-                }
-            }
-
-            return content.ToString();
         }
     }
 }

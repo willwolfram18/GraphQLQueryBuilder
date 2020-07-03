@@ -105,29 +105,6 @@ namespace GraphQLQueryBuilder
             x.Append(_selections);
 
             return x.ToString();
-            //var content = new StringBuilder();
-
-            //content.Append("query ");
-
-            //if (!string.IsNullOrWhiteSpace(OperationName))
-            //{
-            //    content.Append($"{OperationName} ");
-            //}
-
-            //content.AppendLine("{");
-            //var updatedSettings = _settings.IncreaseIndent();
-
-            //var selectionSet = BuildSelectionSetContent(updatedSettings);
-
-            //if (!string.IsNullOrWhiteSpace(selectionSet))
-            //{
-            //    content.AppendLine(selectionSet);
-            //}
-
-            //content.Append(_settings?.CreateIndentation());
-            //content.Append("}");
-
-            //return content.ToString();
         }
 
         private static void ThrowIfNameIsNotValid(string value, string message, string argumentName)
@@ -136,39 +113,6 @@ namespace GraphQLQueryBuilder
             {
                 throw new ArgumentException(message, argumentName);
             }
-        }
-
-        private string BuildSelectionSetContent(QuerySerializerSettings settings)
-        {
-            if (_selections.Count == 0)
-            {
-                return string.Empty;
-            }
-
-            var selectionSetContent = new StringBuilder();
-
-            foreach (var selectionSet in _selections)
-            {
-                if (selectionSetContent.Length != 0)
-                {
-                    selectionSetContent.AppendLine(",");
-                }
-                
-                selectionSetContent.Append($"{settings?.CreateIndentation()}");
-
-                if (selectionSet is ISelectionSetWithSettings selectionSetWithSettings)
-                {
-                    selectionSetWithSettings = selectionSetWithSettings.UpdateSettings(settings);
-
-                    selectionSetContent.Append(selectionSetWithSettings.Build());
-                }
-                else
-                {
-                    selectionSetContent.Append(selectionSet.Build());
-                }
-            }
-
-            return selectionSetContent.ToString();
         }
     }
 }
