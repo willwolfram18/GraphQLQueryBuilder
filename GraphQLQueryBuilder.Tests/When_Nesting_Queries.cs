@@ -90,34 +90,32 @@ namespace GraphQLQueryBuilder.Tests
         }
 
         [Test]
-        public void If_A_Nested_Query_Uses_A_Nested_Query_Then_Both_Nested_Queries_Are_Included_In_The_Query_Content()
+        public void If_A_Nested_Query_Uses_A_Nested_Query_Then_Both_Nested_Queries_Are_Rendered()
         {
-            Assert.Fail("TODO");
-            //var customerQuery = new QueryBuilder<Customer>("customer")
-            //    .AddField(c => c.Id)
-            //    .AddField(c => c.AccountNumber)
-            //    .AddField(
-            //        c => c.CustomerContact,
-            //        contactQuery => contactQuery
-            //            .AddField(contact => contact.FirstName)
-            //            .AddField(contact => contact.LastName)
-            //            .AddField(contact => contact.Address,
-            //                addressQuery => addressQuery
-            //                    .AddField(address => address.Street1)
-            //                    .AddField(address => address.Street2)
-            //                    .AddField(address => address.City)
-            //                    .AddField(address => address.State)
-            //                    .AddField(address => address.ZipCode)
-            //            )
-            //    );
+            var customerQuery = QueryContentBuilder.Of<Customer>()
+                .AddField(c => c.Id)
+                .AddField(c => c.AccountNumber)
+                .AddField(
+                    c => c.CustomerContact,
+                    contactQuery => contactQuery
+                        .AddField(contact => contact.FirstName)
+                        .AddField(contact => contact.LastName)
+                        .AddField(contact => contact.Address,
+                            addressQuery => addressQuery
+                                .AddField(address => address.Street1)
+                                .AddField(address => address.Street2)
+                                .AddField(address => address.City)
+                                .AddField(address => address.State)
+                                .AddField(address => address.ZipCode)
+                        )
+                );
 
-            //var query = new QueryRootBuilder()
-            //    .AddQuery(customerQuery)
-            //    .Build();
+            var query = new QueryOperationBuilder()
+                .AddField("customer", customerQuery);
 
-            //ResultMatchesSnapshotOfMatchingClassAndTestName(query);
+            QueryContentShouldMatchSnapshotForTest(query);
         }
-
+        
         [Test]
         public void If_A_Nested_Query_For_A_Collection_Field_Is_Added_Then_Nested_Query_Is_Included_In_Content()
         {

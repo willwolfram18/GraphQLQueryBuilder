@@ -13,7 +13,13 @@ namespace GraphQLQueryBuilder
             where T : class
             where TProperty : class
         {
-            throw new NotImplementedException();
+            var selectionSet = new QueryContentBuilder<TProperty>();
+
+            configureSelectionSet(selectionSet);
+
+            builder.AddField(expression, selectionSet);
+
+            return builder;
         }
 
         //public static QueryBuilder<T> AddField<T, TProperty>(
