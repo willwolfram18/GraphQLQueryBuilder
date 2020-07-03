@@ -103,14 +103,16 @@ namespace GraphQLQueryBuilder
             }
 
             content.AppendLine("{");
+            var updatedSettings = _settings.IncreaseIndent();
 
-            var selectionSet = BuildSelectionSetContent();
+            var selectionSet = BuildSelectionSetContent(updatedSettings);
 
             if (!string.IsNullOrWhiteSpace(selectionSet))
             {
                 content.AppendLine(selectionSet);
             }
 
+            content.Append(_settings?.CreateIndentation());
             content.Append("}");
 
             return content.ToString();
@@ -124,7 +126,7 @@ namespace GraphQLQueryBuilder
             }
         }
 
-        private string BuildSelectionSetContent()
+        private string BuildSelectionSetContent(QuerySerializerSettings settings)
         {
             if (_selections.Count == 0)
             {
@@ -139,16 +141,17 @@ namespace GraphQLQueryBuilder
                 {
                     selectionSetContent.AppendLine(",");
                 }
+                
+                selectionSetContent.Append($"{settings?.CreateIndentation()}");
 
                 if (selectionSet is ISelectionSetWithSettings selectionSetWithSettings)
                 {
-                    selectionSetWithSettings = selectionSetWithSettings.UpdateSettings(_settings);
+                    selectionSetWithSettings = selectionSetWithSettings.UpdateSettings(settings);
 
                     selectionSetContent.Append(selectionSetWithSettings.Build());
                 }
                 else
                 {
-                    selectionSetContent.Append($"{_settings?.CreateIndentation()}");
                     selectionSetContent.Append(selectionSet.Build());
                 }
             }

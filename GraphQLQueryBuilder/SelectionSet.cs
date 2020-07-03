@@ -50,8 +50,6 @@ namespace GraphQLQueryBuilder
         {
             var content = new StringBuilder();
 
-            content.Append(_settings?.CreateIndentation());
-            
             if (!string.IsNullOrWhiteSpace(_alias))
             {
                 content.Append($"{_alias}: ");
@@ -68,13 +66,18 @@ namespace GraphQLQueryBuilder
                 case IFragmentContentBuilder fragment:
                     content.AppendLine(" {");
                     
-                    var fragmentSpreadIndentation = _settings?.IncreaseIndentBy(_settings.Indent).CreateIndentation();
+                    var fragmentSpreadIndentation = _settings?.IncreaseIndent().CreateIndentation();
 
                     content.Append(fragmentSpreadIndentation);
                     content.AppendLine($"...{fragment.Name}");
                     content.Append(_settings?.CreateIndentation());
                     content.Append("}");
                     
+                    break;
+                case ISelectionSetWithSettings selectionSetWithSettings:
+                    selectionSetWithSettings = selectionSetWithSettings.UpdateSettings(_settings);
+
+                    content.Append(" " + selectionSetWithSettings.Build());
                     break;
                 default:
                     content.Append(" " + _selectionSet.Build());

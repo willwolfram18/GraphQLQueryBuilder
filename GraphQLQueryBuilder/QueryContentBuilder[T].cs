@@ -17,19 +17,32 @@ namespace GraphQLQueryBuilder
         }
     }
 
-    internal class QueryContentBuilder<T> : IGraphQLQueryContentBuilder<T>
+    internal class QueryContentBuilder<T> : IGraphQLQueryContentBuilder<T>, ISelectionSetWithSettings
         where T : class
     {
         private static readonly Regex GraphQLNameRegex = new Regex(@"^[_A-Za-z][_0-9A-Za-z]*$");
 
         private readonly PropertyInfo[] _properties = typeof(T).GetProperties();
         private readonly List<ISelectionSet> _selections = new List<ISelectionSet>();
+        private QuerySerializerSettings _settings = new QuerySerializerSettings(4);
 
         public IGraphQLQueryContentBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
         {
             var fieldName = ConvertExpressionToFieldName(propertyExpression);
 
             return AddValidField(fieldName);
+        }
+
+        public ISelectionSetWithSettings UpdateSettings(QuerySerializerSettings settings)
+        {
+            var newBuilder = new QueryContentBuilder<T>
+            {
+                _settings = settings
+            };
+
+            newBuilder._selections.AddRange(_selections);
+
+            return newBuilder;
         }
 
         public IGraphQLQueryContentBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> propertyExpression)
@@ -120,14 +133,16 @@ namespace GraphQLQueryBuilder
             var content = new StringBuilder();
 
             content.AppendLine("{");
+            var updatedSettings = _settings?.IncreaseIndent();
 
-            var selectionSetContent = BuildSelectionSetContent();
+            var selectionSetContent = BuildSelectionSetContent(updatedSettings);
 
             if (!string.IsNullOrWhiteSpace(selectionSetContent))
             {
                 content.AppendLine(selectionSetContent);
             }
 
+            content.Append(_settings?.CreateIndentation());
             content.Append("}");
 
             return content.ToString();
@@ -196,7 +211,7 @@ namespace GraphQLQueryBuilder
             }
         }
 
-        private string BuildSelectionSetContent()
+        private string BuildSelectionSetContent(QuerySerializerSettings settings)
         {
             if (_selections.Count == 0)
             {
@@ -212,7 +227,18 @@ namespace GraphQLQueryBuilder
                     content.AppendLine(",");
                 }
 
-                content.Append("  " + selection.Build());
+                content.Append(settings.CreateIndentation());
+                
+                if (selection is ISelectionSetWithSettings selectionSetWithSettings)
+                {
+                    selectionSetWithSettings = selectionSetWithSettings.UpdateSettings(settings);
+
+                    content.Append(selectionSetWithSettings.Build());
+                }
+                else
+                {
+                    content.Append(selection.Build());
+                }
             }
 
             return content.ToString();

@@ -2,21 +2,40 @@ namespace GraphQLQueryBuilder
 {
     public class QuerySerializerSettings
     {
-        public QuerySerializerSettings(int indent)
+        public QuerySerializerSettings(int indentSize)
         {
-            Indent = indent;
+            IndentSize = indentSize;
+            CurrentIndent = 0;
         }
         
-        public int Indent { get; }
+        public int IndentSize { get; }
+        
+        public int CurrentIndent { get; private set; }
 
-        public QuerySerializerSettings IncreaseIndentBy(int size)
+        public QuerySerializerSettings IncreaseIndent()
         {
-            return new QuerySerializerSettings(Indent + size);
+            return new QuerySerializerSettings(IndentSize)
+            {
+                CurrentIndent = CurrentIndent + IndentSize
+            };
+        }
+
+        public QuerySerializerSettings DecreaseIndent()
+        {
+            if (IndentSize == 0)
+            {
+                return new QuerySerializerSettings(IndentSize);
+            }
+            
+            return new QuerySerializerSettings(IndentSize)
+            {
+                CurrentIndent = CurrentIndent - IndentSize
+            };
         }
 
         public string CreateIndentation()
         {
-            return new string(' ', Indent);
+            return new string(' ', CurrentIndent);
         }
     }
 }
