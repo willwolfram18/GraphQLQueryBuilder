@@ -4,7 +4,7 @@ namespace GraphQLQueryBuilder
     {
         string Name { get; }
 
-        string Type { get; }
+        string TypeCondition { get; }
 
         IFragmentContentBuilder AddField(string field);
 
