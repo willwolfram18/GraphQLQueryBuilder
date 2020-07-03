@@ -20,6 +20,8 @@
 
     <ItemGroup>
         <SnapshotsFolder Include="$(ProjectDir)__snapshots__\**\*.snap" />
+        <SnapshotsOutputFolder Include="\\?\$(ProjectDir)$(OutDir)__snapshots__" Condition="'$(OS)' == 'Windows_NT'" />
+        <SnapshotsOutputFolder Include="$(ProjectDir)$(OutDir)__snapshots__" Condition="'$(OS)' != 'Windows_NT'" />
         <None Include="@(SnapshotsFolder)">
             <CopyToOutputDirectory>Never</CopyToOutputDirectory>
         </None>
@@ -27,12 +29,12 @@
 
     <Target Name="RemoveSnapshotsFolder">
         <Message Text="Removing snapshots folder" Importance="high" />
-        <RemoveDir Directories="\\?\$(ProjectDir)$(OutDir)__snapshots__" />
+        <RemoveDir Directories="@(SnapshotsOutputFolder)" />
     </Target>
 
     <Target Name="CopySnapshotsFolder">
         <Message Text="Copying snapshots folder" Importance="high" />
-        <Copy SourceFiles="@(SnapshotsFolder)" DestinationFolder="\\?\$(ProjectDir)$(OutDir)__snapshots__" />
+        <Copy SourceFiles="@(SnapshotsFolder)" DestinationFolder="@(SnapshotsOutputFolder)" />
     </Target>
 
     <Target Name="BuildDeps" BeforeTargets="BeforeBuild" DependsOnTargets="RemoveSnapshotsFolder;CopySnapshotsFolder">
