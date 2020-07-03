@@ -45,7 +45,7 @@ namespace GraphQLQueryBuilder.Tests
             var contactQuery = QueryContentBuilder.Of<Contact>()
                 .AddField(contact => contact.FirstName)
                 .AddField(contact => contact.LastName)
-                .AddField(contact => contact.Address);
+                .AddField(contact => contact.Address, addressQuery);
 
             var query = new QueryOperationBuilder()
                 .AddField("customer", contactQuery);
