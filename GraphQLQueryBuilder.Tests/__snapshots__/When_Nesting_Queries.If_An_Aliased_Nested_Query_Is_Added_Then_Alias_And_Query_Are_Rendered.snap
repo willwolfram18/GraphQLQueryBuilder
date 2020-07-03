@@ -1,0 +1,10 @@
+query {
+    customer {
+        Id,
+        AccountNumber,
+        primaryContact: CustomerContact {
+            FirstName,
+            surname: LastName
+        }
+    }
+}

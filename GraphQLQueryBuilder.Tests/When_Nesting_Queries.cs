@@ -115,6 +115,25 @@ namespace GraphQLQueryBuilder.Tests
 
             QueryContentShouldMatchSnapshotForTest(query);
         }
+
+        [Test]
+        public void If_An_Aliased_Nested_Query_Is_Added_Then_Alias_And_Query_Are_Rendered()
+        {
+            var customerQuery = QueryContentBuilder.Of<Customer>()
+                .AddField(customer => customer.Id)
+                .AddField(customer => customer.AccountNumber)
+                .AddField(
+                    "primaryContact",
+                    customer => customer.CustomerContact,
+                    contactQuery => contactQuery.AddField(contact => contact.FirstName)
+                        .AddField("surname", contact => contact.LastName)
+                );
+            
+            var query = new QueryOperationBuilder()
+                .AddField("customer", customerQuery);
+
+            QueryContentShouldMatchSnapshotForTest(query);
+        }
         
         [Test]
         public void If_A_Nested_Query_For_A_Collection_Field_Is_Added_Then_Nested_Query_Is_Included_In_Content()

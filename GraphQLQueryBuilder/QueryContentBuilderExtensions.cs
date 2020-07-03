@@ -17,32 +17,23 @@ namespace GraphQLQueryBuilder
 
             configureSelectionSet(selectionSet);
 
-            builder.AddField(expression, selectionSet);
-
-            return builder;
+            return builder.AddField(expression, selectionSet);
         }
 
-        //public static QueryBuilder<T> AddField<T, TProperty>(
-        //    this QueryBuilder<T> builder,
-        //    string alias,
-        //    Expression<Func<T, TProperty>> expression,
-        //    Action<QueryBuilder<TProperty>> configureSelectionSet)
-        //    where T : class
-        //    where TProperty : class
-        //{
-        //    if (expression.Body is MemberExpression member)
-        //    {
-        //        var propertyQuery = new QueryBuilder<TProperty>(member.Member.Name);
+        public static IGraphQLQueryContentBuilder<T> AddField<T, TProperty>(
+            this IGraphQLQueryContentBuilder<T> builder,
+            string alias,
+            Expression<Func<T, TProperty>> expression,
+            Action<IGraphQLQueryContentBuilder<TProperty>> configureSelectionSet)
+            where T : class
+            where TProperty : class
+        {
+            var propertyQuery = new QueryContentBuilder<TProperty>();
 
-        //        configureSelectionSet(propertyQuery);
+            configureSelectionSet(propertyQuery);
 
-        //        builder.AddQuery(alias, propertyQuery);
-
-        //        return builder;
-        //    }
-
-        //    throw new InvalidOperationException();
-        //}
+            return builder.AddField(alias, expression, propertyQuery);
+        }
 
         //public static QueryBuilder<T> AddCollectionField<T, TProperty>(
         //    this QueryBuilder<T> builder,
