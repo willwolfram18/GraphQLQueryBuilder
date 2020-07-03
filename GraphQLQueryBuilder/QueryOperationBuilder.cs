@@ -9,6 +9,7 @@ namespace GraphQLQueryBuilder
     {
         private static readonly Regex GraphQLNameRegex = new Regex(@"^[_A-Za-z][_0-9A-Za-z]*$");
 
+        private readonly QuerySerializerSettings _settings = new QuerySerializerSettings(4);
         private readonly List<ISelectionSet> _selections = new List<ISelectionSet>();
         private readonly Dictionary<string, IFragmentContentBuilder> _fragmentDefinitions = new Dictionary<string, IFragmentContentBuilder>();
 
@@ -138,7 +139,18 @@ namespace GraphQLQueryBuilder
                 {
                     selectionSetContent.AppendLine(",");
                 }
-                selectionSetContent.Append($"  {selectionSet.Build()}");
+
+                if (selectionSet is ISelectionSetWithSettings selectionSetWithSettings)
+                {
+                    selectionSetWithSettings = selectionSetWithSettings.UpdateSettings(_settings);
+
+                    selectionSetContent.Append(selectionSetWithSettings.Build());
+                }
+                else
+                {
+                    selectionSetContent.Append($"{_settings?.CreateIndentation()}");
+                    selectionSetContent.Append(selectionSet.Build());
+                }
             }
 
             return selectionSetContent.ToString();

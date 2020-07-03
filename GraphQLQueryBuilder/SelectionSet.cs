@@ -2,11 +2,12 @@ using System.Text;
 
 namespace GraphQLQueryBuilder
 {
-    internal class SelectionSet : ISelectionSet
+    internal class SelectionSet : ISelectionSetWithSettings
     {
         private readonly string _alias;
         private readonly string _field;
         private readonly ISelectionSet _selectionSet;
+        private QuerySerializerSettings _settings;
 
         private SelectionSet(string alias, string field, ISelectionSet selectionSet)
         {
@@ -14,7 +15,7 @@ namespace GraphQLQueryBuilder
             _field = field;
             _selectionSet = selectionSet;
         }
-
+        
         public static ISelectionSet Create(string field)
         {
             return new SelectionSet(string.Empty, field, null);
@@ -35,10 +36,22 @@ namespace GraphQLQueryBuilder
             return new SelectionSet(alias, field, selectionSet);
         }
 
+        public ISelectionSetWithSettings UpdateSettings(QuerySerializerSettings settings)
+        {
+            var newSelectionSet = new SelectionSet(_alias, _field, _selectionSet)
+            {
+                _settings = settings
+            };
+
+            return newSelectionSet;
+        }
+
         public string Build()
         {
             var content = new StringBuilder();
 
+            content.Append(_settings?.CreateIndentation());
+            
             if (!string.IsNullOrWhiteSpace(_alias))
             {
                 content.Append($"{_alias}: ");
@@ -53,7 +66,15 @@ namespace GraphQLQueryBuilder
                     // nothing to do/append
                     break;
                 case IFragmentContentBuilder fragment:
-                    content.Append($" {{ ...{fragment.Name} }}");
+                    content.AppendLine(" {");
+                    
+                    var fragmentSpreadIndentation = _settings?.IncreaseIndentBy(_settings.Indent).CreateIndentation();
+
+                    content.Append(fragmentSpreadIndentation);
+                    content.AppendLine($"...{fragment.Name}");
+                    content.Append(_settings?.CreateIndentation());
+                    content.Append("}");
+                    
                     break;
                 default:
                     content.Append(" " + _selectionSet.Build());
