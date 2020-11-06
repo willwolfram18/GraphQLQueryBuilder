@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GraphQLQueryBuilder
+namespace GraphQLQueryBuilder.Abstractions.Language
 {
     public interface ISelectionSet
     {
