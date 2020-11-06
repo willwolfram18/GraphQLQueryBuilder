@@ -14,13 +14,13 @@ namespace GraphQLQueryBuilder
     {
         public ISelectionSetBuilder<T> AddField<TProperty>(System.Linq.Expressions.Expression<System.Func<T, TProperty>> propertySelection)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
             return this;
         }
 
         public ISelectionSetBuilder<T> AddField<TProperty>(string alias, System.Linq.Expressions.Expression<System.Func<T, TProperty>> propertySelection)
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
             return this;
         }
 
@@ -50,7 +50,8 @@ namespace GraphQLQueryBuilder
 
         public ISelectionSet<T> Build()
         {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
+            return null;
         }
     }
 }

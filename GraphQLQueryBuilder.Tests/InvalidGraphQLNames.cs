@@ -5,7 +5,7 @@ namespace GraphQLQueryBuilder.Tests
 {
     public static class InvalidGraphQLNames
     {
-        public static IEnumerable<string[]> BadGraphQLNames =>
+        public static IEnumerable<string[]> InvalidOperationNames =>
             new []
             {
                 new [] { null, "because name is null" },
@@ -20,7 +20,7 @@ namespace GraphQLQueryBuilder.Tests
 
     public class BadGraphQLNamesTestCaseSourceAttribute : TestCaseSourceAttribute
     {
-        public BadGraphQLNamesTestCaseSourceAttribute() : base(typeof(InvalidGraphQLNames), nameof(InvalidGraphQLNames.BadGraphQLNames))
+        public BadGraphQLNamesTestCaseSourceAttribute() : base(typeof(InvalidGraphQLNames), nameof(InvalidGraphQLNames.InvalidOperationNames))
         {
         }
     }

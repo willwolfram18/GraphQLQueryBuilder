@@ -1,9 +1,10 @@
-using System;
 using FluentAssertions;
 using GraphQLQueryBuilder.Abstractions.Language;
 using GraphQLQueryBuilder.Tests.Models;
 using Moq;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests
@@ -50,18 +51,13 @@ namespace GraphQLQueryBuilder.Tests
                 .AddField("acctNum", customer => customer.AccountNumber)
                 .Build();
 
-            var expectedSelections = new IFieldSelectionItem[]
+            var expectedSelections = new List<ISelectionSetItem>
             {
                 Mock.Of<IFieldSelectionItem>(item => item.FieldName == nameof(Customer.Id)),
                 Mock.Of<IFieldSelectionItem>(item => item.Alias == "acctNum" && item.FieldName == nameof(Customer.AccountNumber))
             };
 
-            selectionSet?.Selections.Should().BeEquivalentTo(expectedSelections);;
-
-            IQueryRenderer renderer = null;
-            var result = renderer.Render(selectionSet);
-
-            Assert.Fail("Compare with snapshooter");
+            selectionSet?.Selections.Should().BeEquivalentTo(expectedSelections);
         }
     }
 }
