@@ -2,8 +2,7 @@ using System.Collections.Generic;
 
 namespace GraphQLQueryBuilder.Abstractions.Language
 {
-    public interface ISelectionSet
+    public interface ISelectionSet<T> : ISelectionSet where T : class
     {
-        IEnumerable<ISelectionSetItem> Selections { get; }
     }
 }
