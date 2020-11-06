@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using GraphQLQueryBuilder.Abstractions.Language;
+using NUnit.Framework;
 using Snapshooter.Json;
 using System;
 using System.Runtime.CompilerServices;
@@ -10,15 +11,17 @@ namespace GraphQLQueryBuilder.Tests
     {
         protected const string DuplicateFragmentSkipReason = "Determine duplicate fragment resolution.";
 
-        protected void QueryContentShouldMatchSnapshotForTest(IGraphQLQueryContentBuilder queryContentBuilder, [CallerMemberName] string methodName = "")
-        {
-            ResultMatchesSnapshotOfMatchingClassAndTestName(queryContentBuilder.Build(), methodName);
-        }
+        // protected void QueryContentShouldMatchSnapshotForTest(IGraphQLOperation query, [CallerMemberName] string methodName = "")
+        // {
+        //     IQueryRenderer renderer;
 
-        protected void ResultMatchesSnapshotOfMatchingClassAndTestName(string result, [CallerMemberName] string methodName = "")
-        {
-            Snapshot.Match(result, GenerateSnapshotNameFromClassAndTestNames(methodName));
-        }
+        //     ResultMatchesSnapshotOfMatchingClassAndTestName(renderer.Render(), methodName);
+        // }
+
+        // protected void ResultMatchesSnapshotOfMatchingClassAndTestName(string result, [CallerMemberName] string methodName = "")
+        // {
+        //     Snapshot.Match(result, GenerateSnapshotNameFromClassAndTestNames(methodName));
+        // }
 
         private string GenerateSnapshotNameFromClassAndTestNames(string methodName)
         {

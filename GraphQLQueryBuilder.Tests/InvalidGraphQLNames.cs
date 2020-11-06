@@ -9,7 +9,6 @@ namespace GraphQLQueryBuilder.Tests
             new []
             {
                 new [] { null, "because name is null" },
-                new [] { "", "because name is an empty" },
                 new [] { "", "because name is empty" },
                 new [] { "   ", "because name is only white space" },
                 new [] { "  \n \t ", "because name is only white space" },
@@ -23,7 +22,6 @@ namespace GraphQLQueryBuilder.Tests
     {
         public BadGraphQLNamesTestCaseSourceAttribute() : base(typeof(InvalidGraphQLNames), nameof(InvalidGraphQLNames.BadGraphQLNames))
         {
-
         }
     }
 }

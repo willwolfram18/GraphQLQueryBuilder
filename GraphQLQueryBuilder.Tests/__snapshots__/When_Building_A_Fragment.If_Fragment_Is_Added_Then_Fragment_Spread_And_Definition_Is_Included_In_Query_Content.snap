@@ -1,5 +1,0 @@
-query {
-    ...FakeFragment
-}
-
-fragment FakeFragment on Thing { id, name }

@@ -1,5 +1,0 @@
-﻿fragment PartialAddress on Address {
-    Street1,
-    Street2,
-    ZipCode
-}

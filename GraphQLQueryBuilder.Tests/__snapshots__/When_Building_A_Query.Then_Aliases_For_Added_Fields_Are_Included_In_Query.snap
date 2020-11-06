@@ -1,4 +1,0 @@
-query {
-    aliasA: field1,
-    aliasB: field2
-}
