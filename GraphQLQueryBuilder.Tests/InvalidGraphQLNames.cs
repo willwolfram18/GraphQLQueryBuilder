@@ -1,5 +1,6 @@
-using System.Collections.Generic;
 using NUnit.Framework;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GraphQLQueryBuilder.Tests
 {
@@ -16,11 +17,21 @@ namespace GraphQLQueryBuilder.Tests
                 new [] { "Operation Name", "because name contains spaces"},
                 new [] { "Illegal+Characters&Stars*", "because name contains illegal characters"}
             };
+
+        public static IEnumerable<string[]> InvalidAliasNames =>
+            InvalidOperationNames.Where(values => !string.IsNullOrWhiteSpace(values[0]));
     }
 
-    public class BadGraphQLNamesTestCaseSourceAttribute : TestCaseSourceAttribute
+    public class InvalidOperationNamesTestCaseSourceAttribute : TestCaseSourceAttribute
     {
-        public BadGraphQLNamesTestCaseSourceAttribute() : base(typeof(InvalidGraphQLNames), nameof(InvalidGraphQLNames.InvalidOperationNames))
+        public InvalidOperationNamesTestCaseSourceAttribute() : base(typeof(InvalidGraphQLNames), nameof(InvalidGraphQLNames.InvalidOperationNames))
+        {
+        }
+    }
+
+    public class InvalidAliasNamesTestCaseSourceAttribute : TestCaseSourceAttribute
+    {
+        public InvalidAliasNamesTestCaseSourceAttribute() : base(typeof(InvalidGraphQLNames), nameof(InvalidGraphQLNames.InvalidAliasNames))
         {
         }
     }
