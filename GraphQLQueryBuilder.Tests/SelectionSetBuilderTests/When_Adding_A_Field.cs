@@ -1,11 +1,12 @@
 using FluentAssertions;
+using GraphQLQueryBuilder.Abstractions;
 using GraphQLQueryBuilder.Abstractions.Language;
 using GraphQLQueryBuilder.Tests.Models;
 using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using GraphQLQueryBuilder.Abstractions;
+using System.Linq.Expressions;
 using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
@@ -47,7 +48,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 .WithMessage("When selecting a property that is a class, please use the AddField method that takes an ISelectionSet.");
         }
 
-        public static IEnumerable<AddFieldToSelectionSetTestCase<Customer>> FieldIsNotAMemberOfTheType
+        public static IEnumerable<AddFieldToSelectionSetTestCase<Customer>> FieldIsNotAMemberExpression
         {
             get
             {
@@ -59,11 +60,38 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                     builder => builder.AddField("foo", _ => "hello"),
                     "Adding a field using an alias that isn't on the model."
                 );
+
             }
         }
 
-        [Test]
-        public void If_Expression_Evaluation_Is_Not_A_Property_On_The_Class_Then_An_InvalidOperationException_Is_Thrown(
+        [TestCaseSource(nameof(FieldIsNotAMemberExpression))]
+        public void If_Expression_Is_Not_A_Member_Expression_Then_An_ArgumentException_Is_Thrown(
+            AddFieldToSelectionSetTestCase<Customer> testData)
+        {
+            var builder = SelectionSetBuilder.Of<Customer>();
+
+            Invoking(() => testData.FieldAddition(builder)).Should().ThrowExactly<ArgumentException>()
+                .WithMessage($"A {nameof(MemberExpression)} was not provided.*")
+                .Where(e => e.ParamName == "expression");
+        }
+
+        public static IEnumerable<AddFieldToSelectionSetTestCase<Customer>> FieldIsNotAMemberOfType
+        {
+            get
+            {
+                yield return new AddFieldToSelectionSetTestCase<Customer>(
+                    builder => builder.AddField(customer => customer.CustomerContact.FirstName),
+                    "Adding a field from a nested object that isn't on the model."
+                );
+                yield return new AddFieldToSelectionSetTestCase<Customer>(
+                    builder => builder.AddField(customer => customer.CustomerContact.FirstName),
+                    "Adding a field using an alias from a nested object that isn't on the model."
+                );
+            }
+        }
+
+        [TestCaseSource(nameof(FieldIsNotAMemberOfType))]
+        public void If_Expression_Is_Not_A_Property_Of_The_Class_Then_An_InvalidOperationException_Is_Thrown(
             AddFieldToSelectionSetTestCase<Customer> testData)
         {
             var builder = SelectionSetBuilder.Of<Customer>();
@@ -81,7 +109,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             Action method = () => builder.AddField(alias, customer => customer.Id);
 
             Invoking(method).Should().ThrowExactly<ArgumentException>(because)
-                .Which.HelpLink.Should().Be("https://spec.graphql.org/June2018/#Name");
+                .Where(e => e.ParamName == "alias", "because the alias parameter is the problem")
+                .Where(e => e.HelpLink == "https://spec.graphql.org/June2018/#Name", "because this is the link to the GraphQL 'Name' spec");
         }
 
         [Test]
