@@ -1,12 +1,12 @@
 using GraphQLQueryBuilder.Abstractions;
 using GraphQLQueryBuilder.Abstractions.Language;
+using GraphQLQueryBuilder.Implementations.Language;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text.RegularExpressions;
-using GraphQLQueryBuilder.Implementations.Language;
 
 namespace GraphQLQueryBuilder
 {
@@ -34,30 +34,9 @@ namespace GraphQLQueryBuilder
         {
             alias = alias?.Trim();
 
-            if (!string.IsNullOrWhiteSpace(alias) && !GraphQLName.IsValid(alias))
-            {
-                throw new ArgumentException("Provided alias does not comply with GraphQL's Name specification.", nameof(alias))
-                {
-                    HelpLink = "https://spec.graphql.org/June2018/#Name"
-                };
-            }
+            ThrowIfAliasIsNotValid(alias);
 
-            if (expression == null)
-            {
-                throw new ArgumentNullException(nameof(expression));
-            }
-
-            if (!(expression.Body is MemberExpression memberExpression))
-            {
-                throw new ArgumentException($"A {nameof(MemberExpression)} was not provided.", nameof(expression));
-            }
-
-            var propertyInfo = _properties.SingleOrDefault(property => property == memberExpression.Member);
-            if (propertyInfo == null)
-            {
-                throw new InvalidOperationException($"Property '{memberExpression.Member.Name}' is not a member of type '{typeof(T).FullName}'.");
-            }
-
+            var propertyInfo = GetPropertyInfoForExpression(expression);
             if (propertyInfo.PropertyType.IsClass && propertyInfo.PropertyType != typeof(string))
             {
                 throw new InvalidOperationException(
@@ -79,7 +58,31 @@ namespace GraphQLQueryBuilder
         /// <inheritdoc />
         public ISelectionSetBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            throw new System.NotImplementedException();
+            alias = alias?.Trim();
+
+            ThrowIfAliasIsNotValid(alias);
+
+            if (selectionSet == null)
+            {
+                throw new ArgumentNullException(nameof(selectionSet));
+            }
+
+            var propertyInfo = GetPropertyInfoForExpression(expression);
+            if (propertyInfo.PropertyType == typeof(string))
+            {
+                throw new InvalidOperationException(
+                    $"When selecting a property that is of type string, please use the {nameof(AddField)} method that does not take an {nameof(ISelectionSet)}."
+                );
+            }
+            if (typeof(IEnumerable).IsAssignableFrom(propertyInfo.PropertyType))
+            {
+                throw new InvalidOperationException(
+                    $"When selecting a property that is an {nameof(IEnumerable)}, please use the {nameof(AddCollectionField)} method."
+                );
+            }
+
+            _selectionSetItems.Add(new FieldSelectionItem(alias, propertyInfo.Name, selectionSet));
+
             return this;
         }
 
@@ -109,6 +112,39 @@ namespace GraphQLQueryBuilder
             }
 
             return new SelectionSet<T>(_selectionSetItems);
+        }
+
+        private static void ThrowIfAliasIsNotValid(string alias)
+        {
+            if (!string.IsNullOrWhiteSpace(alias) && !GraphQLName.IsValid(alias))
+            {
+                throw new ArgumentException("Provided alias does not comply with GraphQL's Name specification.", nameof(alias))
+                {
+                    HelpLink = "https://spec.graphql.org/June2018/#Name"
+                };
+            }
+        }
+
+        private PropertyInfo GetPropertyInfoForExpression<TProperty>(Expression<Func<T, TProperty>> expression)
+        {
+            if (expression == null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            if (!(expression.Body is MemberExpression memberExpression))
+            {
+                throw new ArgumentException($"A {nameof(MemberExpression)} was not provided.", nameof(expression));
+            }
+
+            var propertyInfo = _properties.SingleOrDefault(property => property == memberExpression.Member);
+            if (propertyInfo == null)
+            {
+                throw new InvalidOperationException(
+                    $"Property '{memberExpression.Member.Name}' is not a member of type '{typeof(T).FullName}'.");
+            }
+
+            return propertyInfo;
         }
     }
 }
