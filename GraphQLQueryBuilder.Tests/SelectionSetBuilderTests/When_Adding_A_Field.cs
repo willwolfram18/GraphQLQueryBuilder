@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using GraphQLQueryBuilder.Abstractions;
 using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
@@ -79,7 +80,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 
             Action method = () => builder.AddField(alias, customer => customer.Id);
 
-            Invoking(method).Should().ThrowExactly<ArgumentException>(because);
+            Invoking(method).Should().ThrowExactly<ArgumentException>(because)
+                .Which.HelpLink.Should().Be("https://spec.graphql.org/June2018/#Name");
         }
 
         [Test]
