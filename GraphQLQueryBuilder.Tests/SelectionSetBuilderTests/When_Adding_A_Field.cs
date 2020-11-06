@@ -13,7 +13,7 @@ namespace GraphQLQueryBuilder.Tests
         [Test]
         public void If_Property_Expression_Is_Null_Then_ArgumentNullException_Is_Thrown()
         {
-            ISelectionSetBuilder<Customer> builder = null;
+            var builder = SelectionSetBuilder.Of<Customer>();
 
             Action method = () => builder.AddField<Guid>(null);
 
@@ -23,7 +23,7 @@ namespace GraphQLQueryBuilder.Tests
         [Test]
         public void If_Property_Type_Is_A_Class_Then_InvalidOperationException_Is_Thrown_Stating_The_Overload_Should_Be_Used()
         {
-            ISelectionSetBuilder<Customer> builder = null;
+            var builder = SelectionSetBuilder.Of<Customer>();
 
             Action method = () => builder.AddField(customer => customer.CustomerContact);
 
@@ -35,7 +35,7 @@ namespace GraphQLQueryBuilder.Tests
         public void If_Property_Alias_Has_An_Invalid_Name_Then_ArgumentException_Is_Thrown_Stating_Alias_Name_Is_Not_Valid(
             string alias, string because)
         {
-            ISelectionSetBuilder<Customer> builder = null;
+            var builder = SelectionSetBuilder.Of<Customer>();
 
             Action method = () => builder.AddField(alias, customer => customer.Id);
 
@@ -45,12 +45,10 @@ namespace GraphQLQueryBuilder.Tests
         [Test]
         public void Then_Added_Properties_Are_In_The_Selection_Set()
         {
-            ISelectionSetBuilder<Customer> builder = null;
-
-            builder.AddField(customer => customer.Id)
-                .AddField("acctNum", customer => customer.AccountNumber);
-
-            var selectionSet = builder.Build();
+            var selectionSet = SelectionSetBuilder.Of<Customer>()
+                .AddField(customer => customer.Id)
+                .AddField("acctNum", customer => customer.AccountNumber)
+                .Build();
 
             var expectedSelections = new IFieldSelectionItem[]
             {
@@ -58,7 +56,7 @@ namespace GraphQLQueryBuilder.Tests
                 Mock.Of<IFieldSelectionItem>(item => item.Alias == "acctNum" && item.FieldName == nameof(Customer.AccountNumber))
             };
 
-            selectionSet.Selections.Should().BeEquivalentTo(expectedSelections);
+            selectionSet?.Selections.Should().BeEquivalentTo(expectedSelections);;
 
             IQueryRenderer renderer = null;
             var result = renderer.Render(selectionSet);

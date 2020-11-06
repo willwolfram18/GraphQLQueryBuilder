@@ -1,8 +1,13 @@
+using GraphQLQueryBuilder.Abstractions.Language;
+
 namespace GraphQLQueryBuilder
 {
     public static class SelectionSetBuilder
     {
-
+        public static ISelectionSetBuilder<T> Of<T>() where T : class
+        {
+            return new SelectionSetBuilder<T>();
+        }
     }
 
     internal class SelectionSetBuilder<T> : ISelectionSetBuilder<T> where T : class
@@ -41,6 +46,11 @@ namespace GraphQLQueryBuilder
         {
             throw new System.NotImplementedException();
             return this;
+        }
+
+        public ISelectionSet<T> Build()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
