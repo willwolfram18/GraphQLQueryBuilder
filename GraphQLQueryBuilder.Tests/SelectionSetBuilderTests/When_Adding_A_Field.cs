@@ -12,16 +12,30 @@ using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 {
-    public class When_Adding_A_Field : SelectionSetBuilderTest
+    public class When_Adding_A_Field
     {
-        [Test]
-        public void If_Property_Expression_Is_Null_Then_ArgumentNullException_Is_Thrown()
+        public static IEnumerable<AddFieldToSelectionSetTestCase<Customer>> NullPropertyExpressions
+        {
+            get
+            {
+                yield return new AddFieldToSelectionSetTestCase<Customer>(
+                    builder => builder.AddField<Guid>(null),
+                    "Adding a null property expression."
+                );
+                yield return new AddFieldToSelectionSetTestCase<Customer>(
+                    builder => builder.AddField<Guid>("foo", null),
+                    "Adding a null property expression."
+                );
+            }
+        }
+
+        [TestCaseSource(nameof(NullPropertyExpressions))]
+        public void If_Property_Expression_Is_Null_Then_ArgumentNullException_Is_Thrown(
+            AddFieldToSelectionSetTestCase<Customer> testData)
         {
             var builder = SelectionSetBuilder.Of<Customer>();
 
-            Action method = () => builder.AddField<Guid>(null);
-
-            Invoking(method).Should().ThrowExactly<ArgumentNullException>();
+            Invoking(() => testData.FieldAddition(builder)).Should().ThrowExactly<ArgumentNullException>();
         }
 
         public static IEnumerable<AddFieldToSelectionSetTestCase<Customer>> PropertyTypeIsAClass
@@ -46,7 +60,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             var builder = SelectionSetBuilder.Of<Customer>();
 
             Invoking(() => testData.FieldAddition(builder)).Should().ThrowExactly<InvalidOperationException>("because there is an overload for class properties")
-                .WithMessage($"When selecting a property that is a class, please use the {nameof(builder.AddField)} method that takes an {nameof(ISelectionSet)}.");
+                .WithMessage($"When selecting a property that is a class, please use the {nameof(builder.AddCollectionField)} method that takes an {nameof(ISelectionSet)}.");
         }
 
         public static IEnumerable<AddFieldToSelectionSetTestCase<Customer>> FieldIsNotAMemberExpression
@@ -85,7 +99,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                     "Adding a field from a nested object that isn't on the model."
                 );
                 yield return new AddFieldToSelectionSetTestCase<Customer>(
-                    builder => builder.AddField(customer => customer.CustomerContact.FirstName),
+                    builder => builder.AddField("foo", customer => customer.CustomerContact.FirstName),
                     "Adding a field using an alias from a nested object that isn't on the model."
                 );
             }
@@ -159,6 +173,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         public string Description { get; }
 
         /// <inheritdoc />
+        /// <remarks>Overriding so that the description is rendered in test outputs.</remarks>
         public override string ToString()
         {
             return Description;

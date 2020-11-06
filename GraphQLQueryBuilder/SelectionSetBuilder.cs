@@ -20,8 +20,6 @@ namespace GraphQLQueryBuilder
 
     internal class SelectionSetBuilder<T> : ISelectionSetBuilder<T> where T : class
     {
-        private static readonly Regex ValidAliasName = new Regex(@"^[_A-Za-z][_0-9A-Za-z]*$");
-
         private readonly PropertyInfo[] _properties = typeof(T).GetProperties();
         private readonly List<ISelectionSetItem> _selectionSetItems = new List<ISelectionSetItem>();
 
@@ -34,7 +32,9 @@ namespace GraphQLQueryBuilder
         /// <inheritdoc />
         public ISelectionSetBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> expression)
         {
-            if (!string.IsNullOrWhiteSpace(alias) && !ValidAliasName.IsMatch(alias))
+            alias = alias?.Trim();
+
+            if (!string.IsNullOrWhiteSpace(alias) && !GraphQLName.IsValid(alias))
             {
                 throw new ArgumentException("Provided alias does not comply with GraphQL's Name specification.", nameof(alias))
                 {
@@ -61,7 +61,7 @@ namespace GraphQLQueryBuilder
             if (propertyInfo.PropertyType.IsClass && propertyInfo.PropertyType != typeof(string))
             {
                 throw new InvalidOperationException(
-                    $"When selecting a property that is a class, please use the {nameof(AddField)} method that takes an {nameof(ISelectionSet)}."
+                    $"When selecting a property that is a class, please use the {nameof(AddCollectionField)} method that takes an {nameof(ISelectionSet)}."
                 );
             }
 
@@ -73,8 +73,7 @@ namespace GraphQLQueryBuilder
         /// <inheritdoc />
         public ISelectionSetBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            throw new System.NotImplementedException();
-            return this;
+            return AddField(null, expression, selectionSet);
         }
 
         /// <inheritdoc />
@@ -85,14 +84,14 @@ namespace GraphQLQueryBuilder
         }
 
         /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddField<TProperty>(Expression<Func<T, System.Collections.Generic.IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        public ISelectionSetBuilder<T> AddCollectionField<TProperty>(Expression<Func<T, System.Collections.Generic.IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
             throw new System.NotImplementedException();
             return this;
         }
 
         /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, System.Collections.Generic.IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        public ISelectionSetBuilder<T> AddCollectionField<TProperty>(string alias, Expression<Func<T, System.Collections.Generic.IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
             throw new System.NotImplementedException();
             return this;
