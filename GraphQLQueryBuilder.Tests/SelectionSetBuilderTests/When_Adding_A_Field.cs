@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using static FluentAssertions.FluentActions;
 
@@ -45,7 +46,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             var builder = SelectionSetBuilder.Of<Customer>();
 
             Invoking(() => testData.FieldAddition(builder)).Should().ThrowExactly<InvalidOperationException>("because there is an overload for class properties")
-                .WithMessage("When selecting a property that is a class, please use the AddField method that takes an ISelectionSet.");
+                .WithMessage($"When selecting a property that is a class, please use the {nameof(builder.AddField)} method that takes an {nameof(ISelectionSet)}.");
         }
 
         public static IEnumerable<AddFieldToSelectionSetTestCase<Customer>> FieldIsNotAMemberExpression
@@ -114,6 +115,17 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         }
 
         [Test]
+        public void If_No_Fields_Are_Selected_Before_Building_Then_An_InvalidOperationException_Is_Thrown()
+        {
+            var builder = SelectionSetBuilder.Of<Customer>();
+
+            Invoking(builder.Build).Should()
+                .ThrowExactly<InvalidOperationException>("because a selection set must include 1 or more fields")
+                .WithMessage("A selection set must include one or more fields.")
+                .Where(e => e.HelpLink == "https://spec.graphql.org/June2018/#SelectionSet");
+        }
+
+        [Test]
         public void Then_Added_Properties_Are_In_The_Selection_Set()
         {
             var selectionSet = SelectionSetBuilder.Of<Customer>()
@@ -121,13 +133,16 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 .AddField("acctNum", customer => customer.AccountNumber)
                 .Build();
 
-            var expectedSelections = new List<ISelectionSetItem>
+            var expectedSelections = new List<IFieldSelectionItem>
             {
                 Mock.Of<IFieldSelectionItem>(item => item.FieldName == nameof(Customer.Id)),
                 Mock.Of<IFieldSelectionItem>(item => item.Alias == "acctNum" && item.FieldName == nameof(Customer.AccountNumber))
             };
 
-            (selectionSet?.Selections).Should().BeEquivalentTo(expectedSelections);
+            selectionSet.Should().NotBeNull();
+            selectionSet.Selections.Where(selection => selection is IFieldSelectionItem)
+                .Cast<IFieldSelectionItem>()
+                .Should().BeEquivalentTo(expectedSelections);
         }
     }
 
