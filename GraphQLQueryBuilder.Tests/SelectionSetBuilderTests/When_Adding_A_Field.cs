@@ -72,7 +72,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         }
 
         [InvalidAliasNamesTestCaseSource]
-        public void If_Property_Alias_Has_An_Invalid_Name_Then_ArgumentException_Is_Thrown_Stating_Alias_Name_Is_Not_Valid(
+        public void If_Property_Alias_Is_Not_A_Valid_GraphQL_Name_Then_ArgumentException_Is_Thrown_Stating_Alias_Is_Not_Valid(
             string alias, string because)
         {
             var builder = SelectionSetBuilder.Of<Customer>();
