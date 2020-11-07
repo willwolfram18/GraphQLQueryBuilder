@@ -90,7 +90,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 foreach (var addingField in new [] { addingFieldWithAlias, addingFieldWithoutAlias})
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
-                        .WithMessage($"Property '*' is not a member of type '{typeof(Customer).FullName}'.");
+                        .WithMessage($"Property '*' is not a member of type '{typeof(SimpleSchema).FullName}'.");
                 }
             }
         }
@@ -112,7 +112,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
                         .WithMessage(
-                            $"The type {typeof(string).FullName} is not a GraphQL object type. Use the {nameof(builder.AddScalarField)} method.")
+                            $"The type '{typeof(string).FullName}' is not a GraphQL object type. Use the {nameof(builder.AddScalarField)} method.")
                         .Where(e => e.HelpLink == "http://spec.graphql.org/June2018/#sec-Objects");
                 }
             }

@@ -35,7 +35,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 .AddScalarField(schema => schema.Version)
                 .Build();
 
-            var expectedOperationName = string.IsNullOrWhiteSpace(operationName) ? null : operationName;
+            var expectedOperationName = operationName?.Trim();
             
             query.Should().NotBeNull();
             query.Type.Should().Be(OperationTypeForFixture);
@@ -54,6 +54,17 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 .Where(e => e.HelpLink == "https://spec.graphql.org/June2018/#Name", "because this is the link to the GraphQL 'Name' spec");
         }
 
+        [Test]
+        public void Then_At_Least_One_Field_Selection_Must_Be_Made()
+        {
+            var builder = CreateBuilderFor<SimpleSchema>();
+            
+            Invoking(builder.Build).Should()
+                .ThrowExactly<InvalidOperationException>("because a selection set must include 1 or more fields")
+                .WithMessage("A selection set must include one or more fields.")
+                .Where(e => e.HelpLink == "https://spec.graphql.org/June2018/#SelectionSet");
+        }
+        
         [Test]
         public void Then_Added_Fields_Are_Included_In_Selections()
         {
@@ -92,21 +103,23 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                     new FieldSelectionItem(null, nameof(Customer.CustomerContact), expectedContactsSelectionSet)
                 });
 
-            var expectedQuerySelections = new List<ISelectionSetItem>
-            {
-                new FieldSelectionItem(null, nameof(SimpleSchema.Version), null),
-                new FieldSelectionItem("foobar", nameof(SimpleSchema.Version), null),
-                new FieldSelectionItem(null, nameof(SimpleSchema.PastVersions), null),
-                new FieldSelectionItem("versions", nameof(SimpleSchema.PastVersions), null),
-                new FieldSelectionItem(null, nameof(SimpleSchema.Administrator), expectedContactsSelectionSet),
-                new FieldSelectionItem("admin", nameof(SimpleSchema.Administrator), expectedContactsSelectionSet),
-                new FieldSelectionItem(null, nameof(SimpleSchema.Customers), expectedCustomerSelectionSet),
-                new FieldSelectionItem("customers", nameof(SimpleSchema.Customers), expectedCustomerSelectionSet),
-            };
+            var expectedQuerySelectionSet = new SelectionSet<SimpleSchema>(
+                new List<ISelectionSetItem>
+                {
+                    new FieldSelectionItem(null, nameof(SimpleSchema.Version), null),
+                    new FieldSelectionItem("foobar", nameof(SimpleSchema.Version), null),
+                    new FieldSelectionItem(null, nameof(SimpleSchema.PastVersions), null),
+                    new FieldSelectionItem("versions", nameof(SimpleSchema.PastVersions), null),
+                    new FieldSelectionItem(null, nameof(SimpleSchema.Administrator), expectedContactsSelectionSet),
+                    new FieldSelectionItem("admin", nameof(SimpleSchema.Administrator), expectedContactsSelectionSet),
+                    new FieldSelectionItem(null, nameof(SimpleSchema.Customers), expectedCustomerSelectionSet),
+                    new FieldSelectionItem("customers", nameof(SimpleSchema.Customers), expectedCustomerSelectionSet),
+                });
 
-            queryOperation.Should().NotBeNull();
-            queryOperation.Type.Should().Be(OperationTypeForFixture);
-            queryOperation.SelectionSet.Should().BeEquivalentTo(expectedQuerySelections, options => options.RespectingRuntimeTypes());
+            var expectedQueryOperation =
+                new GraphQLQueryOperation<SimpleSchema>(OperationTypeForFixture, null, expectedQuerySelectionSet);
+            
+            queryOperation.Should().BeEquivalentTo(expectedQueryOperation, options => options.RespectingRuntimeTypes());
         }
     }
 }

@@ -79,7 +79,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 foreach (var addingField in new [] { addingFieldWithAlias, addingFieldWithoutAlias})
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
-                        .WithMessage($"Property '*' is not a member of type '{typeof(Customer).FullName}'.");
+                        .WithMessage($"Property '*' is not a member of type '{typeof(SimpleSchema).FullName}'.");
                 }
             }
         }
@@ -97,7 +97,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 foreach (var addingField in new [] { addingFieldWithAlias, addingFieldWithoutAlias })
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>("because there is an overload for class properties")
-                        .WithMessage($"The type '{typeof(PhoneNumber).FullName}' is not a GraphQL scalar type.")
+                        .WithMessage($"The type '{typeof(Customer).FullName}' is not a GraphQL scalar type.")
                         .Where(e => e.HelpLink == "http://spec.graphql.org/June2018/#sec-Scalars");                    
                 }
             }

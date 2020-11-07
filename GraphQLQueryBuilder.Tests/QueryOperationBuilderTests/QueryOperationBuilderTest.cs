@@ -17,7 +17,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         
         protected GraphQLOperationType OperationTypeForFixture { get; }
         
-        private static IEnumerable<GraphQLOperationType> OperationTypes => Enum.GetValues(typeof(GraphQLOperationType))
+        public static IEnumerable<GraphQLOperationType> OperationTypes => Enum.GetValues(typeof(GraphQLOperationType))
             .Cast<GraphQLOperationType>();
 
         protected IQueryOperationBuilder<T> CreateBuilderFor<T>(string operationName = null) where T : class

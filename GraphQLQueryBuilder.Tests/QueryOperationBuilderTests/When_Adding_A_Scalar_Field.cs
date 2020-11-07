@@ -46,7 +46,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 foreach (var addingField in new [] { addingFieldWithAlias, addingFieldWithoutAlias })
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>("because there is an overload for class properties")
-                        .WithMessage($"The type {typeof(Contact).FullName} is not a GraphQL scalar.");                    
+                        .WithMessage($"The type '{typeof(Contact).FullName}' is not a GraphQL scalar type.");                    
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 foreach (var addingField in new [] { addingFieldWithAlias, addingFieldWithoutAlias })
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
-                        .WithMessage($"Property '*' is not a member of type '{typeof(Customer).FullName}'.");
+                        .WithMessage($"Property '*' is not a member of type '{typeof(SimpleSchema).FullName}'.");
                 }
             }
         }

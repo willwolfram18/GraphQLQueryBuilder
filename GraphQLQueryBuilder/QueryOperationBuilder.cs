@@ -3,6 +3,8 @@ using GraphQLQueryBuilder.Abstractions.Language;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using GraphQLQueryBuilder.Guards;
+using GraphQLQueryBuilder.Implementations.Language;
 
 namespace GraphQLQueryBuilder
 {
@@ -31,7 +33,7 @@ namespace GraphQLQueryBuilder
         public QueryOperationBuilder(GraphQLOperationType type, string name)
         {
             Type = type;
-            Name = name;
+            Name = name.MustBeValidGraphQLName(nameof(name));
         }
 
         /// <inheritdoc />
@@ -43,71 +45,71 @@ namespace GraphQLQueryBuilder
         /// <inheritdoc />
         public IQueryOperationBuilder<T> AddScalarField<TProperty>(Expression<Func<T, TProperty>> expression)
         {
-            throw new NotImplementedException();
-//            _selectionSet.AddField(expression);
-//
-//            return this;
+            _selectionSet.AddScalarField(expression);
+
+            return this;
         }
 
         /// <inheritdoc />
         public IQueryOperationBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression)
         {
-            throw new NotImplementedException();
-//            _selectionSet.AddField(expression);
-//
-//            return this;
+            _selectionSet.AddScalarField(alias, expression);
+
+            return this;
         }
 
         /// <inheritdoc />
         public IQueryOperationBuilder<T> AddObjectField<TProperty>(Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            throw new NotImplementedException();
-//            _selectionSet.AddField(expression);
-//
-//            return this;
+            _selectionSet.AddObjectField(expression, selectionSet);
+
+            return this;
         }
 
         /// <inheritdoc />
         public IQueryOperationBuilder<T> AddObjectField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            throw new NotImplementedException();
-//            _selectionSet.AddField(expression);
-//
-//            return this;
+            _selectionSet.AddObjectField(alias, expression, selectionSet);
+
+            return this;
         }
 
         public IQueryOperationBuilder<T> AddScalarCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression)
         {
-            throw new NotImplementedException();
+            _selectionSet.AddScalarCollectionField(expression);
+
+            return this;
         }
 
         public IQueryOperationBuilder<T> AddScalarCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression)
         {
-            throw new NotImplementedException();
+            _selectionSet.AddScalarCollectionField(alias, expression);
+
+            return this;
         }
 
         /// <inheritdoc />
         public IQueryOperationBuilder<T> AddObjectCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            throw new NotImplementedException();
-//            _selectionSet.AddField(expression);
-//
-//            return this;
+            _selectionSet.AddObjectCollectionField(expression, selectionSet);
+
+            return this;
         }
 
         /// <inheritdoc />
         public IQueryOperationBuilder<T> AddObjectCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            throw new NotImplementedException();
-//            _selectionSet.AddField(expression);
-//
-//            return this;
+            _selectionSet.AddObjectCollectionField(alias, expression, selectionSet);
+
+            return this;
         }
 
         /// <inheritdoc />
         public IGraphQLOperation<T> Build()
         {
-            throw new NotImplementedException();
+            var selectionSet = _selectionSet.Build();
+
+            return new GraphQLQueryOperation<T>(Type, Name, selectionSet);
         }
     }
 }
