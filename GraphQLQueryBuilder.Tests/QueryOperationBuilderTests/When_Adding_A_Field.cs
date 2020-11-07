@@ -11,23 +11,17 @@ using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
 {
-    [TestFixtureSource(nameof(OperationTypes))]
-    public class When_Adding_A_Field
+    
+    public class When_Adding_A_Field : QueryOperationBuilderTest
     {
-        private readonly GraphQLOperationType _operationTypeForFixture;
-        
-        public When_Adding_A_Field(GraphQLOperationType operationType)
+        public When_Adding_A_Field(GraphQLOperationType operationType) : base(operationType)
         {
-            _operationTypeForFixture = operationType;
         }
-
-        private static IEnumerable<GraphQLOperationType> OperationTypes => Enum.GetValues(typeof(GraphQLOperationType))
-            .Cast<GraphQLOperationType>();
         
         [Test]
         public void If_Property_Expression_Is_Null_Then_ArgumentNullException_Is_Thrown()
         {
-            var builder = QueryOperationBuilder.ForSchema<SimpleSchema>(_operationTypeForFixture);
+            var builder = QueryOperationBuilder.ForSchema<SimpleSchema>(OperationTypeForFixture);
 
             Action addingFieldWithoutAlias = () => builder.AddField<string>(null);
             Action addingFieldWithAlias = () => builder.AddField<string>("foo", null);
@@ -44,7 +38,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         [Test]
         public void If_Property_Type_Is_A_Class_Then_InvalidOperationException_Is_Thrown_Stating_The_Overload_Should_Be_Used()
         {
-            var builder = QueryOperationBuilder.ForSchema<SimpleSchema>(_operationTypeForFixture);
+            var builder = QueryOperationBuilder.ForSchema<SimpleSchema>(OperationTypeForFixture);
 
             Action addingFieldWithoutAlias = () => builder.AddField(schema => schema.Administrator);
             Action addingFieldWithAlias = () => builder.AddField("foo", schema => schema.Administrator);
@@ -62,7 +56,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         [Test]
         public void If_Expression_Is_Not_A_Member_Expression_Then_An_ArgumentException_Is_Thrown()
         {
-            var builder = QueryOperationBuilder.ForSchema<SimpleSchema>(_operationTypeForFixture);
+            var builder = QueryOperationBuilder.ForSchema<SimpleSchema>(OperationTypeForFixture);
 
             Action addingFieldWithoutAlias = () => builder.AddField(_ => "hello");
             Action addingFieldWithAlias = () => builder.AddField("foo", _ => "hello");
@@ -81,7 +75,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         [Test]
         public void If_Expression_Is_Not_A_Property_Of_The_Class_Then_An_InvalidOperationException_Is_Thrown()
         {
-            var builder = QueryOperationBuilder.ForSchema<SimpleSchema>(_operationTypeForFixture);
+            var builder = QueryOperationBuilder.ForSchema<SimpleSchema>(OperationTypeForFixture);
 
             Action addingFieldWithoutAlias = () => builder.AddField(schema => schema.Administrator.FirstName);
             Action addingFieldWithAlias = () => builder.AddField("foo", schema => schema.Administrator.FirstName);
@@ -100,7 +94,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         public void If_Property_Alias_Is_Not_A_Valid_GraphQL_Name_Then_ArgumentException_Is_Thrown_Stating_Alias_Is_Not_Valid(
             string alias, string because)
         {
-            var builder = QueryOperationBuilder.ForSchema<SimpleSchema>(_operationTypeForFixture);
+            var builder = QueryOperationBuilder.ForSchema<SimpleSchema>(OperationTypeForFixture);
 
             Action method = () => builder.AddField(alias, schema => schema.Version);
 
