@@ -1,12 +1,7 @@
 using FluentAssertions;
-using GraphQLQueryBuilder.Abstractions;
-using GraphQLQueryBuilder.Abstractions.Language;
 using GraphQLQueryBuilder.Tests.Models;
-using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using FluentAssertions.Execution;
 using static FluentAssertions.FluentActions;
@@ -14,6 +9,7 @@ using static FluentAssertions.FluentActions;
 namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 {
     // TODO: What about primitive aliases like Int32 and Boolean?
+    // TODO: test with enums
     public class When_Adding_A_Scalar_Field
     {
         [Test]
