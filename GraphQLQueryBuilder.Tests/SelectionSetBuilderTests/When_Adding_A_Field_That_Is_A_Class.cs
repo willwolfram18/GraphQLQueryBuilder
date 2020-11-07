@@ -16,7 +16,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Property_Expression_Is_Null_Then_ArgumentNullException_Is_Thrown()
         {
-            var builder = SelectionSetBuilder.Of<Customer>();
+            var builder = SelectionSetBuilder.For<Customer>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<Contact>>();
 
             Action addingFieldWithoutAlias = () => builder.AddField(null, fakeSelectionSet);
@@ -35,7 +35,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Selection_Set_Is_Null_Then_An_ArgumentNullException_Is_Thrown()
         {
-            var builder = SelectionSetBuilder.Of<Customer>();
+            var builder = SelectionSetBuilder.For<Customer>();
 
             Action addingFieldWithoutAlias = () => builder.AddField(customer => customer.CustomerContact, null);
             Action addingFieldWithAlias = () => builder.AddField("foo", customer => customer.CustomerContact, null);
@@ -53,7 +53,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Expression_Is_Not_A_Member_Expression_Then_An_ArgumentException_Is_Thrown()
         {
-            var builder = SelectionSetBuilder.Of<Customer>();
+            var builder = SelectionSetBuilder.For<Customer>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<string>>();
 
             Action addingFieldWithoutAlias = () => builder.AddField(_ => "hello", fakeSelectionSet);
@@ -74,7 +74,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Expression_Is_Not_A_Property_Of_The_Class_Then_An_InvalidOperationException_Is_Thrown()
         {
-            var builder = SelectionSetBuilder.Of<Customer>();
+            var builder = SelectionSetBuilder.For<Customer>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<Address>>();
 
             Action addingFieldWithoutAlias = () =>
@@ -95,7 +95,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Expression_Is_A_String_Property_Then_An_InvalidOperationException_Is_Thrown_Stating_To_Use_The_Other_Method_Overload()
         {
-            var builder = SelectionSetBuilder.Of<Customer>();
+            var builder = SelectionSetBuilder.For<Customer>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<string>>();
 
             Action addingFieldWithoutAlias = () =>
@@ -117,7 +117,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Expression_Is_An_Enumerable_Property_Then_An_InvalidOperationException_Is_Thrown_Stating_To_Use_AddCollectionField()
         {
-            var builder = SelectionSetBuilder.Of<Contact>();
+            var builder = SelectionSetBuilder.For<Contact>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<IEnumerable<PhoneNumber>>>();
 
             Action addingFieldWithoutAlias = () =>
@@ -140,7 +140,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         public void If_Property_Alias_Is_Not_A_Valid_GraphQL_Name_Then_ArgumentException_Is_Thrown_Stating_Alias_Is_Not_Valid(
             string alias, string because)
         {
-            var builder = SelectionSetBuilder.Of<Customer>();
+            var builder = SelectionSetBuilder.For<Customer>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<Contact>>();
 
             Action method = () => builder.AddField(alias, customer => customer.CustomerContact, fakeSelectionSet);

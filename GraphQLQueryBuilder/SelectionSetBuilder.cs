@@ -12,7 +12,7 @@ namespace GraphQLQueryBuilder
 {
     public static class SelectionSetBuilder
     {
-        public static ISelectionSetBuilder<T> Of<T>() where T : class
+        public static ISelectionSetBuilder<T> For<T>() where T : class
         {
             return new SelectionSetBuilder<T>();
         }

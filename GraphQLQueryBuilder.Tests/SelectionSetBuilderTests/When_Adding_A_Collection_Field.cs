@@ -15,7 +15,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Property_Expression_Is_Null_Then_ArgumentNullException_Is_Thrown()
         {
-            var builder = SelectionSetBuilder.Of<Contact>();
+            var builder = SelectionSetBuilder.For<Contact>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<PhoneNumber>>();
 
             Action addingFieldWithoutAlias = () => builder.AddCollectionField(null, fakeSelectionSet);
@@ -34,7 +34,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Selection_Set_Is_Null_Then_An_ArgumentNullException_Is_Thrown()
         {
-            var builder = SelectionSetBuilder.Of<Contact>();
+            var builder = SelectionSetBuilder.For<Contact>();
 
             Action addingFieldWithoutAlias = () => builder.AddCollectionField(contact => contact.PhoneNumbers, null);
             Action addingFieldWithAlias = () => builder.AddCollectionField("foo", contact => contact.PhoneNumbers, null);
@@ -52,7 +52,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Expression_Is_Not_A_Member_Expression_Then_An_ArgumentException_Is_Thrown()
         {
-            var builder = SelectionSetBuilder.Of<Contact>();
+            var builder = SelectionSetBuilder.For<Contact>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<string>>();
 
             Action addingFieldWithoutAlias = () => builder.AddCollectionField(_ => new [] { "hello" }, fakeSelectionSet);
@@ -72,7 +72,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Expression_Is_Not_A_Property_Of_The_Class_Then_An_InvalidOperationException_Is_Thrown()
         {
-            var builder = SelectionSetBuilder.Of<Customer>();
+            var builder = SelectionSetBuilder.For<Customer>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<PhoneNumber>>();
 
             Action addingFieldWithoutAlias = () =>
@@ -94,7 +94,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         public void If_Property_Alias_Is_Not_A_Valid_GraphQL_Name_Then_ArgumentException_Is_Thrown_Stating_Alias_Is_Not_Valid(
             string alias, string because)
         {
-            var builder = SelectionSetBuilder.Of<Contact>();
+            var builder = SelectionSetBuilder.For<Contact>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<PhoneNumber>>();
 
             Action method = () => builder.AddCollectionField(alias, contact => contact.PhoneNumbers, fakeSelectionSet);

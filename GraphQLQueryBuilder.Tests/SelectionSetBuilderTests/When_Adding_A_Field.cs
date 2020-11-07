@@ -18,7 +18,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Property_Expression_Is_Null_Then_ArgumentNullException_Is_Thrown()
         {
-            var builder = SelectionSetBuilder.Of<Customer>();
+            var builder = SelectionSetBuilder.For<Customer>();
 
             Action addingFieldWithoutAlias = () => builder.AddField<Guid>(null);
             Action addingFieldWithAlias = () => builder.AddField<Guid>("foo", null);
@@ -35,7 +35,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Property_Type_Is_A_Class_Then_InvalidOperationException_Is_Thrown_Stating_The_Overload_Should_Be_Used()
         {
-            var builder = SelectionSetBuilder.Of<Customer>();
+            var builder = SelectionSetBuilder.For<Customer>();
 
             Action addingFieldWithoutAlias = () => builder.AddField(customer => customer.CustomerContact);
             Action addingFieldWithAlias = () => builder.AddField("foo", customer => customer.CustomerContact);
@@ -53,7 +53,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Expression_Is_Not_A_Member_Expression_Then_An_ArgumentException_Is_Thrown()
         {
-            var builder = SelectionSetBuilder.Of<Customer>();
+            var builder = SelectionSetBuilder.For<Customer>();
 
             Action addingFieldWithoutAlias = () => builder.AddField(_ => "hello");
             Action addingFieldWithAlias = () => builder.AddField("foo", _ => "hello");
@@ -72,7 +72,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Expression_Is_Not_A_Property_Of_The_Class_Then_An_InvalidOperationException_Is_Thrown()
         {
-            var builder = SelectionSetBuilder.Of<Customer>();
+            var builder = SelectionSetBuilder.For<Customer>();
 
             Action addingFieldWithoutAlias = () => builder.AddField(customer => customer.CustomerContact.FirstName);
             Action addingFieldWithAlias = () => builder.AddField("foo", customer => customer.CustomerContact.FirstName);
@@ -91,7 +91,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         public void If_Property_Alias_Is_Not_A_Valid_GraphQL_Name_Then_ArgumentException_Is_Thrown_Stating_Alias_Is_Not_Valid(
             string alias, string because)
         {
-            var builder = SelectionSetBuilder.Of<Customer>();
+            var builder = SelectionSetBuilder.For<Customer>();
 
             Action method = () => builder.AddField(alias, customer => customer.Id);
 

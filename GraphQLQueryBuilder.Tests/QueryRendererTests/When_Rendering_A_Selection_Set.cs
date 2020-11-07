@@ -11,7 +11,7 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
         [Test]
         public void Then_Specified_Properties_Are_Rendered()
         {
-            var addressSelectionSet = SelectionSetBuilder.Of<Address>()
+            var addressSelectionSet = SelectionSetBuilder.For<Address>()
                 .AddField("line1", address => address.Street1)
                 .AddField("line2", address => address.Street2)
                 .AddField(address => address.City)
@@ -19,13 +19,13 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                 .AddField(address => address.ZipCode)
                 .Build();
 
-            var contactSelectionSet = SelectionSetBuilder.Of<Contact>()
+            var contactSelectionSet = SelectionSetBuilder.For<Contact>()
                 .AddField(contact => contact.FirstName)
                 .AddField("surname", contact => contact.LastName)
                 .AddField(contact => contact.Address, addressSelectionSet)
                 .Build();
 
-            var selectionSet = SelectionSetBuilder.Of<Customer>()
+            var selectionSet = SelectionSetBuilder.For<Customer>()
                 .AddField(customer => customer.Id)
                 .AddField("acctNum", customer => customer.AccountNumber)
                 .AddField("contactInfo", customer => customer.CustomerContact, contactSelectionSet)

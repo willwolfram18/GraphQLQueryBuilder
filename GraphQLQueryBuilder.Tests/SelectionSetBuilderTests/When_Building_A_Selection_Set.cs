@@ -14,7 +14,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void Then_Added_Properties_Are_In_The_Selection_Set()
         {
-            var selectionSet = SelectionSetBuilder.Of<Customer>()
+            var selectionSet = SelectionSetBuilder.For<Customer>()
                 .AddField(customer => customer.Id)
                 .AddField("acctNum", customer => customer.AccountNumber)
                 .Build();
@@ -32,12 +32,12 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Added_Properties_Are_Classes_Then_They_Are_In_The_Selection_Set()
         {
-            var contactSelectionSet = SelectionSetBuilder.Of<Contact>()
+            var contactSelectionSet = SelectionSetBuilder.For<Contact>()
                 .AddField(contact => contact.FirstName)
                 .AddField(contact => contact.LastName)
                 .Build();
 
-            var customerSelectionSet = SelectionSetBuilder.Of<Customer>()
+            var customerSelectionSet = SelectionSetBuilder.For<Customer>()
                 .AddField(customer => customer.Id)
                 .AddField(customer => customer.CustomerContact, contactSelectionSet)
                 .AddField("foobar", customer => customer.CustomerContact, contactSelectionSet)
@@ -63,12 +63,12 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_Added_Properties_Are_Collection_Then_They_Are_In_The_Selection_Set()
         {
-            var phoneNumberSelectionSet = SelectionSetBuilder.Of<PhoneNumber>()
+            var phoneNumberSelectionSet = SelectionSetBuilder.For<PhoneNumber>()
                 .AddField(phone => phone.Number)
                 .AddField("ext", phone => phone.Extension)
                 .Build();
 
-            var contactSelectionSet = SelectionSetBuilder.Of<Contact>()
+            var contactSelectionSet = SelectionSetBuilder.For<Contact>()
                 .AddField(contact => contact.FirstName)
                 .AddField("surname", contact => contact.LastName)
                 .AddCollectionField(contact => contact.PhoneNumbers, phoneNumberSelectionSet)
@@ -97,7 +97,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void If_No_Fields_Are_Selected_Before_Building_Then_An_InvalidOperationException_Is_Thrown()
         {
-            var builder = SelectionSetBuilder.Of<Customer>();
+            var builder = SelectionSetBuilder.For<Customer>();
 
             Invoking(builder.Build).Should()
                 .ThrowExactly<InvalidOperationException>("because a selection set must include 1 or more fields")
