@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using GraphQLQueryBuilder.Abstractions.Language;
+using GraphQLQueryBuilder.Implementations.Language;
 using GraphQLQueryBuilder.Tests.Models;
-using Moq;
 using NUnit.Framework;
 using static FluentAssertions.FluentActions;
 
@@ -22,14 +21,77 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 
             var expectedSelections = new List<IFieldSelectionItem>
             {
-                Mock.Of<IFieldSelectionItem>(item => item.FieldName == nameof(Customer.Id)),
-                Mock.Of<IFieldSelectionItem>(item => item.Alias == "acctNum" && item.FieldName == nameof(Customer.AccountNumber))
+                new FieldSelectionItem(null, nameof(Customer.Id), null),
+                new FieldSelectionItem("acctNum", nameof(Customer.AccountNumber), null)
             };
 
             selectionSet.Should().NotBeNull();
-            selectionSet.Selections.Where(selection => selection is IFieldSelectionItem)
-                .Cast<IFieldSelectionItem>()
-                .Should().BeEquivalentTo(expectedSelections);
+            selectionSet.Selections.Should().BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
+        }
+
+        [Test]
+        public void If_Added_Properties_Are_Classes_Then_They_Are_In_The_Selection_Set()
+        {
+            var contactSelectionSet = SelectionSetBuilder.Of<Contact>()
+                .AddField(contact => contact.FirstName)
+                .AddField(contact => contact.LastName)
+                .Build();
+
+            var customerSelectionSet = SelectionSetBuilder.Of<Customer>()
+                .AddField(customer => customer.Id)
+                .AddField(customer => customer.CustomerContact, contactSelectionSet)
+                .AddField("foobar", customer => customer.CustomerContact, contactSelectionSet)
+                .Build();
+            
+            var expectedContactSelectionSet = new SelectionSet<Contact>(
+                new ISelectionSetItem[]
+                {
+                    new FieldSelectionItem(null, nameof(Contact.FirstName), null),
+                    new FieldSelectionItem(null, nameof(Contact.LastName), null),
+                });
+            var expectedCustomerSelections = new List<ISelectionSetItem>
+            {
+                new FieldSelectionItem(null, nameof(Customer.Id), null),
+                new FieldSelectionItem(null, nameof(Customer.CustomerContact), expectedContactSelectionSet),
+                new FieldSelectionItem("foobar", nameof(Customer.CustomerContact), expectedContactSelectionSet),
+            };
+
+            customerSelectionSet.Should().NotBeNull();
+            customerSelectionSet.Selections.Should().BeEquivalentTo(expectedCustomerSelections, options => options.RespectingRuntimeTypes());
+        }
+
+        [Test]
+        public void If_Added_Properties_Are_Collection_Then_They_Are_In_The_Selection_Set()
+        {
+            var phoneNumberSelectionSet = SelectionSetBuilder.Of<PhoneNumber>()
+                .AddField(phone => phone.Number)
+                .AddField("ext", phone => phone.Extension)
+                .Build();
+
+            var contactSelectionSet = SelectionSetBuilder.Of<Contact>()
+                .AddField(contact => contact.FirstName)
+                .AddField("surname", contact => contact.LastName)
+                .AddCollectionField(contact => contact.PhoneNumbers, phoneNumberSelectionSet)
+                .AddCollectionField("foobar", contact => contact.PhoneNumbers, phoneNumberSelectionSet)
+                .Build();
+            
+            var expectedPhoneNumberSelectionSet = new SelectionSet<PhoneNumber>(
+                new List<ISelectionSetItem>
+                {
+                    new FieldSelectionItem(null, nameof(PhoneNumber.Number), null),
+                    new FieldSelectionItem("ext", nameof(PhoneNumber.Extension), null)
+                });
+
+            var expectedContactSelections = new List<ISelectionSetItem>
+            {
+                new FieldSelectionItem(null, nameof(Contact.FirstName), null),
+                new FieldSelectionItem("surname", nameof(Contact.LastName), null),
+                new FieldSelectionItem(null, nameof(Contact.PhoneNumbers), expectedPhoneNumberSelectionSet),
+                new FieldSelectionItem("foobar", nameof(Contact.PhoneNumbers), expectedPhoneNumberSelectionSet)
+            };
+
+            contactSelectionSet.Should().NotBeNull();
+            contactSelectionSet.Selections.Should().BeEquivalentTo(expectedContactSelections, options => options.RespectingRuntimeTypes());
         }
         
         [Test]
