@@ -19,16 +19,25 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                 .AddField(address => address.ZipCode)
                 .Build();
 
+            var phoneNumberSelectionSet = SelectionSetBuilder.For<PhoneNumber>()
+                .AddField(phone => phone.Number)
+                .AddField("ext", phone => phone.Extension)
+                .Build();
+            
             var contactSelectionSet = SelectionSetBuilder.For<Contact>()
                 .AddField(contact => contact.FirstName)
                 .AddField("surname", contact => contact.LastName)
+                .AddCollectionField("names", contact => contact.Nicknames)
                 .AddField(contact => contact.Address, addressSelectionSet)
+                .AddCollectionField(contact => contact.PhoneNumbers, phoneNumberSelectionSet)
+                .AddCollectionField("foobar", contact => contact.PhoneNumbers, phoneNumberSelectionSet)
                 .Build();
 
             var selectionSet = SelectionSetBuilder.For<Customer>()
                 .AddField(customer => customer.Id)
                 .AddField("acctNum", customer => customer.AccountNumber)
                 .AddField("contactInfo", customer => customer.CustomerContact, contactSelectionSet)
+                .AddCollectionField(customer => customer.FavoriteNumbers)
                 .Build();
 
             IQueryRenderer renderer = new QueryRenderer();

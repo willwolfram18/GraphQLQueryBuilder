@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace GraphQLQueryBuilder.Tests.Models
 {
@@ -9,5 +10,7 @@ namespace GraphQLQueryBuilder.Tests.Models
         public string AccountNumber { get; set; }
 
         public Contact CustomerContact { get; set; }
+        
+        public IEnumerable<int> FavoriteNumbers { get; set; }
     }
 }

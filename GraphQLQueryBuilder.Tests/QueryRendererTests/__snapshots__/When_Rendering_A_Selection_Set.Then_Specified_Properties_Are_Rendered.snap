@@ -4,6 +4,7 @@
   contactInfo: CustomerContact {
     FirstName
     surname: LastName
+    names: Nicknames
     Address {
       line1: Street1
       line2: Street2
@@ -11,5 +12,14 @@
       State
       ZipCode
     }
+    PhoneNumbers {
+      Number
+      ext: Extension
+    }
+    foobar: PhoneNumbers {
+      Number
+      ext: Extension
+    }
   }
+  FavoriteNumbers
 }
