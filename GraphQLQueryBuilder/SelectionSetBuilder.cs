@@ -103,14 +103,6 @@ namespace GraphQLQueryBuilder
         /// <inheritdoc />
         public ISelectionSet<T> Build()
         {
-            if (_selectionSetItems.Count == 0)
-            {
-                throw new InvalidOperationException("A selection set must include one or more fields.")
-                {
-                    HelpLink = "https://spec.graphql.org/June2018/#SelectionSet"
-                };
-            }
-
             return new SelectionSet<T>(_selectionSetItems);
         }
 
