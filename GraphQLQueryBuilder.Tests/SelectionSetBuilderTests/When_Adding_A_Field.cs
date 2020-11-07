@@ -138,26 +138,6 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 .WithMessage("A selection set must include one or more fields.")
                 .Where(e => e.HelpLink == "https://spec.graphql.org/June2018/#SelectionSet");
         }
-
-        [Test]
-        public void Then_Added_Properties_Are_In_The_Selection_Set()
-        {
-            var selectionSet = SelectionSetBuilder.Of<Customer>()
-                .AddField(customer => customer.Id)
-                .AddField("acctNum", customer => customer.AccountNumber)
-                .Build();
-
-            var expectedSelections = new List<IFieldSelectionItem>
-            {
-                Mock.Of<IFieldSelectionItem>(item => item.FieldName == nameof(Customer.Id)),
-                Mock.Of<IFieldSelectionItem>(item => item.Alias == "acctNum" && item.FieldName == nameof(Customer.AccountNumber))
-            };
-
-            selectionSet.Should().NotBeNull();
-            selectionSet.Selections.Where(selection => selection is IFieldSelectionItem)
-                .Cast<IFieldSelectionItem>()
-                .Should().BeEquivalentTo(expectedSelections);
-        }
     }
 
     public class AddFieldToSelectionSetTestCase<T> where T : class
