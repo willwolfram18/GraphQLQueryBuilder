@@ -22,8 +22,8 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             var builder = CreateBuilderFor<SimpleSchema>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<Customer>>();
 
-            Action addingFieldWithoutAlias = () => builder.AddCollectionField(null, fakeSelectionSet);
-            Action addingFieldWithAlias = () => builder.AddCollectionField("foo", null, fakeSelectionSet);
+            Action addingFieldWithoutAlias = () => builder.AddObjectCollectionField(null, fakeSelectionSet);
+            Action addingFieldWithAlias = () => builder.AddObjectCollectionField("foo", null, fakeSelectionSet);
 
             using (new AssertionScope())
             {
@@ -40,8 +40,8 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         {
             var builder = CreateBuilderFor<SimpleSchema>();
 
-            Action addingFieldWithoutAlias = () => builder.AddCollectionField(schema => schema.Customers, null);
-            Action addingFieldWithAlias = () => builder.AddCollectionField("foo", schema => schema.Customers, null);
+            Action addingFieldWithoutAlias = () => builder.AddObjectCollectionField(schema => schema.Customers, null);
+            Action addingFieldWithAlias = () => builder.AddObjectCollectionField("foo", schema => schema.Customers, null);
 
             using (new AssertionScope())
             {
@@ -59,8 +59,8 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             var builder = CreateBuilderFor<SimpleSchema>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<string>>();
 
-            Action addingFieldWithoutAlias = () => builder.AddCollectionField(_ => new [] { "hello" }, fakeSelectionSet);
-            Action addingFieldWithAlias = () => builder.AddCollectionField("foo", _ => new [] { "hello" }, fakeSelectionSet);
+            Action addingFieldWithoutAlias = () => builder.AddObjectCollectionField(_ => new [] { "hello" }, fakeSelectionSet);
+            Action addingFieldWithAlias = () => builder.AddObjectCollectionField("foo", _ => new [] { "hello" }, fakeSelectionSet);
 
             using (new AssertionScope())
             {
@@ -101,7 +101,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             var builder = CreateBuilderFor<SimpleSchema>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<Customer>>();
 
-            Action method = () => builder.AddCollectionField(alias, schema => schema.Customers, fakeSelectionSet);
+            Action method = () => builder.AddObjectCollectionField(alias, schema => schema.Customers, fakeSelectionSet);
 
             Invoking(method).Should().ThrowExactly<ArgumentException>(because)
                 .Where(e => e.ParamName == "alias", "because the alias parameter is the problem")

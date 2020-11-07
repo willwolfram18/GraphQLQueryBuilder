@@ -16,7 +16,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         public void Then_Operation_Type_Matches_Parameter()
         {
             var query = CreateBuilderFor<SimpleSchema>()
-                .AddField(schema => schema.Version)
+                .AddScalarField(schema => schema.Version)
                 .Build();
 
             query.Should().NotBeNull();
@@ -29,7 +29,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             [Values(null, "", "    ", "  \n \t", "MyOperation")] string operationName)
         {
             var query = CreateBuilderFor<SimpleSchema>(operationName)
-                .AddField(schema => schema.Version)
+                .AddScalarField(schema => schema.Version)
                 .Build();
 
             var expectedOperationName = string.IsNullOrWhiteSpace(operationName) ? null : operationName;

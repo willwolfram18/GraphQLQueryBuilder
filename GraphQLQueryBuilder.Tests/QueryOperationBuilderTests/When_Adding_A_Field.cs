@@ -21,8 +21,8 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         {
             var builder = CreateBuilderFor<SimpleSchema>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField<string>(null);
-            Action addingFieldWithAlias = () => builder.AddField<string>("foo", null);
+            Action addingFieldWithoutAlias = () => builder.AddScalarField<string>(null);
+            Action addingFieldWithAlias = () => builder.AddScalarField<string>("foo", null);
 
             using (new AssertionScope())
             {
@@ -38,15 +38,15 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         {
             var builder = CreateBuilderFor<SimpleSchema>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField(schema => schema.Administrator);
-            Action addingFieldWithAlias = () => builder.AddField("foo", schema => schema.Administrator);
+            Action addingFieldWithoutAlias = () => builder.AddScalarField(schema => schema.Administrator);
+            Action addingFieldWithAlias = () => builder.AddScalarField("foo", schema => schema.Administrator);
 
             using (new AssertionScope())
             {
                 foreach (var addingField in new [] { addingFieldWithAlias, addingFieldWithoutAlias })
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>("because there is an overload for class properties")
-                        .WithMessage($"When selecting a property that is a class, please use the {nameof(builder.AddField)} method that takes an {nameof(ISelectionSet)}.");                    
+                        .WithMessage($"When selecting a property that is a class, please use the {nameof(builder.AddScalarField)} method that takes an {nameof(ISelectionSet)}.");                    
                 }
             }
         }
@@ -56,8 +56,8 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         {
             var builder = CreateBuilderFor<SimpleSchema>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField(_ => "hello");
-            Action addingFieldWithAlias = () => builder.AddField("foo", _ => "hello");
+            Action addingFieldWithoutAlias = () => builder.AddScalarField(_ => "hello");
+            Action addingFieldWithAlias = () => builder.AddScalarField("foo", _ => "hello");
 
             using (new AssertionScope())
             {
@@ -75,8 +75,8 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         {
             var builder = CreateBuilderFor<SimpleSchema>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField(schema => schema.Administrator.FirstName);
-            Action addingFieldWithAlias = () => builder.AddField("foo", schema => schema.Administrator.FirstName);
+            Action addingFieldWithoutAlias = () => builder.AddScalarField(schema => schema.Administrator.FirstName);
+            Action addingFieldWithAlias = () => builder.AddScalarField("foo", schema => schema.Administrator.FirstName);
 
             using (new AssertionScope())
             {
@@ -94,7 +94,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         {
             var builder = CreateBuilderFor<SimpleSchema>();
 
-            Action method = () => builder.AddField(alias, schema => schema.Version);
+            Action method = () => builder.AddScalarField(alias, schema => schema.Version);
 
             Invoking(method).Should().ThrowExactly<ArgumentException>(because)
                 .Where(e => e.ParamName == "alias", "because the alias parameter is the problem")

@@ -23,8 +23,8 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             var builder = CreateBuilderFor<SimpleSchema>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<Contact>>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField(null, fakeSelectionSet);
-            Action addingFieldWithAlias = () => builder.AddField("foo", null, fakeSelectionSet);
+            Action addingFieldWithoutAlias = () => builder.AddObjectField(null, fakeSelectionSet);
+            Action addingFieldWithAlias = () => builder.AddObjectField("foo", null, fakeSelectionSet);
 
             using (new AssertionScope())
             {
@@ -41,8 +41,8 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         {
             var builder = CreateBuilderFor<SimpleSchema>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField(schema => schema.Administrator, null);
-            Action addingFieldWithAlias = () => builder.AddField("foo", schema => schema.Administrator, null);
+            Action addingFieldWithoutAlias = () => builder.AddObjectField(schema => schema.Administrator, null);
+            Action addingFieldWithAlias = () => builder.AddObjectField("foo", schema => schema.Administrator, null);
 
             using (new AssertionScope())
             {
@@ -60,8 +60,8 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             var builder = CreateBuilderFor<SimpleSchema>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<string>>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField(_ => "hello", fakeSelectionSet);
-            Action addingFieldWithAlias = () => builder.AddField("foo", _ => "hello", fakeSelectionSet);
+            Action addingFieldWithoutAlias = () => builder.AddObjectField(_ => "hello", fakeSelectionSet);
+            Action addingFieldWithAlias = () => builder.AddObjectField("foo", _ => "hello", fakeSelectionSet);
 
             using (new AssertionScope())
             {
@@ -82,9 +82,9 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             var fakeSelectionSet = Mock.Of<ISelectionSet<Address>>();
 
             Action addingFieldWithoutAlias = () =>
-                builder.AddField(schema => schema.Administrator.Address, fakeSelectionSet);
+                builder.AddObjectField(schema => schema.Administrator.Address, fakeSelectionSet);
             Action addingFieldWithAlias = () =>
-                builder.AddField("foo", schema => schema.Administrator.Address, fakeSelectionSet);
+                builder.AddObjectField("foo", schema => schema.Administrator.Address, fakeSelectionSet);
 
             using (new AssertionScope())
             {
@@ -103,9 +103,9 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             var fakeSelectionSet = Mock.Of<ISelectionSet<string>>();
 
             Action addingFieldWithoutAlias = () =>
-                builder.AddField(schema => schema.Version, fakeSelectionSet);
+                builder.AddObjectField(schema => schema.Version, fakeSelectionSet);
             Action addingFieldWithAlias = () =>
-                builder.AddField("foo", schema => schema.Version, fakeSelectionSet);
+                builder.AddObjectField("foo", schema => schema.Version, fakeSelectionSet);
 
             using (new AssertionScope())
             {
@@ -113,7 +113,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
                         .WithMessage(
-                            $"When selecting a property that is of type string, please use the {nameof(builder.AddField)} method that does not take an {nameof(ISelectionSet)}.");
+                            $"When selecting a property that is of type string, please use the {nameof(builder.AddScalarField)} method that does not take an {nameof(ISelectionSet)}.");
                 }
             }
         }
@@ -147,7 +147,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             var builder = CreateBuilderFor<SimpleSchema>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<Contact>>();
 
-            Action method = () => builder.AddField(alias, schema => schema.Administrator, fakeSelectionSet);
+            Action method = () => builder.AddObjectField(alias, schema => schema.Administrator, fakeSelectionSet);
 
             Invoking(method).Should().ThrowExactly<ArgumentException>(because)
                 .Where(e => e.ParamName == "alias", "because the alias parameter is the problem")

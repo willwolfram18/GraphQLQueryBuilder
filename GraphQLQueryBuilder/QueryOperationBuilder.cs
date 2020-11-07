@@ -41,7 +41,7 @@ namespace GraphQLQueryBuilder
         public string Name { get; }
 
         /// <inheritdoc />
-        public IQueryOperationBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> expression)
+        public IQueryOperationBuilder<T> AddScalarField<TProperty>(Expression<Func<T, TProperty>> expression)
         {
             throw new NotImplementedException();
 //            _selectionSet.AddField(expression);
@@ -50,7 +50,7 @@ namespace GraphQLQueryBuilder
         }
 
         /// <inheritdoc />
-        public IQueryOperationBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> expression)
+        public IQueryOperationBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression)
         {
             throw new NotImplementedException();
 //            _selectionSet.AddField(expression);
@@ -59,7 +59,7 @@ namespace GraphQLQueryBuilder
         }
 
         /// <inheritdoc />
-        public IQueryOperationBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        public IQueryOperationBuilder<T> AddObjectField<TProperty>(Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
             throw new NotImplementedException();
 //            _selectionSet.AddField(expression);
@@ -68,7 +68,26 @@ namespace GraphQLQueryBuilder
         }
 
         /// <inheritdoc />
-        public IQueryOperationBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        public IQueryOperationBuilder<T> AddObjectField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        {
+            throw new NotImplementedException();
+//            _selectionSet.AddField(expression);
+//
+//            return this;
+        }
+
+        public IQueryOperationBuilder<T> AddScalarCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryOperationBuilder<T> AddScalarCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public IQueryOperationBuilder<T> AddObjectCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
             throw new NotImplementedException();
 //            _selectionSet.AddField(expression);
@@ -77,16 +96,7 @@ namespace GraphQLQueryBuilder
         }
 
         /// <inheritdoc />
-        public IQueryOperationBuilder<T> AddCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
-        {
-            throw new NotImplementedException();
-//            _selectionSet.AddField(expression);
-//
-//            return this;
-        }
-
-        /// <inheritdoc />
-        public IQueryOperationBuilder<T> AddCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        public IQueryOperationBuilder<T> AddObjectCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
             throw new NotImplementedException();
 //            _selectionSet.AddField(expression);
