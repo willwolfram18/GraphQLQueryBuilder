@@ -12,32 +12,32 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
         public void Then_Specified_Properties_Are_Rendered()
         {
             var addressSelectionSet = SelectionSetBuilder.For<Address>()
-                .AddField("line1", address => address.Street1)
-                .AddField("line2", address => address.Street2)
-                .AddField(address => address.City)
-                .AddField(address => address.State)
-                .AddField(address => address.ZipCode)
+                .AddScalarField("line1", address => address.Street1)
+                .AddScalarField("line2", address => address.Street2)
+                .AddScalarField(address => address.City)
+                .AddScalarField(address => address.State)
+                .AddScalarField(address => address.ZipCode)
                 .Build();
 
             var phoneNumberSelectionSet = SelectionSetBuilder.For<PhoneNumber>()
-                .AddField(phone => phone.Number)
-                .AddField("ext", phone => phone.Extension)
+                .AddScalarField(phone => phone.Number)
+                .AddScalarField("ext", phone => phone.Extension)
                 .Build();
             
             var contactSelectionSet = SelectionSetBuilder.For<Contact>()
-                .AddField(contact => contact.FirstName)
-                .AddField("surname", contact => contact.LastName)
-                .AddCollectionField("names", contact => contact.Nicknames)
-                .AddField(contact => contact.Address, addressSelectionSet)
-                .AddCollectionField(contact => contact.PhoneNumbers, phoneNumberSelectionSet)
-                .AddCollectionField("foobar", contact => contact.PhoneNumbers, phoneNumberSelectionSet)
+                .AddScalarField(contact => contact.FirstName)
+                .AddScalarField("surname", contact => contact.LastName)
+                .AddScalarCollectionField("names", contact => contact.Nicknames)
+                .AddObjectField(contact => contact.Address, addressSelectionSet)
+                .AddObjectCollectionField(contact => contact.PhoneNumbers, phoneNumberSelectionSet)
+                .AddObjectCollectionField("foobar", contact => contact.PhoneNumbers, phoneNumberSelectionSet)
                 .Build();
 
             var selectionSet = SelectionSetBuilder.For<Customer>()
-                .AddField(customer => customer.Id)
-                .AddField("acctNum", customer => customer.AccountNumber)
-                .AddField("contactInfo", customer => customer.CustomerContact, contactSelectionSet)
-                .AddCollectionField(customer => customer.FavoriteNumbers)
+                .AddScalarField(customer => customer.Id)
+                .AddScalarField("acctNum", customer => customer.AccountNumber)
+                .AddObjectField("contactInfo", customer => customer.CustomerContact, contactSelectionSet)
+                .AddScalarCollectionField(customer => customer.FavoriteNumbers)
                 .Build();
 
             IQueryRenderer renderer = new QueryRenderer();

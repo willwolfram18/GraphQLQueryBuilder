@@ -80,9 +80,9 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             var fakeSelectionSet = Mock.Of<ISelectionSet<PhoneNumber>>();
 
             Action addingFieldWithoutAlias = () =>
-                builder.AddCollectionField(schema => schema.CustomerContact.PhoneNumbers, fakeSelectionSet);
+                builder.AddObjectCollectionField(schema => schema.CustomerContact.PhoneNumbers, fakeSelectionSet);
             Action addingFieldWithAlias = () =>
-                builder.AddCollectionField("foo", schema => schema.CustomerContact.PhoneNumbers, fakeSelectionSet);
+                builder.AddObjectCollectionField("foo", schema => schema.CustomerContact.PhoneNumbers, fakeSelectionSet);
 
             using (new AssertionScope())
             {

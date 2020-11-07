@@ -125,9 +125,9 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             var fakeSelectionSet = Mock.Of<ISelectionSet<IEnumerable<PhoneNumber>>>();
 
             Action addingFieldWithoutAlias = () =>
-                builder.AddField(contact => contact.PhoneNumbers, fakeSelectionSet);
+                builder.AddObjectField(contact => contact.PhoneNumbers, fakeSelectionSet);
             Action addingFieldWithAlias = () =>
-                builder.AddField("foo", contact => contact.PhoneNumbers, fakeSelectionSet);
+                builder.AddObjectField("foo", contact => contact.PhoneNumbers, fakeSelectionSet);
 
             using (new AssertionScope())
             {
@@ -135,7 +135,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
                         .WithMessage(
-                            $"When selecting a property that is an IEnumerable, please use the {nameof(builder.AddCollectionField)} method.");
+                            $"When selecting a property that is an IEnumerable, please use the {nameof(builder.AddScalarCollectionField)} method.");
                 }
             }
         }

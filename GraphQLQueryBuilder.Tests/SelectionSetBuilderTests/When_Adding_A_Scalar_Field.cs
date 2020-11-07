@@ -20,8 +20,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         {
             var builder = SelectionSetBuilder.For<Customer>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField<Guid>(null);
-            Action addingFieldWithAlias = () => builder.AddField<Guid>("foo", null);
+            Action addingFieldWithoutAlias = () => builder.AddScalarField<Guid>(null);
+            Action addingFieldWithAlias = () => builder.AddScalarField<Guid>("foo", null);
 
             using (new AssertionScope())
             {
@@ -37,15 +37,15 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         {
             var builder = SelectionSetBuilder.For<Customer>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField(customer => customer.CustomerContact);
-            Action addingFieldWithAlias = () => builder.AddField("foo", customer => customer.CustomerContact);
+            Action addingFieldWithoutAlias = () => builder.AddScalarField(customer => customer.CustomerContact);
+            Action addingFieldWithAlias = () => builder.AddScalarField("foo", customer => customer.CustomerContact);
 
             using (new AssertionScope())
             {
                 foreach (var addingField in new [] { addingFieldWithAlias, addingFieldWithoutAlias })
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>("because there is an overload for class properties")
-                        .WithMessage($"When selecting a property that is a class, please use the {nameof(builder.AddField)} method that takes an {nameof(ISelectionSet)}.");                    
+                        .WithMessage($"When selecting a property that is a class, please use the {nameof(builder.AddObjectField)} method that takes an {nameof(ISelectionSet)}.");                    
                 }
             }
         }
@@ -55,8 +55,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         {
             var builder = SelectionSetBuilder.For<Customer>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField(_ => "hello");
-            Action addingFieldWithAlias = () => builder.AddField("foo", _ => "hello");
+            Action addingFieldWithoutAlias = () => builder.AddScalarField(_ => "hello");
+            Action addingFieldWithAlias = () => builder.AddScalarField("foo", _ => "hello");
 
             using (new AssertionScope())
             {
@@ -74,8 +74,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         {
             var builder = SelectionSetBuilder.For<Customer>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField(customer => customer.CustomerContact.FirstName);
-            Action addingFieldWithAlias = () => builder.AddField("foo", customer => customer.CustomerContact.FirstName);
+            Action addingFieldWithoutAlias = () => builder.AddScalarField(customer => customer.CustomerContact.FirstName);
+            Action addingFieldWithAlias = () => builder.AddScalarField("foo", customer => customer.CustomerContact.FirstName);
 
             using (new AssertionScope())
             {
@@ -93,7 +93,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         {
             var builder = SelectionSetBuilder.For<Customer>();
 
-            Action method = () => builder.AddField(alias, customer => customer.Id);
+            Action method = () => builder.AddScalarField(alias, customer => customer.Id);
 
             Invoking(method).Should().ThrowExactly<ArgumentException>(because)
                 .Where(e => e.ParamName == "alias", "because the alias parameter is the problem")

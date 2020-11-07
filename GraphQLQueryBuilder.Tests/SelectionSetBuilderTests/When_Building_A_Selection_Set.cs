@@ -15,8 +15,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         public void Then_Added_Properties_Are_In_The_Selection_Set()
         {
             var selectionSet = SelectionSetBuilder.For<Customer>()
-                .AddField(customer => customer.Id)
-                .AddField("acctNum", customer => customer.AccountNumber)
+                .AddScalarField(customer => customer.Id)
+                .AddScalarField("acctNum", customer => customer.AccountNumber)
                 .Build();
 
             var expectedSelections = new List<IFieldSelectionItem>
@@ -33,14 +33,14 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         public void If_Added_Properties_Are_Classes_Then_They_Are_In_The_Selection_Set()
         {
             var contactSelectionSet = SelectionSetBuilder.For<Contact>()
-                .AddField(contact => contact.FirstName)
-                .AddField(contact => contact.LastName)
+                .AddScalarField(contact => contact.FirstName)
+                .AddScalarField(contact => contact.LastName)
                 .Build();
 
             var customerSelectionSet = SelectionSetBuilder.For<Customer>()
-                .AddField(customer => customer.Id)
-                .AddField(customer => customer.CustomerContact, contactSelectionSet)
-                .AddField("foobar", customer => customer.CustomerContact, contactSelectionSet)
+                .AddScalarField(customer => customer.Id)
+                .AddObjectField(customer => customer.CustomerContact, contactSelectionSet)
+                .AddObjectField("foobar", customer => customer.CustomerContact, contactSelectionSet)
                 .Build();
             
             var expectedContactSelectionSet = new SelectionSet<Contact>(
@@ -64,23 +64,23 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         public void If_Added_Properties_Are_Collection_Then_They_Are_In_The_Selection_Set()
         {
             var phoneNumberSelectionSet = SelectionSetBuilder.For<PhoneNumber>()
-                .AddField(phone => phone.Number)
-                .AddField("ext", phone => phone.Extension)
+                .AddScalarField(phone => phone.Number)
+                .AddScalarField("ext", phone => phone.Extension)
                 .Build();
 
             var contactSelectionSet = SelectionSetBuilder.For<Contact>()
-                .AddField(contact => contact.FirstName)
-                .AddField("surname", contact => contact.LastName)
-                .AddCollectionField(contact => contact.PhoneNumbers, phoneNumberSelectionSet)
-                .AddCollectionField("foobar", contact => contact.PhoneNumbers, phoneNumberSelectionSet)
-                .AddCollectionField("names", contact => contact.Nicknames)
+                .AddScalarField(contact => contact.FirstName)
+                .AddScalarField("surname", contact => contact.LastName)
+                .AddObjectCollectionField(contact => contact.PhoneNumbers, phoneNumberSelectionSet)
+                .AddObjectCollectionField("foobar", contact => contact.PhoneNumbers, phoneNumberSelectionSet)
+                .AddScalarCollectionField("names", contact => contact.Nicknames)
                 .Build();
 
             var customerSelectionSet = SelectionSetBuilder.For<Customer>()
-                .AddField(customer => customer.Id)
-                .AddCollectionField(customer => customer.FavoriteNumbers)
-                .AddCollectionField("baz", customer => customer.FavoriteNumbers)
-                .AddField(customer => customer.CustomerContact)
+                .AddScalarField(customer => customer.Id)
+                .AddScalarCollectionField(customer => customer.FavoriteNumbers)
+                .AddScalarCollectionField("baz", customer => customer.FavoriteNumbers)
+                .AddScalarField(customer => customer.CustomerContact)
                 .Build();
             
             var expectedPhoneNumberSelectionSet = new SelectionSet<PhoneNumber>(

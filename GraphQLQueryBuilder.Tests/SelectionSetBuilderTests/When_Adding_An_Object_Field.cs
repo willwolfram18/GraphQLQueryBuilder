@@ -19,8 +19,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             var builder = SelectionSetBuilder.For<Customer>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<Contact>>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField(null, fakeSelectionSet);
-            Action addingFieldWithAlias = () => builder.AddField("foo", null, fakeSelectionSet);
+            Action addingFieldWithoutAlias = () => builder.AddObjectField(null, fakeSelectionSet);
+            Action addingFieldWithAlias = () => builder.AddObjectField("foo", null, fakeSelectionSet);
 
             using (new AssertionScope())
             {
@@ -37,8 +37,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         {
             var builder = SelectionSetBuilder.For<Customer>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField(customer => customer.CustomerContact, null);
-            Action addingFieldWithAlias = () => builder.AddField("foo", customer => customer.CustomerContact, null);
+            Action addingFieldWithoutAlias = () => builder.AddObjectField(customer => customer.CustomerContact, null);
+            Action addingFieldWithAlias = () => builder.AddObjectField("foo", customer => customer.CustomerContact, null);
 
             using (new AssertionScope())
             {
@@ -56,8 +56,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             var builder = SelectionSetBuilder.For<Customer>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<string>>();
 
-            Action addingFieldWithoutAlias = () => builder.AddField(_ => "hello", fakeSelectionSet);
-            Action addingFieldWithAlias = () => builder.AddField("foo", _ => "hello", fakeSelectionSet);
+            Action addingFieldWithoutAlias = () => builder.AddObjectField(_ => "hello", fakeSelectionSet);
+            Action addingFieldWithAlias = () => builder.AddObjectField("foo", _ => "hello", fakeSelectionSet);
 
             using (new AssertionScope())
             {
@@ -78,9 +78,9 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             var fakeSelectionSet = Mock.Of<ISelectionSet<Address>>();
 
             Action addingFieldWithoutAlias = () =>
-                builder.AddField(customer => customer.CustomerContact.Address, fakeSelectionSet);
+                builder.AddObjectField(customer => customer.CustomerContact.Address, fakeSelectionSet);
             Action addingFieldWithAlias = () =>
-                builder.AddField("foo", customer => customer.CustomerContact.Address, fakeSelectionSet);
+                builder.AddObjectField("foo", customer => customer.CustomerContact.Address, fakeSelectionSet);
 
             using (new AssertionScope())
             {
@@ -99,9 +99,9 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             var fakeSelectionSet = Mock.Of<ISelectionSet<string>>();
 
             Action addingFieldWithoutAlias = () =>
-                builder.AddField(customer => customer.AccountNumber, fakeSelectionSet);
+                builder.AddObjectField(customer => customer.AccountNumber, fakeSelectionSet);
             Action addingFieldWithAlias = () =>
-                builder.AddField("foo", customer => customer.AccountNumber, fakeSelectionSet);
+                builder.AddObjectField("foo", customer => customer.AccountNumber, fakeSelectionSet);
 
             using (new AssertionScope())
             {
@@ -109,7 +109,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
                         .WithMessage(
-                            $"When selecting a property that is of type string, please use the {nameof(builder.AddField)} method that does not take an {nameof(ISelectionSet)}.");
+                            $"When selecting a property that is of type string, please use the {nameof(builder.AddObjectField)} method that does not take an {nameof(ISelectionSet)}.");
                 }
             }
         }
@@ -121,9 +121,9 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             var fakeSelectionSet = Mock.Of<ISelectionSet<IEnumerable<PhoneNumber>>>();
 
             Action addingFieldWithoutAlias = () =>
-                builder.AddField(contact => contact.PhoneNumbers, fakeSelectionSet);
+                builder.AddObjectField(contact => contact.PhoneNumbers, fakeSelectionSet);
             Action addingFieldWithAlias = () =>
-                builder.AddField("foo", contact => contact.PhoneNumbers, fakeSelectionSet);
+                builder.AddObjectField("foo", contact => contact.PhoneNumbers, fakeSelectionSet);
 
             using (new AssertionScope())
             {
@@ -131,7 +131,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
                         .WithMessage(
-                            $"When selecting a property that is an IEnumerable, please use the {nameof(builder.AddCollectionField)} method.");
+                            $"When selecting a property that is an IEnumerable, please use the {nameof(builder.AddScalarCollectionField)} method.");
                 }
             }
         }
@@ -143,7 +143,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             var builder = SelectionSetBuilder.For<Customer>();
             var fakeSelectionSet = Mock.Of<ISelectionSet<Contact>>();
 
-            Action method = () => builder.AddField(alias, customer => customer.CustomerContact, fakeSelectionSet);
+            Action method = () => builder.AddObjectField(alias, customer => customer.CustomerContact, fakeSelectionSet);
 
             Invoking(method).Should().ThrowExactly<ArgumentException>(because)
                 .Where(e => e.ParamName == "alias", "because the alias parameter is the problem")

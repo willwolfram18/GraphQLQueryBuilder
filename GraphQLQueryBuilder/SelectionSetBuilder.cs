@@ -24,13 +24,13 @@ namespace GraphQLQueryBuilder
         private readonly List<ISelectionSetItem> _selectionSetItems = new List<ISelectionSetItem>();
 
         /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> expression)
+        public ISelectionSetBuilder<T> AddScalarField<TProperty>(Expression<Func<T, TProperty>> expression)
         {
-            return AddField(null, expression);
+            return AddScalarField(null, expression);
         }
 
         /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> expression)
+        public ISelectionSetBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression)
         {
             alias = alias?.Trim();
 
@@ -40,7 +40,7 @@ namespace GraphQLQueryBuilder
             if (propertyInfo.PropertyType.IsClass && propertyInfo.PropertyType != typeof(string))
             {
                 throw new InvalidOperationException(
-                    $"When selecting a property that is a class, please use the {nameof(AddField)} method that takes an {nameof(ISelectionSet)}."
+                    $"When selecting a property that is a class, please use the {nameof(AddObjectField)} method that takes an {nameof(ISelectionSet)}."
                 );
             }
 
@@ -50,13 +50,13 @@ namespace GraphQLQueryBuilder
         }
 
         /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        public ISelectionSetBuilder<T> AddObjectField<TProperty>(Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            return AddField(null, expression, selectionSet);
+            return AddObjectField(null, expression, selectionSet);
         }
 
         /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        public ISelectionSetBuilder<T> AddObjectField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
             alias = alias?.Trim();
 
@@ -71,13 +71,13 @@ namespace GraphQLQueryBuilder
             if (propertyInfo.PropertyType == typeof(string))
             {
                 throw new InvalidOperationException(
-                    $"When selecting a property that is of type string, please use the {nameof(AddField)} method that does not take an {nameof(ISelectionSet)}."
+                    $"When selecting a property that is of type string, please use the {nameof(AddObjectField)} method that does not take an {nameof(ISelectionSet)}."
                 );
             }
             if (typeof(IEnumerable).IsAssignableFrom(propertyInfo.PropertyType))
             {
                 throw new InvalidOperationException(
-                    $"When selecting a property that is an {nameof(IEnumerable)}, please use the {nameof(AddCollectionField)} method."
+                    $"When selecting a property that is an {nameof(IEnumerable)}, please use the {nameof(AddScalarCollectionField)} method."
                 );
             }
 
@@ -86,24 +86,24 @@ namespace GraphQLQueryBuilder
             return this;
         }
 
-        public ISelectionSetBuilder<T> AddCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression)
+        public ISelectionSetBuilder<T> AddScalarCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression)
         {
-            return AddCollectionField(null, expression);
+            return AddScalarCollectionField(null, expression);
         }
 
-        public ISelectionSetBuilder<T> AddCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression)
+        public ISelectionSetBuilder<T> AddScalarCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        public ISelectionSetBuilder<T> AddObjectCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            return AddCollectionField(null, expression, selectionSet);
+            return AddObjectCollectionField(null, expression, selectionSet);
         }
 
         /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        public ISelectionSetBuilder<T> AddObjectCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
             alias = alias?.Trim();
 
