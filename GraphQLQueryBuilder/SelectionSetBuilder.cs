@@ -40,8 +40,11 @@ namespace GraphQLQueryBuilder
             if (!GraphQLTypes.IsScalarType(propertyType))
             {
                 throw new InvalidOperationException(
-                    $"Type '{propertyType.FullName}' is not a GraphQL scalar type."
-                );
+                    $"The type '{propertyType.FullName}' is not a GraphQL scalar type."
+                )
+                {
+                    HelpLink = "http://spec.graphql.org/June2018/#sec-Scalars"
+                };
             }
 
             var propertyInfo = GetPropertyInfoForExpression(expression);
@@ -103,7 +106,26 @@ namespace GraphQLQueryBuilder
 
         public ISelectionSetBuilder<T> AddScalarCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression)
         {
-            throw new NotImplementedException();
+            alias = alias?.Trim();
+
+            ThrowIfAliasIsNotValid(alias);
+            
+            var propertyType = typeof(TProperty);
+            if (!GraphQLTypes.IsScalarType(propertyType))
+            {
+                throw new InvalidOperationException(
+                    $"The type '{propertyType.FullName}' is not a GraphQL scalar type."
+                )
+                {
+                    HelpLink = "http://spec.graphql.org/June2018/#sec-Scalars"
+                };
+            }
+            
+            var propertyInfo = GetPropertyInfoForExpression(expression);
+
+            _selectionSetItems.Add(new FieldSelectionItem(alias, propertyInfo.Name, null));
+
+            return this;
         }
 
         /// <inheritdoc />

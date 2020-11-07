@@ -80,7 +80,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 .AddScalarField(customer => customer.Id)
                 .AddScalarCollectionField(customer => customer.FavoriteNumbers)
                 .AddScalarCollectionField("baz", customer => customer.FavoriteNumbers)
-                .AddScalarField(customer => customer.CustomerContact)
+                .AddObjectField(customer => customer.CustomerContact, contactSelectionSet)
                 .Build();
             
             var expectedPhoneNumberSelectionSet = new SelectionSet<PhoneNumber>(
