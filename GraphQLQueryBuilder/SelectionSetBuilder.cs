@@ -87,16 +87,27 @@ namespace GraphQLQueryBuilder
         }
 
         /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddCollectionField<TProperty>(Expression<Func<T, System.Collections.Generic.IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        public ISelectionSetBuilder<T> AddCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            throw new System.NotImplementedException();
-            return this;
+            return AddCollectionField(null, expression, selectionSet);
         }
 
         /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddCollectionField<TProperty>(string alias, Expression<Func<T, System.Collections.Generic.IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        public ISelectionSetBuilder<T> AddCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            throw new System.NotImplementedException();
+            alias = alias?.Trim();
+
+            ThrowIfAliasIsNotValid(alias);
+
+            if (selectionSet == null)
+            {
+                throw new ArgumentNullException(nameof(selectionSet));
+            }
+
+            var propertyInfo = GetPropertyInfoForExpression(expression);
+            
+            _selectionSetItems.Add(new FieldSelectionItem(alias, propertyInfo.Name, selectionSet));
+            
             return this;
         }
 
