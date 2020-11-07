@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -5,6 +6,7 @@ using GraphQLQueryBuilder.Abstractions.Language;
 using GraphQLQueryBuilder.Tests.Models;
 using Moq;
 using NUnit.Framework;
+using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 {
@@ -28,6 +30,17 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             selectionSet.Selections.Where(selection => selection is IFieldSelectionItem)
                 .Cast<IFieldSelectionItem>()
                 .Should().BeEquivalentTo(expectedSelections);
+        }
+        
+        [Test]
+        public void If_No_Fields_Are_Selected_Before_Building_Then_An_InvalidOperationException_Is_Thrown()
+        {
+            var builder = SelectionSetBuilder.Of<Customer>();
+
+            Invoking(builder.Build).Should()
+                .ThrowExactly<InvalidOperationException>("because a selection set must include 1 or more fields")
+                .WithMessage("A selection set must include one or more fields.")
+                .Where(e => e.HelpLink == "https://spec.graphql.org/June2018/#SelectionSet");
         }
     }
 }
