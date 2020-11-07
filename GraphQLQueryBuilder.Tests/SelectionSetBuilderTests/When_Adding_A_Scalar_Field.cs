@@ -46,7 +46,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 foreach (var addingField in new [] { addingFieldWithAlias, addingFieldWithoutAlias })
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>("because there is an overload for class properties")
-                        .WithMessage($"Type '{typeof(Contact).FullName}' is not a GraphQL scalar type.");                    
+                        .WithMessage($"The type '{typeof(Contact).FullName}' is not a GraphQL scalar type.")
+                        .Where(e => e.HelpLink == "http://spec.graphql.org/June2018/#sec-Scalars");                    
                 }
             }
         }
