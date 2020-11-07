@@ -43,49 +43,55 @@ namespace GraphQLQueryBuilder
         /// <inheritdoc />
         public IQueryOperationBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> expression)
         {
-            _selectionSet.AddField(expression);
-
-            return this;
+            throw new NotImplementedException();
+//            _selectionSet.AddField(expression);
+//
+//            return this;
         }
 
         /// <inheritdoc />
         public IQueryOperationBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> expression)
         {
-            _selectionSet.AddField(alias, expression);
-
-            return this;
+            throw new NotImplementedException();
+//            _selectionSet.AddField(expression);
+//
+//            return this;
         }
 
         /// <inheritdoc />
         public IQueryOperationBuilder<T> AddField<TProperty>(Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            _selectionSet.AddField(expression, selectionSet);
-
-            return this;
+            throw new NotImplementedException();
+//            _selectionSet.AddField(expression);
+//
+//            return this;
         }
 
         /// <inheritdoc />
         public IQueryOperationBuilder<T> AddField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            _selectionSet.AddField(alias, expression, selectionSet);
-
-            return this;
+            throw new NotImplementedException();
+//            _selectionSet.AddField(expression);
+//
+//            return this;
         }
 
         /// <inheritdoc />
         public IQueryOperationBuilder<T> AddCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            _selectionSet.AddCollectionField(expression, selectionSet);
-
-            return this;
+            throw new NotImplementedException();
+//            _selectionSet.AddField(expression);
+//
+//            return this;
         }
 
         /// <inheritdoc />
         public IQueryOperationBuilder<T> AddCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            _selectionSet.AddCollectionField(alias, expression, selectionSet);
-
-            return this;
+            throw new NotImplementedException();
+//            _selectionSet.AddField(expression);
+//
+//            return this;
         }
 
         /// <inheritdoc />
