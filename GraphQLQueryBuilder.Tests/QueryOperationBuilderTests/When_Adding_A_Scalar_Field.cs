@@ -10,9 +10,9 @@ using static FluentAssertions.FluentActions;
 namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
 {
     
-    public class When_Adding_A_Field : QueryOperationBuilderTest
+    public class When_Adding_A_Scalar_Field : QueryOperationBuilderTest
     {
-        public When_Adding_A_Field(GraphQLOperationType operationType) : base(operationType)
+        public When_Adding_A_Scalar_Field(GraphQLOperationType operationType) : base(operationType)
         {
         }
         

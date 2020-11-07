@@ -11,9 +11,9 @@ using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
 {
-    public class When_Adding_A_Field_That_Is_A_Class : QueryOperationBuilderTest
+    public class When_Adding_An_Object_Field : QueryOperationBuilderTest
     {
-        public When_Adding_A_Field_That_Is_A_Class(GraphQLOperationType operationType) : base(operationType)
+        public When_Adding_An_Object_Field(GraphQLOperationType operationType) : base(operationType)
         {
         }
         

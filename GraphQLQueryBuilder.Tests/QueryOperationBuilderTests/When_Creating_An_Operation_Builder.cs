@@ -47,7 +47,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             Action method = () => CreateBuilderFor<SimpleSchema>(operationName);
             
             Invoking(method).Should().ThrowExactly<ArgumentException>(because)
-                .Where(e => e.ParamName == "alias", "because the alias parameter is the problem")
+                .Where(e => e.ParamName == "name", "because the name parameter is the problem")
                 .Where(e => e.HelpLink == "https://spec.graphql.org/June2018/#Name", "because this is the link to the GraphQL 'Name' spec");
         }
     }
