@@ -10,7 +10,7 @@ using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 {
-    public class When_Adding_A_Collection_Field
+    public class When_Adding_An_Object_Collection
     {
         [Test]
         public void If_Field_Is_A_Class_And_Does_Not_Include_A_Selection_Set_Then_InvalidOperationException_Is_Thrown_Stating_Other_Overload_Is_Needed()

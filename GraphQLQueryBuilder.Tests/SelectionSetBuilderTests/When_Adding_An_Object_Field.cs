@@ -11,7 +11,7 @@ using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 {
-    public class When_Adding_A_Field_That_Is_A_Class
+    public class When_Adding_An_Object_Field
     {
         [Test]
         public void If_Property_Expression_Is_Null_Then_ArgumentNullException_Is_Thrown()

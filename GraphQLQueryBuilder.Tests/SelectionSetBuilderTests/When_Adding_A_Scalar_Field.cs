@@ -13,7 +13,7 @@ using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 {
-    public class When_Adding_A_Field
+    public class When_Adding_A_Scalar_Field
     {
         [Test]
         public void If_Property_Expression_Is_Null_Then_ArgumentNullException_Is_Thrown()

@@ -88,7 +88,7 @@ namespace GraphQLQueryBuilder
 
         public ISelectionSetBuilder<T> AddCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression)
         {
-            throw new NotImplementedException();
+            return AddCollectionField(null, expression);
         }
 
         public ISelectionSetBuilder<T> AddCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression)
@@ -115,6 +115,10 @@ namespace GraphQLQueryBuilder
             }
 
             var propertyInfo = GetPropertyInfoForExpression(expression);
+            if (propertyInfo.PropertyType == typeof(string))
+            {
+                throw new InvalidOperationException($"A {nameof(ISelectionSet)} is not required for string values.");
+            }
             
             _selectionSetItems.Add(new FieldSelectionItem(alias, propertyInfo.Name, selectionSet));
             
