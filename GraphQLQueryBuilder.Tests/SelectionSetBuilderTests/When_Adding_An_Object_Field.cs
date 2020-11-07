@@ -110,8 +110,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
                         .WithMessage(
-                            $"The type '{typeof(string).FullName}' is a GraphQL scalar type so the {nameof(builder.AddScalarField)} method should be used.")
-                        .Where(e => e.HelpLink == "http://spec.graphql.org/June2018/#sec-Scalars");
+                            $"The type '{typeof(string).FullName}' is not a GraphQL object type. Use the {nameof(builder.AddScalarField)} method.")
+                        .Where(e => e.HelpLink == "http://spec.graphql.org/June2018/#sec-Objects");
                 }
             }
         }
@@ -133,7 +133,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
                         .WithMessage(
-                            $"The type '{typeof(IEnumerable<PhoneNumber>).FullName}' is a GraphQL list type so the {nameof(builder.AddScalarCollectionField)} or {nameof(builder.AddObjectCollectionField)} methods should be used.")
+                            $"The type '{typeof(IEnumerable<PhoneNumber>).FullName}' is a GraphQL list type. Use the {nameof(builder.AddScalarCollectionField)} or {nameof(builder.AddObjectCollectionField)} methods.")
                         .Where(e => e.HelpLink == "http://spec.graphql.org/June2018/#sec-Type-System.List");
                 }
             }

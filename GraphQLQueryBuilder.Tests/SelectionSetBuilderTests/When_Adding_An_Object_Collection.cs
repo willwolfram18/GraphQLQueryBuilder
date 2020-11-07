@@ -27,7 +27,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
                         .WithMessage(
-                            $"The type '{typeof(string).FullName}' is not a GraphQL object type.")
+                            $"The type '{typeof(string).FullName}' is not a GraphQL object type. Use the {nameof(builder.AddScalarCollectionField)} method.")
                         .Where(e => e.HelpLink == "http://spec.graphql.org/June2018/#sec-Objects");
                 }
             }
