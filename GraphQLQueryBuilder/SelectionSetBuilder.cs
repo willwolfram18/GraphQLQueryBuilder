@@ -36,13 +36,15 @@ namespace GraphQLQueryBuilder
 
             ThrowIfAliasIsNotValid(alias);
 
-            var propertyInfo = GetPropertyInfoForExpression(expression);
-            if (propertyInfo.PropertyType.IsClass && propertyInfo.PropertyType != typeof(string))
+            var propertyType = typeof(TProperty);
+            if (!GraphQLTypes.IsScalarType(propertyType))
             {
                 throw new InvalidOperationException(
-                    $"When selecting a property that is a class, please use the {nameof(AddObjectField)} method that takes an {nameof(ISelectionSet)}."
+                    $"Type '{propertyType.FullName}' is not a GraphQL scalar type."
                 );
             }
+
+            var propertyInfo = GetPropertyInfoForExpression(expression);
 
             _selectionSetItems.Add(new FieldSelectionItem(alias, propertyInfo.Name, null));
 
@@ -68,17 +70,25 @@ namespace GraphQLQueryBuilder
             }
 
             var propertyInfo = GetPropertyInfoForExpression(expression);
-            if (propertyInfo.PropertyType == typeof(string))
+            
+            var propertyType = typeof(TProperty);
+            if (GraphQLTypes.IsScalarType(propertyType))
             {
                 throw new InvalidOperationException(
-                    $"When selecting a property that is of type string, please use the {nameof(AddObjectField)} method that does not take an {nameof(ISelectionSet)}."
-                );
+                    $"The type '{propertyType.FullName}' is a GraphQL scalar type so the {nameof(AddScalarField)} method should be used."
+                )
+                {
+                    HelpLink = "http://spec.graphql.org/June2018/#sec-Scalars"
+                };
             }
-            if (typeof(IEnumerable).IsAssignableFrom(propertyInfo.PropertyType))
+            if (GraphQLTypes.IsListType(propertyType))
             {
                 throw new InvalidOperationException(
-                    $"When selecting a property that is an {nameof(IEnumerable)}, please use the {nameof(AddScalarCollectionField)} method."
-                );
+                    $"The type '{propertyType.FullName}' is a GraphQL list type so the {nameof(AddScalarCollectionField)} or {nameof(AddObjectCollectionField)} methods should be used."
+                )
+                {
+                    HelpLink = "http://spec.graphql.org/June2018/#sec-Type-System.List"
+                };
             }
 
             _selectionSetItems.Add(new FieldSelectionItem(alias, propertyInfo.Name, selectionSet));
@@ -115,9 +125,14 @@ namespace GraphQLQueryBuilder
             }
 
             var propertyInfo = GetPropertyInfoForExpression(expression);
-            if (propertyInfo.PropertyType == typeof(string))
+            
+            var propertyType = typeof(TProperty);
+            if (!GraphQLTypes.IsObjectType(propertyType))
             {
-                throw new InvalidOperationException($"A {nameof(ISelectionSet)} is not required for string values.");
+                throw new InvalidOperationException($"The type '{propertyType.FullName}' is not a GraphQL object type.")
+                {
+                    HelpLink = "http://spec.graphql.org/June2018/#sec-Objects"
+                };
             }
             
             _selectionSetItems.Add(new FieldSelectionItem(alias, propertyInfo.Name, selectionSet));

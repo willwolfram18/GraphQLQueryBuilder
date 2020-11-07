@@ -5,6 +5,7 @@ using GraphQLQueryBuilder.Tests.Models;
 using Moq;
 using NUnit.Framework;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using static FluentAssertions.FluentActions;
@@ -109,7 +110,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
                         .WithMessage(
-                            $"When selecting a property that is of type string, please use the {nameof(builder.AddObjectField)} method that does not take an {nameof(ISelectionSet)}.");
+                            $"The type '{typeof(string).FullName}' is a GraphQL scalar type so the {nameof(builder.AddScalarField)} method should be used.")
+                        .Where(e => e.HelpLink == "http://spec.graphql.org/June2018/#sec-Scalars");
                 }
             }
         }
@@ -131,7 +133,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
                         .WithMessage(
-                            $"When selecting a property that is an IEnumerable, please use the {nameof(builder.AddScalarCollectionField)} method.");
+                            $"The type '{typeof(IEnumerable<PhoneNumber>).FullName}' is a GraphQL list type so the {nameof(builder.AddScalarCollectionField)} or {nameof(builder.AddObjectCollectionField)} methods should be used.")
+                        .Where(e => e.HelpLink == "http://spec.graphql.org/June2018/#sec-Type-System.List");
                 }
             }
         }

@@ -13,25 +13,6 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
     public class When_Adding_An_Object_Collection
     {
         [Test]
-        public void If_Field_Is_A_Class_And_Does_Not_Include_A_Selection_Set_Then_InvalidOperationException_Is_Thrown_Stating_Other_Overload_Is_Needed()
-        {
-            var builder = SelectionSetBuilder.For<Contact>();
-
-            Action addingFieldWithoutAlias = () => builder.AddScalarCollectionField(contact => contact.PhoneNumbers);
-            Action addingFieldWithAlias = () => builder.AddScalarCollectionField("foo", contact => contact.PhoneNumbers);
-
-            using (new AssertionScope())
-            {
-                foreach (var addingField in new[] { addingFieldWithAlias, addingFieldWithoutAlias })
-                {
-                    Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
-                        .WithMessage(
-                            $"When selecting a collection property that is a class, please use the {nameof(builder.AddScalarCollectionField)} method that takes an {nameof(ISelectionSet)}.");
-                }
-            }
-        }
-
-        [Test]
         public void If_A_Collection_Of_Strings_Is_Added_With_A_Selection_Set_Then_An_InvalidOperationException_Is_Thrown_Stating_A_String_Does_Not_Need_A_Selection_Set()
         {
             var builder = SelectionSetBuilder.For<Contact>();
@@ -46,7 +27,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
                         .WithMessage(
-                            $"A {nameof(ISelectionSet)} is not required for string values.");
+                            $"The type '{typeof(string).FullName}' is not a GraphQL object type.")
+                        .Where(e => e.HelpLink == "http://spec.graphql.org/June2018/#sec-Objects");
                 }
             }
         }

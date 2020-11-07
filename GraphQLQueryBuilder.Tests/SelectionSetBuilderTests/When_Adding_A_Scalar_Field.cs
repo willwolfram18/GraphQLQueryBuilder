@@ -13,6 +13,7 @@ using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 {
+    // TODO: What about primitive aliases like Int32 and Boolean?
     public class When_Adding_A_Scalar_Field
     {
         [Test]
@@ -33,7 +34,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         }
 
         [Test]
-        public void If_Property_Type_Is_A_Class_Then_InvalidOperationException_Is_Thrown_Stating_The_Overload_Should_Be_Used()
+        public void If_Property_Is_A_GraphQL_Object_Type_Then_InvalidOperationException_Is_Thrown_Stating_The_Overload_Should_Be_Used()
         {
             var builder = SelectionSetBuilder.For<Customer>();
 
@@ -45,7 +46,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 foreach (var addingField in new [] { addingFieldWithAlias, addingFieldWithoutAlias })
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>("because there is an overload for class properties")
-                        .WithMessage($"When selecting a property that is a class, please use the {nameof(builder.AddObjectField)} method that takes an {nameof(ISelectionSet)}.");                    
+                        .WithMessage($"Type '{typeof(Contact).FullName}' is not a GraphQL scalar type.");                    
                 }
             }
         }
