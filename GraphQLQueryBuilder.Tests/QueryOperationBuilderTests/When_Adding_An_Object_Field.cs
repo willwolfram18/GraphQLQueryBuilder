@@ -72,7 +72,6 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                         .Where(e => e.ParamName == "expression");
                 }
             }
-
         }
 
         [Test]
@@ -113,7 +112,8 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
                         .WithMessage(
-                            $"When selecting a property that is of type string, please use the {nameof(builder.AddScalarField)} method that does not take an {nameof(ISelectionSet)}.");
+                            $"The type {typeof(string).FullName} is not a GraphQL object type. Use the {nameof(builder.AddScalarField)} method.")
+                        .Where(e => e.HelpLink == "http://spec.graphql.org/June2018/#sec-Objects");
                 }
             }
         }
@@ -121,13 +121,13 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         [Test]
         public void If_Expression_Is_An_Enumerable_Property_Then_An_InvalidOperationException_Is_Thrown_Stating_To_Use_AddCollectionField()
         {
-            var builder = SelectionSetBuilder.For<Contact>();
-            var fakeSelectionSet = Mock.Of<ISelectionSet<IEnumerable<PhoneNumber>>>();
+            var builder = CreateBuilderFor<SimpleSchema>();
+            var fakeSelectionSet = Mock.Of<ISelectionSet<IEnumerable<Customer>>>();
 
             Action addingFieldWithoutAlias = () =>
-                builder.AddObjectField(contact => contact.PhoneNumbers, fakeSelectionSet);
+                builder.AddObjectField(schema => schema.Customers, fakeSelectionSet);
             Action addingFieldWithAlias = () =>
-                builder.AddObjectField("foo", contact => contact.PhoneNumbers, fakeSelectionSet);
+                builder.AddObjectField("foo", schema => schema.Customers, fakeSelectionSet);
 
             using (new AssertionScope())
             {
@@ -135,7 +135,8 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
                         .WithMessage(
-                            $"When selecting a property that is an IEnumerable, please use the {nameof(builder.AddScalarCollectionField)} method.");
+                            $"The type '{typeof(IEnumerable<Customer>).FullName}' is a GraphQL list type. Use the {nameof(builder.AddScalarCollectionField)} or {nameof(builder.AddObjectCollectionField)} methods.")
+                        .Where(e => e.HelpLink == "http://spec.graphql.org/June2018/#sec-Type-System.List");
                 }
             }
         }

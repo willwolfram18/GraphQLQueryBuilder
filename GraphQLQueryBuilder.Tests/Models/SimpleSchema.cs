@@ -6,6 +6,8 @@ namespace GraphQLQueryBuilder.Tests.Models
     {
         public string Version { get; set; }
         
+        public ICollection<string> PastVersions { get; set; }
+        
         public Contact Administrator { get; set; }
         
         public ICollection<Customer> Customers { get; set; }

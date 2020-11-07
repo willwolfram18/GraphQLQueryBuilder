@@ -34,7 +34,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         }
 
         [Test]
-        public void If_Property_Type_Is_A_Class_Then_InvalidOperationException_Is_Thrown_Stating_The_Overload_Should_Be_Used()
+        public void If_Property_Type_Is_Not_A_GraphQL_Scalar_Then_InvalidOperationException_Is_Thrown()
         {
             var builder = CreateBuilderFor<SimpleSchema>();
 
@@ -46,7 +46,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 foreach (var addingField in new [] { addingFieldWithAlias, addingFieldWithoutAlias })
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>("because there is an overload for class properties")
-                        .WithMessage($"When selecting a property that is a class, please use the {nameof(builder.AddScalarField)} method that takes an {nameof(ISelectionSet)}.");                    
+                        .WithMessage($"The type {typeof(Contact).FullName} is not a GraphQL scalar.");                    
                 }
             }
         }

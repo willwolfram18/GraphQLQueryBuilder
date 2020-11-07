@@ -54,6 +54,27 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         }
         
         [Test]
+        public void If_A_Collection_Of_Strings_Is_Added_With_A_Selection_Set_Then_An_InvalidOperationException_Is_Thrown_Stating_A_String_Does_Not_Need_A_Selection_Set()
+        {
+            var builder = CreateBuilderFor<SimpleSchema>();
+            var fakeSelectionSet = Mock.Of<ISelectionSet<string>>();
+
+            Action addingFieldWithoutAlias = () => builder.AddObjectCollectionField(contact => contact.PastVersions, fakeSelectionSet);
+            Action addingFieldWithAlias = () => builder.AddObjectCollectionField("foobar", contact => contact.PastVersions, fakeSelectionSet);
+            
+            using (new AssertionScope())
+            {
+                foreach (var addingField in new[] { addingFieldWithAlias, addingFieldWithoutAlias })
+                {
+                    Invoking(addingField).Should().ThrowExactly<InvalidOperationException>()
+                        .WithMessage(
+                            $"The type '{typeof(string).FullName}' is not a GraphQL object type. Use the {nameof(builder.AddScalarCollectionField)} method.")
+                        .Where(e => e.HelpLink == "http://spec.graphql.org/June2018/#sec-Objects");
+                }
+            }
+        }
+        
+        [Test]
         public void If_Expression_Is_Not_A_Member_Expression_Then_An_ArgumentException_Is_Thrown()
         {
             var builder = CreateBuilderFor<SimpleSchema>();
