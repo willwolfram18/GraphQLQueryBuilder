@@ -15,6 +15,7 @@ namespace GraphQLQueryBuilder
         /// <inheritdoc />
         public string Render(IGraphQLOperation query)
         {
+            return "fake";
             throw new NotImplementedException();
         }
 
