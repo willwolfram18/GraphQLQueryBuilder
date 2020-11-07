@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using GraphQLQueryBuilder.Abstractions.Language;
+using System;
 using System.Text;
-using System.Threading.Tasks;
-using GraphQLQueryBuilder.Abstractions.Language;
 
 namespace GraphQLQueryBuilder
 {
@@ -12,14 +9,56 @@ namespace GraphQLQueryBuilder
         /// <inheritdoc />
         public string Render(ISelectionSet selectionSet)
         {
-            return "fake";
-            throw new NotImplementedException();
+            return Render(selectionSet, new QueryRenderingContext());
         }
 
         /// <inheritdoc />
         public string Render(IGraphQLOperation query)
         {
             throw new NotImplementedException();
+        }
+
+        private string Render(ISelectionSet selectionSet, QueryRenderingContext context)
+        {
+            var content = new StringBuilder();
+
+            content.AppendLine("{");
+            context = context.IncreaseIndentationLevel();
+
+            foreach (var selectionItem in selectionSet.Selections)
+            {
+                var selectionItemContent = selectionItem switch
+                {
+                    IFieldSelectionItem fieldSelection => Render(fieldSelection, context),
+                    _ => throw new NotImplementedException($"Unable to render selection {selectionItem.GetType().FullName}")
+                };
+
+                content.AppendLine($"{context.RenderIndentationString()}{selectionItemContent}");
+            }
+
+            context = context.DecreaseIndentationLevel();
+            content.Append($"{context.RenderIndentationString()}}}");
+
+            return content.ToString();
+        }
+
+        private string Render(IFieldSelectionItem fieldSelection, QueryRenderingContext context)
+        {
+            var content = new StringBuilder();
+
+            if (!string.IsNullOrWhiteSpace(fieldSelection.Alias))
+            {
+                content.Append($"{fieldSelection.Alias}: ");
+            }
+
+            content.Append(fieldSelection.FieldName);
+
+            if (fieldSelection.SelectionSet != null)
+            {
+                content.Append($" {Render(fieldSelection.SelectionSet, context)}");
+            }
+
+            return content.ToString();
         }
     }
 }

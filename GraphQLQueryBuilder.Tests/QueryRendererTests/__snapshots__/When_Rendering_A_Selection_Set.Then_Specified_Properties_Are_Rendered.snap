@@ -1,4 +1,15 @@
 ﻿{
-    Id
-    acctNum: AccountNumber
+  Id
+  acctNum: AccountNumber
+  contactInfo: CustomerContact {
+    FirstName
+    surname: LastName
+    Address {
+      line1: Street1
+      line2: Street2
+      City
+      State
+      ZipCode
+    }
+  }
 }
