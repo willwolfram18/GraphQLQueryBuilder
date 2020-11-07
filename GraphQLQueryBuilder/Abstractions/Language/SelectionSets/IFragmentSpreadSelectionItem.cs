@@ -1,6 +1,6 @@
 namespace GraphQLQueryBuilder.Abstractions.Language
 {
-    public interface IFragmentSpeadSelectionItem
+    public interface IFragmentSpreadSelectionItem
     {
         string FragmentName { get; }
     }
