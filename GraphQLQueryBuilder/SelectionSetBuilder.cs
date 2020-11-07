@@ -32,9 +32,7 @@ namespace GraphQLQueryBuilder
         /// <inheritdoc />
         public ISelectionSetBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression)
         {
-            alias = alias?.Trim();
-
-            AssertAliasIsValidGraphQLName(alias);
+            alias = alias.MustBeValidGraphQLName(nameof(alias));
             
             typeof(TProperty).MustBeGraphQLScalar();
 
@@ -54,9 +52,7 @@ namespace GraphQLQueryBuilder
         /// <inheritdoc />
         public ISelectionSetBuilder<T> AddObjectField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            alias = alias?.Trim();
-
-            AssertAliasIsValidGraphQLName(alias);
+            alias = alias.MustBeValidGraphQLName(nameof(alias));
 
             if (selectionSet == null)
             {
@@ -80,9 +76,7 @@ namespace GraphQLQueryBuilder
 
         public ISelectionSetBuilder<T> AddScalarCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression)
         {
-            alias = alias?.Trim();
-
-            AssertAliasIsValidGraphQLName(alias);
+            alias = alias.MustBeValidGraphQLName(nameof(alias));
             
             typeof(TProperty).MustBeGraphQLScalar();
             
@@ -102,9 +96,7 @@ namespace GraphQLQueryBuilder
         /// <inheritdoc />
         public ISelectionSetBuilder<T> AddObjectCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
-            alias = alias?.Trim();
-
-            AssertAliasIsValidGraphQLName(alias);
+            alias = alias.MustBeValidGraphQLName(nameof(alias));
 
             if (selectionSet == null)
             {
@@ -124,17 +116,6 @@ namespace GraphQLQueryBuilder
         public ISelectionSet<T> Build()
         {
             return new SelectionSet<T>(_selectionSetItems);
-        }
-
-        private static void AssertAliasIsValidGraphQLName(string alias)
-        {
-            if (!string.IsNullOrWhiteSpace(alias) && !GraphQLName.IsValid(alias))
-            {
-                throw new ArgumentException("Provided alias does not comply with GraphQL's Name specification.", nameof(alias))
-                {
-                    HelpLink = "https://spec.graphql.org/June2018/#Name"
-                };
-            }
         }
 
         private PropertyInfo GetPropertyInfoForExpression<TProperty>(Expression<Func<T, TProperty>> expression)
