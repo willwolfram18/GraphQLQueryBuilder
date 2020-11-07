@@ -45,7 +45,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 foreach (var addingField in new [] { addingFieldWithAlias, addingFieldWithoutAlias })
                 {
                     Invoking(addingField).Should().ThrowExactly<InvalidOperationException>("because there is an overload for class properties")
-                        .WithMessage($"When selecting a property that is a class, please use the {nameof(builder.AddCollectionField)} method that takes an {nameof(ISelectionSet)}.");                    
+                        .WithMessage($"When selecting a property that is a class, please use the {nameof(builder.AddField)} method that takes an {nameof(ISelectionSet)}.");                    
                 }
             }
         }

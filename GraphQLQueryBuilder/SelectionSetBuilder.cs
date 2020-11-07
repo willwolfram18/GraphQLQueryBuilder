@@ -40,7 +40,7 @@ namespace GraphQLQueryBuilder
             if (propertyInfo.PropertyType.IsClass && propertyInfo.PropertyType != typeof(string))
             {
                 throw new InvalidOperationException(
-                    $"When selecting a property that is a class, please use the {nameof(AddCollectionField)} method that takes an {nameof(ISelectionSet)}."
+                    $"When selecting a property that is a class, please use the {nameof(AddField)} method that takes an {nameof(ISelectionSet)}."
                 );
             }
 
