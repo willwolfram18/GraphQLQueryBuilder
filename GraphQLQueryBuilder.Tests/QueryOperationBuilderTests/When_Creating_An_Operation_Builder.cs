@@ -15,7 +15,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         [Test]
         public void Then_Operation_Type_Matches_Parameter()
         {
-            var query = QueryOperationBuilder.ForSchema<SimpleSchema>(OperationTypeForFixture)
+            var query = CreateBuilderFor<SimpleSchema>()
                 .AddField(schema => schema.Version)
                 .Build();
 
@@ -28,7 +28,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         public void Then_Operation_Type_And_Name_Match_Parameters(
             [Values(null, "", "    ", "  \n \t", "MyOperation")] string operationName)
         {
-            var query = QueryOperationBuilder.ForSchema<SimpleSchema>(OperationTypeForFixture, operationName)
+            var query = CreateBuilderFor<SimpleSchema>(operationName)
                 .AddField(schema => schema.Version)
                 .Build();
 
@@ -44,7 +44,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             If_Operation_Name_Is_Not_A_Valid_GraphQL_Name_Then_ArgumentException_Is_Thrown_Stating_Operation_Name_Is_Not_Valid(
                 string operationName, string because)
         {
-            Action method = () => QueryOperationBuilder.ForSchema<SimpleSchema>(OperationTypeForFixture, operationName);
+            Action method = () => CreateBuilderFor<SimpleSchema>(operationName);
             
             Invoking(method).Should().ThrowExactly<ArgumentException>(because)
                 .Where(e => e.ParamName == "alias", "because the alias parameter is the problem")

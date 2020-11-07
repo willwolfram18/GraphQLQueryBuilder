@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GraphQLQueryBuilder.Abstractions;
+using GraphQLQueryBuilder.Tests.Models;
 using NUnit.Framework;
 
 namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
@@ -17,5 +19,10 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         
         private static IEnumerable<GraphQLOperationType> OperationTypes => Enum.GetValues(typeof(GraphQLOperationType))
             .Cast<GraphQLOperationType>();
+
+        protected IQueryOperationBuilder<T> CreateBuilderFor<T>(string operationName = null) where T : class
+        {
+            return QueryOperationBuilder.ForSchema<T>(OperationTypeForFixture, operationName);
+        }
     }
 }
