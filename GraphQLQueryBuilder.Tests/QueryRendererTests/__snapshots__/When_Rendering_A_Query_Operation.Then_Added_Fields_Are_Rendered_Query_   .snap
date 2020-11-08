@@ -1,2 +1,49 @@
 ﻿query {
+  Version
+  versions: PastVersions
+  users: Customers {
+    Id
+    acctNum: AccountNumber
+    contactInfo: CustomerContact {
+      FirstName
+      surname: LastName
+      names: Nicknames
+      Address {
+        line1: Street1
+        line2: Street2
+        City
+        State
+        ZipCode
+      }
+      PhoneNumbers {
+        Number
+        ext: Extension
+      }
+      foobar: PhoneNumbers {
+        Number
+        ext: Extension
+      }
+    }
+    FavoriteNumbers
+  }
+  admin: Administrator {
+    FirstName
+    surname: LastName
+    names: Nicknames
+    Address {
+      line1: Street1
+      line2: Street2
+      City
+      State
+      ZipCode
+    }
+    PhoneNumbers {
+      Number
+      ext: Extension
+    }
+    foobar: PhoneNumbers {
+      Number
+      ext: Extension
+    }
+  }
 }
