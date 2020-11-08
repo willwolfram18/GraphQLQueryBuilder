@@ -1,5 +1,7 @@
 ﻿using GraphQLQueryBuilder.Abstractions.Language;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace GraphQLQueryBuilder
@@ -58,6 +60,11 @@ namespace GraphQLQueryBuilder
 
             content.Append(fieldSelection.FieldName);
 
+            if (fieldSelection.Arguments.Count != 0)
+            {
+                content.Append(Render(fieldSelection.Arguments.ToList()));
+            }
+
             if (fieldSelection.SelectionSet != null)
             {
                 content.Append($" {Render(fieldSelection.SelectionSet, context)}");
@@ -80,6 +87,53 @@ namespace GraphQLQueryBuilder
         private static string RenderOperationName(string queryName)
         {
             return string.IsNullOrWhiteSpace(queryName) ? null : $"{queryName} ";
+        }
+
+        private static string Render(IReadOnlyList<IArgument> arguments)
+        {
+            var content = new StringBuilder();
+
+            content.Append("(");
+
+            for (var i = 0; i < arguments.Count; i++)
+            {
+                var argument = arguments[i];
+                if (i != 0)
+                {
+                    content.Append(", ");
+                }
+                
+                content.Append($"{argument.Name}: {Render(argument.Value)}");
+            }
+
+            content.Append(")");
+
+            return content.ToString();
+        }
+        
+        private static string Render(IArgumentValue value)
+        {
+            return value switch
+            {
+                ILiteralArgumentValue literal => Render(literal),
+                _ => throw new NotImplementedException(
+                    $"Unable to render argument of type '{value.GetType().FullName}'")
+            };
+        }
+
+        private static string Render(ILiteralArgumentValue literalValue)
+        {
+            return literalValue switch
+            {
+                INullArgumentValue _ => "null",
+                IStringArgumentValue stringValue => stringValue.Value,
+                IIntegerArgumentValue intValue => intValue.Value.ToString(),
+                IFloatArgumentValue floatValue => floatValue.Value.ToString(),
+                IBooleanArgumentValue boolValue => boolValue.Value.ToString().ToLower(),
+                IEnumArgumentValue enumValue => throw new NotImplementedException("Need to do enums"),
+                _ => throw new NotImplementedException(
+                    $"Unable to render argument of type '{literalValue.GetType().FullName}'")
+            };
         }
     }
 }

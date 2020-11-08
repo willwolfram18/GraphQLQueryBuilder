@@ -87,7 +87,7 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
             var customerSelectionSet = SelectionSetBuilder.For<Customer>()
                 .AddObjectField(customer => customer.CustomerContact, contactArguments, contactSelectionSet)
                 // TODO add in once method supports args
-//                .AddScalarCollectionField(customer => customer.FavoriteNumbers, favoriteNumberArguments)
+//                .AddScalarCollectionField("favoriteEvenNumbersGreaterThan10", customer => customer.FavoriteNumbers, favoriteNumberArguments)
                 .Build();
             
             var result = new QueryRenderer().Render(customerSelectionSet);
