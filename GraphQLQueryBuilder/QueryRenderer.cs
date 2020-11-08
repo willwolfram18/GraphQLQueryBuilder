@@ -15,8 +15,15 @@ namespace GraphQLQueryBuilder
         /// <inheritdoc />
         public string Render(IGraphQLOperation query)
         {
-            return "fake";
-            throw new NotImplementedException();
+            var context = new QueryRenderingContext();
+            var content = new StringBuilder();
+
+            content.Append($"{Render(query.Type)} ");
+            content.Append(RenderOperationName(query.Name));
+            
+            content.Append(Render(query.SelectionSet, context));
+
+            return content.ToString();
         }
 
         private string Render(ISelectionSet selectionSet, QueryRenderingContext context)
@@ -60,6 +67,22 @@ namespace GraphQLQueryBuilder
             }
 
             return content.ToString();
+        }
+
+        private static string Render(GraphQLOperationType type)
+        {
+            return type switch
+            {
+                GraphQLOperationType.Mutation => "mutation",
+                GraphQLOperationType.Query => "query",
+                GraphQLOperationType.Subscription => "subscription",
+                _ => throw new NotImplementedException($"Unknown query operation type '{type}'.")
+            };
+        }
+        
+        private static string RenderOperationName(string queryName)
+        {
+            return string.IsNullOrWhiteSpace(queryName) ? null : $"{queryName} ";
         }
     }
 }
