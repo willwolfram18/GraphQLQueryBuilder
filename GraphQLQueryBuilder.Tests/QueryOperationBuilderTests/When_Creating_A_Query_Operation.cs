@@ -90,28 +90,28 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             var expectedContactsSelectionSet = new SelectionSet<Contact>(
                 new List<ISelectionSetItem>
                 {
-                    new FieldSelectionItem(null, nameof(Contact.FirstName), null),
-                    new FieldSelectionItem("surname", nameof(Contact.LastName), null),
-                    new FieldSelectionItem(null, nameof(Contact.Nicknames), null),
+                    new ObjectFieldSelectionItem(null, nameof(Contact.FirstName), null),
+                    new ObjectFieldSelectionItem("surname", nameof(Contact.LastName), null),
+                    new ObjectFieldSelectionItem(null, nameof(Contact.Nicknames), null),
                 });
             
             var expectedCustomerSelectionSet = new SelectionSet<Customer>(
                 new List<ISelectionSetItem>
                 {
-                    new FieldSelectionItem(null, nameof(Customer.CustomerContact), expectedContactsSelectionSet)
+                    new ObjectFieldSelectionItem(null, nameof(Customer.CustomerContact), expectedContactsSelectionSet)
                 });
 
             var expectedQuerySelectionSet = new SelectionSet<SimpleSchema>(
                 new List<ISelectionSetItem>
                 {
-                    new FieldSelectionItem(null, nameof(SimpleSchema.Version), null),
-                    new FieldSelectionItem("foobar", nameof(SimpleSchema.Version), null),
-                    new FieldSelectionItem(null, nameof(SimpleSchema.PastVersions), null),
-                    new FieldSelectionItem("versions", nameof(SimpleSchema.PastVersions), null),
-                    new FieldSelectionItem(null, nameof(SimpleSchema.Administrator), expectedContactsSelectionSet),
-                    new FieldSelectionItem("admin", nameof(SimpleSchema.Administrator), expectedContactsSelectionSet),
-                    new FieldSelectionItem(null, nameof(SimpleSchema.Customers), expectedCustomerSelectionSet),
-                    new FieldSelectionItem("customers", nameof(SimpleSchema.Customers), expectedCustomerSelectionSet),
+                    new ObjectFieldSelectionItem(null, nameof(SimpleSchema.Version), null),
+                    new ObjectFieldSelectionItem("foobar", nameof(SimpleSchema.Version), null),
+                    new ObjectFieldSelectionItem(null, nameof(SimpleSchema.PastVersions), null),
+                    new ObjectFieldSelectionItem("versions", nameof(SimpleSchema.PastVersions), null),
+                    new ObjectFieldSelectionItem(null, nameof(SimpleSchema.Administrator), expectedContactsSelectionSet),
+                    new ObjectFieldSelectionItem("admin", nameof(SimpleSchema.Administrator), expectedContactsSelectionSet),
+                    new ObjectFieldSelectionItem(null, nameof(SimpleSchema.Customers), expectedCustomerSelectionSet),
+                    new ObjectFieldSelectionItem("customers", nameof(SimpleSchema.Customers), expectedCustomerSelectionSet),
                 });
 
             var expectedQueryOperation =

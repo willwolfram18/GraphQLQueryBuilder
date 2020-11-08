@@ -15,7 +15,7 @@ namespace GraphQLQueryBuilder.Implementations.Language
             Alias = alias;
             FieldName = fieldName;
             Arguments = (arguments ?? Enumerable.Empty<IArgument>())
-                .Where(e => e != null)
+                .Where(arg => arg != null)
                 .ToList()
                 .AsReadOnly();
         }

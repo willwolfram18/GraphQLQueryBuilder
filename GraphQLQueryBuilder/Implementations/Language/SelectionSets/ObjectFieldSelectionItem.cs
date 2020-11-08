@@ -4,18 +4,21 @@ using GraphQLQueryBuilder.Abstractions.Language;
 
 namespace GraphQLQueryBuilder.Implementations.Language
 {
-    internal class FieldSelectionItem : IFieldSelectionItem
+    internal class ObjectFieldSelectionItem : IFieldSelectionItem
     {
-        public FieldSelectionItem(string alias, string fieldName, ISelectionSet selectionSet) : this(alias, fieldName, null, selectionSet)
+        public ObjectFieldSelectionItem(string alias, string fieldName, ISelectionSet selectionSet) : this(alias, fieldName, null, selectionSet)
         {
         }
 
-        public FieldSelectionItem(string alias, string fieldName, IEnumerable<IArgument> arguments,
+        public ObjectFieldSelectionItem(string alias, string fieldName, IEnumerable<IArgument> arguments,
             ISelectionSet selectionSet)
         {
             Alias = alias;
             FieldName = fieldName;
-            Arguments = (arguments ?? Enumerable.Empty<IArgument>()).ToList().AsReadOnly();
+            Arguments = (arguments ?? Enumerable.Empty<IArgument>())
+                .Where(arg => arg != null)
+                .ToList()
+                .AsReadOnly();
             SelectionSet = selectionSet;
         }
 

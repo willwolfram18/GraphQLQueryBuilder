@@ -74,7 +74,7 @@ namespace GraphQLQueryBuilder
             typeof(TProperty).MustBeAGraphQLObject($" Use the {nameof(AddScalarField)} method.")
                 .MustNotBeGraphQLList($" Use the {nameof(AddScalarCollectionField)} or {nameof(AddObjectCollectionField)} methods.");
 
-            _selectionSetItems.Add(new FieldSelectionItem(alias, propertyInfo.Name, selectionSet));
+            _selectionSetItems.Add(new ObjectFieldSelectionItem(alias, propertyInfo.Name, selectionSet));
 
             return this;
         }
@@ -92,7 +92,7 @@ namespace GraphQLQueryBuilder
             
             var propertyInfo = GetPropertyInfoForExpression(expression);
 
-            _selectionSetItems.Add(new FieldSelectionItem(alias, propertyInfo.Name, null));
+            _selectionSetItems.Add(new ObjectFieldSelectionItem(alias, propertyInfo.Name, null));
 
             return this;
         }
@@ -117,7 +117,7 @@ namespace GraphQLQueryBuilder
             
             typeof(TProperty).MustBeAGraphQLObject($" Use the {nameof(AddScalarCollectionField)} method.");
             
-            _selectionSetItems.Add(new FieldSelectionItem(alias, propertyInfo.Name, selectionSet));
+            _selectionSetItems.Add(new ObjectFieldSelectionItem(alias, propertyInfo.Name, selectionSet));
             
             return this;
         }

@@ -109,8 +109,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             var expectedCustomerSelections = new List<ISelectionSetItem>
             {
                 new ScalarFieldSelectionItem(null, nameof(Customer.Id)),
-                new FieldSelectionItem(null, nameof(Customer.CustomerContact), expectedContactSelectionSet),
-                new FieldSelectionItem("foobar", nameof(Customer.CustomerContact), expectedContactSelectionSet),
+                new ObjectFieldSelectionItem(null, nameof(Customer.CustomerContact), expectedContactSelectionSet),
+                new ObjectFieldSelectionItem("foobar", nameof(Customer.CustomerContact), expectedContactSelectionSet),
             };
 
             customerSelectionSet.Should().NotBeNull();
@@ -152,8 +152,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 {
                     new ScalarFieldSelectionItem(null, nameof(Contact.FirstName)),
                     new ScalarFieldSelectionItem("surname", nameof(Contact.LastName)),
-                    new FieldSelectionItem(null, nameof(Contact.PhoneNumbers), expectedPhoneNumberSelectionSet),
-                    new FieldSelectionItem("foobar", nameof(Contact.PhoneNumbers), expectedPhoneNumberSelectionSet),
+                    new ObjectFieldSelectionItem(null, nameof(Contact.PhoneNumbers), expectedPhoneNumberSelectionSet),
+                    new ObjectFieldSelectionItem("foobar", nameof(Contact.PhoneNumbers), expectedPhoneNumberSelectionSet),
                     new ScalarFieldSelectionItem("names", nameof(Contact.Nicknames))
                 });
 
@@ -162,7 +162,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 new ScalarFieldSelectionItem(null, nameof(Customer.Id)),
                 new ScalarFieldSelectionItem(null, nameof(Customer.FavoriteNumbers)),
                 new ScalarFieldSelectionItem("baz", nameof(Customer.FavoriteNumbers)),
-                new FieldSelectionItem(null, nameof(Customer.CustomerContact), expectedContactSelection)
+                new ObjectFieldSelectionItem(null, nameof(Customer.CustomerContact), expectedContactSelection)
             };
 
             customerSelectionSet.Should().NotBeNull();
