@@ -9,5 +9,7 @@ namespace GraphQLQueryBuilder.Implementations.Language
         public EnumArgumentValue(T value) : base(value)
         {
         }
+
+        public object Value => base.Value;
     }
 }

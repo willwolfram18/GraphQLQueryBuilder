@@ -60,7 +60,7 @@ namespace GraphQLQueryBuilder
         /// <returns></returns>
         public static IArgument Build<T>(string name, T value) where T : Enum
         {
-            throw new NotImplementedException();
+            return Build(name, value, argValue => new EnumArgumentValue<T>(argValue));
         }
 
         /// <summary>

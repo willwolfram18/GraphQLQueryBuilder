@@ -2,8 +2,13 @@ using System;
 
 namespace GraphQLQueryBuilder.Abstractions.Language
 {
-    public interface IEnumArgumentValue<T> : IArgumentValue, ILiteralArgumentValue where T : Enum
+    public interface IEnumArgumentValue : IArgumentValue, ILiteralArgumentValue
     {
-        T Value { get; }
+        object Value { get; }
+    }
+    
+    public interface IEnumArgumentValue<out T> : IEnumArgumentValue where T : Enum
+    {
+        new T Value { get; }
     }
 }
