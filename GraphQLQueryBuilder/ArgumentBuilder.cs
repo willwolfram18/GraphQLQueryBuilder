@@ -15,16 +15,7 @@ namespace GraphQLQueryBuilder
         /// <returns></returns>
         public static IArgument Build(string name, string value)
         {
-            name = name.MustNotBeNullOrWhiteSpace("A GraphQL argument name cannot be null or white space.", nameof(name))
-                .MustBeValidGraphQLName(nameof(name));
-
-            IArgumentValue argValue = new StringArgumentValue(value);
-            if (value == null)
-            {
-                argValue = new NullArgumentValue();
-            }
-            
-            return new Argument(name, argValue);
+            return Build(name, value, argValue => new StringArgumentValue(argValue));
         }
 
         /// <summary>
@@ -35,7 +26,7 @@ namespace GraphQLQueryBuilder
         /// <returns></returns>
         public static IArgument Build(string name, int? value)
         {
-            throw new NotImplementedException();
+            return Build(name, value, argValue => new IntegerArgumentValue(argValue.Value));
         }
 
         /// <summary>
@@ -46,7 +37,7 @@ namespace GraphQLQueryBuilder
         /// <returns></returns>
         public static IArgument Build(string name, bool? value)
         {
-            throw new NotImplementedException();
+            return Build(name, value, argValue => new BooleanArgumentValue(argValue.Value));
         }
 
         /// <summary>
@@ -57,7 +48,7 @@ namespace GraphQLQueryBuilder
         /// <returns></returns>
         public static IArgument Build(string name, double? value)
         {
-            throw new NotImplementedException();
+            return Build(name, value, argValue => new FloatArgumentValue(argValue.Value));
         }
 
         /// <summary>
@@ -81,6 +72,16 @@ namespace GraphQLQueryBuilder
         public static IArgument Build(string name)
         {
             throw new NotImplementedException();
+        }
+
+        private static IArgument Build<T>(string name, T value, Func<T, IArgumentValue> valueFactory)
+        {
+            name = name.MustNotBeNullOrWhiteSpace("A GraphQL argument name cannot be null or white space.", nameof(name))
+                .MustBeValidGraphQLName(nameof(name));
+            
+            IArgumentValue argValue = value == null ? new NullArgumentValue() : valueFactory(value);
+
+            return new Argument(name, argValue);
         }
     }
 }

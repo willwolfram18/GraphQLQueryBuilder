@@ -1,3 +1,4 @@
+using System;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using FluentAssertions.Primitives;
@@ -8,6 +9,7 @@ namespace GraphQLQueryBuilder.Tests.ArgumentBuilderTests
 {
     public class When_Building_A_Float_Value_Argument_From_A_Double : ArgumentBuilderTest<double?, IFloatArgumentValue>
     {
+        private static readonly Random _numberGenerator = new Random();
         protected override double? ArgumentValue { get; set; }
 
         protected override IArgument BuildArgument(string name, double? value) => ArgumentBuilder.Build(name, value);
@@ -15,6 +17,12 @@ namespace GraphQLQueryBuilder.Tests.ArgumentBuilderTests
         protected override void ValidateArgumentValue(AndWhichConstraint<ObjectAssertions, IFloatArgumentValue> argumentValueAssertions)
         {
             argumentValueAssertions.Which.Value.Should().Be(ArgumentValue.Value);
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            ArgumentValue = _numberGenerator.NextDouble();
         }
         
         [Test]
