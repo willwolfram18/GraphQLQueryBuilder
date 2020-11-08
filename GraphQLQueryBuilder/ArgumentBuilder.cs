@@ -71,7 +71,7 @@ namespace GraphQLQueryBuilder
         /// <returns></returns>
         public static IArgument Build(string name)
         {
-            throw new NotImplementedException();
+            return Build<object>(name, null, _ => new NullArgumentValue());
         }
 
         private static IArgument Build<T>(string name, T value, Func<T, IArgumentValue> valueFactory)
