@@ -23,23 +23,6 @@ namespace GraphQLQueryBuilder
         private readonly PropertyInfo[] _properties = typeof(T).GetProperties();
         private readonly List<ISelectionSetItem> _selectionSetItems = new List<ISelectionSetItem>();
 
-//        /// <inheritdoc />
-//        public ISelectionSetBuilder<T> AddScalarField<TProperty>(Expression<Func<T, TProperty>> expression)
-//        {
-//            return AddScalarField(null, expression);
-//        }
-//
-//        public ISelectionSetBuilder<T> AddScalarField<TProperty>(Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments)
-//        {
-//            return AddScalarField(null, expression, arguments);
-//        }
-//
-//        /// <inheritdoc />
-//        public ISelectionSetBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression)
-//        {
-//            return AddScalarField(alias, expression, null);
-//        }
-
         public ISelectionSetBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments)
         {
             alias = alias.MustBeValidGraphQLName(nameof(alias));
@@ -51,23 +34,6 @@ namespace GraphQLQueryBuilder
             _selectionSetItems.Add(new ScalarFieldSelectionItem(alias, propertyInfo.Name, arguments));
 
             return this;
-        }
-
-        /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddObjectField<TProperty>(Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
-        {
-            return AddObjectField(null, expression, selectionSet);
-        }
-
-        public ISelectionSetBuilder<T> AddObjectField<TProperty>(Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments, ISelectionSet<TProperty> selectionSet) where TProperty : class
-        {
-            return AddObjectField(null, expression, arguments, selectionSet);
-        }
-
-        /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddObjectField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
-        {
-            return AddObjectField(alias, expression, null, selectionSet);
         }
 
         public ISelectionSetBuilder<T> AddObjectField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments,
