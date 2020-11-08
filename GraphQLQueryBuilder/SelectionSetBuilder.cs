@@ -47,9 +47,8 @@ namespace GraphQLQueryBuilder
             typeof(TProperty).MustBeGraphQLScalar();
 
             var propertyInfo = GetPropertyInfoForExpression(expression);
-            var args = (arguments ?? Enumerable.Empty<IArgument>()).Where(arg => arg != null).ToList();
 
-            _selectionSetItems.Add(new FieldSelectionItem(alias, propertyInfo.Name, args, null));
+            _selectionSetItems.Add(new ScalarFieldSelectionItem(alias, propertyInfo.Name, arguments));
 
             return this;
         }

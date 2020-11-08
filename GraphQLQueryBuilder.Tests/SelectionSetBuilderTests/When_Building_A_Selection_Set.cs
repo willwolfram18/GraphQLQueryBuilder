@@ -29,8 +29,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 
             var expectedSelections = new ISelectionSetItem[]
             {
-                new FieldSelectionItem(null, nameof(Customer.Id), Enumerable.Empty<IArgument>(), null),
-                new FieldSelectionItem("foobar", nameof(Customer.Id), Enumerable.Empty<IArgument>(), null),
+                new ScalarFieldSelectionItem(null, nameof(Customer.Id)), 
+                new ScalarFieldSelectionItem("foobar", nameof(Customer.Id)),
             };
             
             selectionSet.Should().NotBeNull();
@@ -59,8 +59,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 
             var expectedSelections = new List<ISelectionSetItem>
             {
-                new FieldSelectionItem(null, nameof(Customer.Id), expectedArguments, null),
-                new FieldSelectionItem("foobar", nameof(Customer.Id), expectedArguments, null)
+                new ScalarFieldSelectionItem(null, nameof(Customer.Id), expectedArguments),
+                new ScalarFieldSelectionItem("foobar", nameof(Customer.Id), expectedArguments)
             };
             
             selectionSet.Should().NotBeNull();
@@ -78,8 +78,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 
             var expectedSelections = new List<IFieldSelectionItem>
             {
-                new FieldSelectionItem(null, nameof(Customer.Id), null),
-                new FieldSelectionItem("acctNum", nameof(Customer.AccountNumber), null)
+                new ScalarFieldSelectionItem(null, nameof(Customer.Id)),
+                new ScalarFieldSelectionItem("acctNum", nameof(Customer.AccountNumber))
             };
 
             selectionSet.Should().NotBeNull();
@@ -103,12 +103,12 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             var expectedContactSelectionSet = new SelectionSet<Contact>(
                 new ISelectionSetItem[]
                 {
-                    new FieldSelectionItem(null, nameof(Contact.FirstName), null),
-                    new FieldSelectionItem(null, nameof(Contact.LastName), null),
+                    new ScalarFieldSelectionItem(null, nameof(Contact.FirstName)), 
+                    new ScalarFieldSelectionItem(null, nameof(Contact.LastName)), 
                 });
             var expectedCustomerSelections = new List<ISelectionSetItem>
             {
-                new FieldSelectionItem(null, nameof(Customer.Id), null),
+                new ScalarFieldSelectionItem(null, nameof(Customer.Id)),
                 new FieldSelectionItem(null, nameof(Customer.CustomerContact), expectedContactSelectionSet),
                 new FieldSelectionItem("foobar", nameof(Customer.CustomerContact), expectedContactSelectionSet),
             };
@@ -143,25 +143,25 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             var expectedPhoneNumberSelectionSet = new SelectionSet<PhoneNumber>(
                 new List<ISelectionSetItem>
                 {
-                    new FieldSelectionItem(null, nameof(PhoneNumber.Number), null),
-                    new FieldSelectionItem("ext", nameof(PhoneNumber.Extension), null)
+                    new ScalarFieldSelectionItem(null, nameof(PhoneNumber.Number)),
+                    new ScalarFieldSelectionItem("ext", nameof(PhoneNumber.Extension))
                 });
 
             var expectedContactSelection = new SelectionSet<Contact>(
                 new List<ISelectionSetItem>
                 {
-                    new FieldSelectionItem(null, nameof(Contact.FirstName), null),
-                    new FieldSelectionItem("surname", nameof(Contact.LastName), null),
+                    new ScalarFieldSelectionItem(null, nameof(Contact.FirstName)),
+                    new ScalarFieldSelectionItem("surname", nameof(Contact.LastName)),
                     new FieldSelectionItem(null, nameof(Contact.PhoneNumbers), expectedPhoneNumberSelectionSet),
                     new FieldSelectionItem("foobar", nameof(Contact.PhoneNumbers), expectedPhoneNumberSelectionSet),
-                    new FieldSelectionItem("names", nameof(Contact.Nicknames), null)
+                    new ScalarFieldSelectionItem("names", nameof(Contact.Nicknames))
                 });
 
             var expectedCustomerSelections = new List<ISelectionSetItem>
             {
-                new FieldSelectionItem(null, nameof(Customer.Id), null),
-                new FieldSelectionItem(null, nameof(Customer.FavoriteNumbers), null),
-                new FieldSelectionItem("baz", nameof(Customer.FavoriteNumbers), null),
+                new ScalarFieldSelectionItem(null, nameof(Customer.Id)),
+                new ScalarFieldSelectionItem(null, nameof(Customer.FavoriteNumbers)),
+                new ScalarFieldSelectionItem("baz", nameof(Customer.FavoriteNumbers)),
                 new FieldSelectionItem(null, nameof(Customer.CustomerContact), expectedContactSelection)
             };
 
