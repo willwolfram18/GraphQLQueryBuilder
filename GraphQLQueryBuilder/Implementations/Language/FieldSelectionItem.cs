@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GraphQLQueryBuilder.Abstractions.Language;
 
 namespace GraphQLQueryBuilder.Implementations.Language
@@ -14,7 +15,7 @@ namespace GraphQLQueryBuilder.Implementations.Language
         {
             Alias = alias;
             FieldName = fieldName;
-            Arguments = arguments;
+            Arguments = (arguments ?? Enumerable.Empty<IArgument>()).ToList().AsReadOnly();
             SelectionSet = selectionSet;
         }
 
@@ -25,7 +26,7 @@ namespace GraphQLQueryBuilder.Implementations.Language
         public string FieldName { get; }
         
         /// <inheritdoc />
-        public IEnumerable<IArgument> Arguments { get; }
+        public IReadOnlyCollection<IArgument> Arguments { get; }
 
         /// <inheritdoc />
         public ISelectionSet SelectionSet { get; }

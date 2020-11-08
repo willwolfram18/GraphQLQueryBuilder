@@ -8,7 +8,7 @@ namespace GraphQLQueryBuilder.Abstractions.Language
 
         string FieldName { get; }
         
-        IEnumerable<IArgument> Arguments { get; }
+        IReadOnlyCollection<IArgument> Arguments { get; }
 
         ISelectionSet SelectionSet { get; }
     }
