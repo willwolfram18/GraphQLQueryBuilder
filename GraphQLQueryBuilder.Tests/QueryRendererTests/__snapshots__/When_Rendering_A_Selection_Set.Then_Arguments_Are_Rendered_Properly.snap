@@ -5,5 +5,5 @@
       postalCode: ZipCode
     }
   }
-  favoriteEvenNumbersGreaterThan10: FavoriteNumbers(isEven: true, greaterThan: 10)
+  favoriteOddNumbersGreaterThan10: FavoriteNumbers(isEven: false, greaterThan: 10)
 }
