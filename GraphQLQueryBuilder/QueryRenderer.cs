@@ -16,22 +16,20 @@ namespace GraphQLQueryBuilder
         public string Render(IGraphQLOperation query)
         {
             var context = new QueryRenderingContext();
-            var content = new StringBuilder();
+            var content = new QueryContentAppender(context);
 
-            content.Append($"{Render(query.Type)} ");
-            content.Append(RenderOperationName(query.Name));
-            
-            content.Append(Render(query.SelectionSet, context));
+            content.Append($"{Render(query.Type)} ")
+                .Append(RenderOperationName(query.Name))
+                .Append(Render(query.SelectionSet, context));
 
             return content.ToString();
         }
 
         private string Render(ISelectionSet selectionSet, QueryRenderingContext context)
         {
-            var content = new StringBuilder();
+            var content = new QueryContentAppender(context);
 
-            content.AppendLine("{");
-            context = context.IncreaseIndentationLevel();
+            (_, context) = content.AppendStartOfSelectionSet();
 
             foreach (var selectionItem in selectionSet.Selections)
             {
@@ -41,18 +39,17 @@ namespace GraphQLQueryBuilder
                     _ => throw new NotImplementedException($"Unable to render selection {selectionItem.GetType().FullName}")
                 };
 
-                content.AppendLine($"{context.RenderIndentationString()}{selectionItemContent}");
+                content.AppendLineWithIndentation($"{selectionItemContent}");
             }
 
-            context = context.DecreaseIndentationLevel();
-            content.Append($"{context.RenderIndentationString()}}}");
+            content.AppendEndOfSelectionSet();
 
             return content.ToString();
         }
 
         private string Render(IFieldSelectionItem fieldSelection, QueryRenderingContext context)
         {
-            var content = new StringBuilder();
+            var content = new QueryContentAppender(context);
 
             if (!string.IsNullOrWhiteSpace(fieldSelection.Alias))
             {
