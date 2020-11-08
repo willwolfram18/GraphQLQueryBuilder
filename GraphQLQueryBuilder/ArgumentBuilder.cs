@@ -33,7 +33,7 @@ namespace GraphQLQueryBuilder
         /// <param name="name">The argument's name'</param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static IArgument Build(string name, int value)
+        public static IArgument Build(string name, int? value)
         {
             throw new NotImplementedException();
         }
@@ -44,7 +44,7 @@ namespace GraphQLQueryBuilder
         /// <param name="name">The argument's name'</param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static IArgument Build(string name, bool value)
+        public static IArgument Build(string name, bool? value)
         {
             throw new NotImplementedException();
         }
@@ -55,7 +55,7 @@ namespace GraphQLQueryBuilder
         /// <param name="name">The argument's name'</param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static IArgument Build(string name, double value)
+        public static IArgument Build(string name, double? value)
         {
             throw new NotImplementedException();
         }
