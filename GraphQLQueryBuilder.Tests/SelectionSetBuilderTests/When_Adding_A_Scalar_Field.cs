@@ -94,6 +94,6 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             Action method = () => builder.AddScalarField(alias, customer => customer.Id);
 
             Invoking(method).Should().ThrowInvalidGraphQLNameException("alias", because);
-        }
+        }        
     }
 }

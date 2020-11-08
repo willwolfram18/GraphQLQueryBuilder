@@ -29,16 +29,27 @@ namespace GraphQLQueryBuilder
             return AddScalarField(null, expression);
         }
 
+        public ISelectionSetBuilder<T> AddScalarField<TProperty>(Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments)
+        {
+            return AddScalarField(null, expression, arguments);
+        }
+
         /// <inheritdoc />
         public ISelectionSetBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression)
+        {
+            return AddScalarField(alias, expression, null);
+        }
+
+        public ISelectionSetBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments)
         {
             alias = alias.MustBeValidGraphQLName(nameof(alias));
             
             typeof(TProperty).MustBeGraphQLScalar();
 
             var propertyInfo = GetPropertyInfoForExpression(expression);
+            var args = (arguments ?? Enumerable.Empty<IArgument>()).Where(arg => arg != null).ToList();
 
-            _selectionSetItems.Add(new FieldSelectionItem(alias, propertyInfo.Name, null));
+            _selectionSetItems.Add(new FieldSelectionItem(alias, propertyInfo.Name, args, null));
 
             return this;
         }

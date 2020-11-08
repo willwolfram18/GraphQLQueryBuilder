@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using GraphQLQueryBuilder.Abstractions.Language;
 using GraphQLQueryBuilder.Implementations.Language;
@@ -11,6 +12,62 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 {
     public class When_Building_A_Selection_Set
     {
+        public static IEnumerable<List<IArgument>> NullOrEmptyArguments => new[]
+        {
+            null,
+            Enumerable.Empty<IArgument>().ToList()
+        };
+        
+        [TestCaseSource(nameof(NullOrEmptyArguments))]
+        public void If_Arguments_For_Scalar_Field_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
+            List<IArgument> arguments)
+        {
+            var selectionSet = SelectionSetBuilder.For<Customer>()
+                .AddScalarField(customer => customer.Id, arguments)
+                .AddScalarField("foobar", customer => customer.Id, arguments)
+                .Build();
+
+            var expectedSelections = new ISelectionSetItem[]
+            {
+                new FieldSelectionItem(null, nameof(Customer.Id), Enumerable.Empty<IArgument>(), null),
+                new FieldSelectionItem("foobar", nameof(Customer.Id), Enumerable.Empty<IArgument>(), null),
+            };
+            
+            selectionSet.Should().NotBeNull();
+            selectionSet.Selections.Should()
+                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
+        }
+
+        [Test]
+        public void Then_Arguments_For_Field_Selection_Exclude_Nulls()
+        {
+            var arguments = new List<IArgument>
+            {
+                ArgumentBuilder.Build("first", "foo"),
+                ArgumentBuilder.Build("second", 3),
+                null,
+                ArgumentBuilder.Build("fourth", 10.1),
+                ArgumentBuilder.Build("fifth")
+            };
+
+            var expectedArguments = arguments.Where(a => a != null).ToList();
+            
+            var selectionSet = SelectionSetBuilder.For<Customer>()
+                .AddScalarField(customer => customer.Id, arguments)
+                .AddScalarField("foobar", customer => customer.Id, arguments)
+                .Build();
+
+            var expectedSelections = new List<ISelectionSetItem>
+            {
+                new FieldSelectionItem(null, nameof(Customer.Id), expectedArguments, null),
+                new FieldSelectionItem("foobar", nameof(Customer.Id), expectedArguments, null)
+            };
+            
+            selectionSet.Should().NotBeNull();
+            selectionSet.Selections.Should()
+                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
+        }
+        
         [Test]
         public void Then_Added_Properties_Are_In_The_Selection_Set()
         {
