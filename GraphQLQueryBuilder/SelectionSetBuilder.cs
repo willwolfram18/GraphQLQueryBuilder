@@ -23,22 +23,22 @@ namespace GraphQLQueryBuilder
         private readonly PropertyInfo[] _properties = typeof(T).GetProperties();
         private readonly List<ISelectionSetItem> _selectionSetItems = new List<ISelectionSetItem>();
 
-        /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddScalarField<TProperty>(Expression<Func<T, TProperty>> expression)
-        {
-            return AddScalarField(null, expression);
-        }
-
-        public ISelectionSetBuilder<T> AddScalarField<TProperty>(Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments)
-        {
-            return AddScalarField(null, expression, arguments);
-        }
-
-        /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression)
-        {
-            return AddScalarField(alias, expression, null);
-        }
+//        /// <inheritdoc />
+//        public ISelectionSetBuilder<T> AddScalarField<TProperty>(Expression<Func<T, TProperty>> expression)
+//        {
+//            return AddScalarField(null, expression);
+//        }
+//
+//        public ISelectionSetBuilder<T> AddScalarField<TProperty>(Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments)
+//        {
+//            return AddScalarField(null, expression, arguments);
+//        }
+//
+//        /// <inheritdoc />
+//        public ISelectionSetBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression)
+//        {
+//            return AddScalarField(alias, expression, null);
+//        }
 
         public ISelectionSetBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments)
         {

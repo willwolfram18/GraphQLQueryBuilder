@@ -10,6 +10,6 @@ namespace GraphQLQueryBuilder.Implementations.Language
         {
         }
 
-        public object Value => base.Value;
+        public new object Value => base.Value;
     }
 }

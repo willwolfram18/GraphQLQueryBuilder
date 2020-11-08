@@ -7,12 +7,6 @@ namespace GraphQLQueryBuilder.Abstractions
 {
     public interface ISelectionSetBuilder<T> where T : class
     {
-        ISelectionSetBuilder<T> AddScalarField<TProperty>(Expression<Func<T, TProperty>> expression);
-        
-        ISelectionSetBuilder<T> AddScalarField<TProperty>(Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments);
-
-        ISelectionSetBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression);
-        
         ISelectionSetBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments);
 
         ISelectionSetBuilder<T> AddObjectField<TProperty>(Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class;
