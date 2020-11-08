@@ -15,8 +15,8 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         {
             var builder = SelectionSetBuilder.For<Contact>();
 
-            Action addingFieldWithoutAlias = () => builder.AddScalarCollectionField<Guid>(null);
-            Action addingFieldWithAlias = () => builder.AddScalarCollectionField<Guid>("foo", null);
+            Action addingFieldWithoutAlias = () => builder.AddScalarCollectionField<Contact, Guid>(null);
+            Action addingFieldWithAlias = () => builder.AddScalarCollectionField<Contact, Guid>("foo", null);
 
             using (new AssertionScope())
             {
