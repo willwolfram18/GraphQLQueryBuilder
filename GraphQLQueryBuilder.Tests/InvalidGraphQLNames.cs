@@ -25,9 +25,9 @@ namespace GraphQLQueryBuilder.Tests
         }
     }
 
-    public class InvalidAliasNamesTestCaseSourceAttribute : TestCaseSourceAttribute
+    public class InvalidGraphQLNamesTestCaseSourceAttribute : TestCaseSourceAttribute
     {
-        public InvalidAliasNamesTestCaseSourceAttribute() : base(typeof(InvalidGraphQLNames), nameof(InvalidGraphQLNames.InvalidAliasNames))
+        public InvalidGraphQLNamesTestCaseSourceAttribute() : base(typeof(InvalidGraphQLNames), nameof(InvalidGraphQLNames.InvalidAliasNames))
         {
         }
     }

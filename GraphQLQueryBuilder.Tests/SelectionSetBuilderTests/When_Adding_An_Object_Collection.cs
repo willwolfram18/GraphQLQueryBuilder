@@ -111,7 +111,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             }
         }
         
-        [InvalidAliasNamesTestCaseSource]
+        [InvalidGraphQLNamesTestCaseSource]
         public void If_Property_Alias_Is_Not_A_Valid_GraphQL_Name_Then_ArgumentException_Is_Thrown_Stating_Alias_Is_Not_Valid(
             string alias, string because)
         {
@@ -120,9 +120,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 
             Action method = () => builder.AddObjectCollectionField(alias, contact => contact.PhoneNumbers, fakeSelectionSet);
 
-            Invoking(method).Should().ThrowExactly<ArgumentException>(because)
-                .Where(e => e.ParamName == "alias", "because the alias parameter is the problem")
-                .Where(e => e.HelpLink == "https://spec.graphql.org/June2018/#Name", "because this is the link to the GraphQL 'Name' spec");
+            Invoking(method).Should().ThrowInvalidGraphQLNameException("alias", because);
         }
     }
 }
