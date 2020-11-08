@@ -63,13 +63,18 @@ namespace GraphQLQueryBuilder
 
         public ISelectionSetBuilder<T> AddScalarCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression)
         {
+            return AddScalarCollectionField(alias, expression, null);
+        }
+        
+        public ISelectionSetBuilder<T> AddScalarCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, IEnumerable<IArgument> arguments)
+        {
             alias = alias.MustBeValidGraphQLName(nameof(alias));
             
             typeof(TProperty).MustBeGraphQLScalar();
             
             var propertyInfo = GetPropertyInfoForExpression(expression);
 
-            _selectionSetItems.Add(new ObjectFieldSelectionItem(alias, propertyInfo.Name, null));
+            _selectionSetItems.Add(new ScalarFieldSelectionItem(alias, propertyInfo.Name, arguments));
 
             return this;
         }

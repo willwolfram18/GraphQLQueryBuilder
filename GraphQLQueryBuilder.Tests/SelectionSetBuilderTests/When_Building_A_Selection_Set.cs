@@ -39,6 +39,26 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         }
         
         [TestCaseSource(nameof(NullOrEmptyArguments))]
+        public void If_Arguments_For_Scalar_Collection_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
+            List<IArgument> arguments)
+        {
+            var selectionSet = SelectionSetBuilder.For<Customer>()
+                .AddScalarCollectionField(customer => customer.FavoriteNumbers, arguments)
+                .AddScalarCollectionField("numbers", customer => customer.FavoriteNumbers, arguments)
+                .Build();
+
+            var expectedSelections = new ISelectionSetItem[]
+            {
+                new ScalarFieldSelectionItem(null, nameof(Customer.FavoriteNumbers)), 
+                new ScalarFieldSelectionItem("numbers", nameof(Customer.FavoriteNumbers)),
+            };
+            
+            selectionSet.Should().NotBeNull();
+            selectionSet.Selections.Should()
+                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
+        }
+        
+        [TestCaseSource(nameof(NullOrEmptyArguments))]
         public void If_Arguments_For_Object_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
             List<IArgument> arguments)
         {
@@ -91,6 +111,36 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             {
                 new ScalarFieldSelectionItem(null, nameof(Customer.Id), expectedArguments),
                 new ScalarFieldSelectionItem("foobar", nameof(Customer.Id), expectedArguments)
+            };
+            
+            selectionSet.Should().NotBeNull();
+            selectionSet.Selections.Should()
+                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
+        }
+        
+        [Test]
+        public void Then_Arguments_For_Scalar_Collection_Field_Selections_Exclude_Nulls()
+        {
+            var arguments = new List<IArgument>
+            {
+                ArgumentBuilder.Build("first", "foo"),
+                ArgumentBuilder.Build("second", 3),
+                null,
+                ArgumentBuilder.Build("fourth", 10.1),
+                ArgumentBuilder.Build("fifth")
+            };
+
+            var expectedArguments = arguments.Where(a => a != null).ToList();
+            
+            var selectionSet = SelectionSetBuilder.For<Customer>()
+                .AddScalarCollectionField(customer => customer.FavoriteNumbers, arguments)
+                .AddScalarCollectionField("numbers", customer => customer.FavoriteNumbers, arguments)
+                .Build();
+
+            var expectedSelections = new List<ISelectionSetItem>
+            {
+                new ScalarFieldSelectionItem(null, nameof(Customer.FavoriteNumbers), expectedArguments),
+                new ScalarFieldSelectionItem("numbers", nameof(Customer.FavoriteNumbers), expectedArguments)
             };
             
             selectionSet.Should().NotBeNull();

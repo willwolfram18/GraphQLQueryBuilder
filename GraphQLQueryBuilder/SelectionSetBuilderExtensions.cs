@@ -30,6 +30,15 @@ namespace GraphQLQueryBuilder
             return builder.AddScalarField(alias, expression, null);
         }
 
+        public static ISelectionSetBuilder<T> AddScalarCollectionField<T, TProperty>(
+            this ISelectionSetBuilder<T> builder,
+            Expression<Func<T, IEnumerable<TProperty>>> expression,
+            IEnumerable<IArgument> arguments)
+            where T : class
+        {
+            return builder.AddScalarCollectionField(null, expression, arguments);
+        }
+
         public static ISelectionSetBuilder<T> AddObjectField<T, TProperty>(this ISelectionSetBuilder<T> builder,
             Expression<Func<T, TProperty>> expression,
             ISelectionSet<TProperty> selectionSet)
