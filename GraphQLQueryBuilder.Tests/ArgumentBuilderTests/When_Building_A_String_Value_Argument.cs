@@ -29,7 +29,7 @@ namespace GraphQLQueryBuilder.Tests.ArgumentBuilderTests
                     .WithMessage("A GraphQL argument name cannot be null or white space.*");
                 
                 exceptionAssertion.And.ParamName.Should().Be("name");
-                exceptionAssertion.And.HelpLink.Should().Be("http://spec.graphql.org/June2018/#Name");
+                exceptionAssertion.And.HelpLink.Should().Be("https://spec.graphql.org/June2018/#Name");
             }
             
         }
@@ -51,7 +51,7 @@ namespace GraphQLQueryBuilder.Tests.ArgumentBuilderTests
             {
                 argument.Should().NotBeNull();
                 argument?.Name.Should().Be("myName");
-                argument?.Value.Should().BeOfType<INullArgumentValue>();
+                argument?.Value.Should().BeAssignableTo<INullArgumentValue>("because the value is null");
             }
         }
 
@@ -64,7 +64,7 @@ namespace GraphQLQueryBuilder.Tests.ArgumentBuilderTests
             {
                 argument.Should().NotBeNull();
                 argument?.Name.Should().Be("myName");
-                argument?.Value.Should().BeOfType<IStringArgumentValue>()
+                argument?.Value.Should().BeAssignableTo<IStringArgumentValue>()
                     .Which.Value.Should().Be(_argumentValue);
             }
         }

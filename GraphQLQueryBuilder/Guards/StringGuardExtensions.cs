@@ -5,6 +5,19 @@ namespace GraphQLQueryBuilder.Guards
 {
     internal static class StringGuardExtensions
     {
+        public static string MustNotBeNullOrWhiteSpace(this string name, string message, string paramName)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentException(message, paramName)
+                {
+                    HelpLink = "https://spec.graphql.org/June2018/#Name"
+                };
+            }
+
+            return name;
+        }
+        
         public static string MustBeValidGraphQLName(this string name, string paramName)
         {
             name = name?.Trim();

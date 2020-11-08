@@ -1,5 +1,7 @@
 using System;
 using GraphQLQueryBuilder.Abstractions.Language;
+using GraphQLQueryBuilder.Guards;
+using GraphQLQueryBuilder.Implementations.Language;
 
 namespace GraphQLQueryBuilder
 {
@@ -13,7 +15,16 @@ namespace GraphQLQueryBuilder
         /// <returns></returns>
         public static IArgument Build(string name, string value)
         {
-            throw new NotImplementedException();
+            name = name.MustNotBeNullOrWhiteSpace("A GraphQL argument name cannot be null or white space.", nameof(name))
+                .MustBeValidGraphQLName(nameof(name));
+
+            IArgumentValue argValue = new StringArgumentValue(value);
+            if (value == null)
+            {
+                argValue = new NullArgumentValue();
+            }
+            
+            return new Argument(name, argValue);
         }
 
         /// <summary>
