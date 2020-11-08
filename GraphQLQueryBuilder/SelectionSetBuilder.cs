@@ -59,8 +59,19 @@ namespace GraphQLQueryBuilder
             return AddObjectField(null, expression, selectionSet);
         }
 
+        public ISelectionSetBuilder<T> AddObjectField<TProperty>(Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        {
+            return AddObjectField(null, expression, arguments, selectionSet);
+        }
+
         /// <inheritdoc />
         public ISelectionSetBuilder<T> AddObjectField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
+        {
+            return AddObjectField(alias, expression, null, selectionSet);
+        }
+
+        public ISelectionSetBuilder<T> AddObjectField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments,
+            ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
             alias = alias.MustBeValidGraphQLName(nameof(alias));
 
@@ -74,7 +85,7 @@ namespace GraphQLQueryBuilder
             typeof(TProperty).MustBeAGraphQLObject($" Use the {nameof(AddScalarField)} method.")
                 .MustNotBeGraphQLList($" Use the {nameof(AddScalarCollectionField)} or {nameof(AddObjectCollectionField)} methods.");
 
-            _selectionSetItems.Add(new ObjectFieldSelectionItem(alias, propertyInfo.Name, selectionSet));
+            _selectionSetItems.Add(new ObjectFieldSelectionItem(alias, propertyInfo.Name, arguments, selectionSet));
 
             return this;
         }
