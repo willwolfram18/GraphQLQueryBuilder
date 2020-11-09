@@ -1,7 +1,4 @@
-﻿using System.IO;
-using FluentAssertions;
-using GraphQLQueryBuilder.Abstractions.Language;
-using GraphQLQueryBuilder.Tests.ArgumentBuilderTests;
+﻿using GraphQLQueryBuilder.Implementations.Language;
 using GraphQLQueryBuilder.Tests.Models;
 using NUnit.Framework;
 using Snapshooter.NUnit;
@@ -59,19 +56,19 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                 .AddScalarField(phone => phone.Number)
                 .Build();
             
-            var nameArguments = new []
+            var nameArguments = new ArgumentList
             {
                 ArgumentBuilder.Build("initials", true),
                 ArgumentBuilder.Build("length", 3),
                 ArgumentBuilder.Build("filter", (string) null)
             };
-            var addressArguments = new[]
+            var addressArguments = new ArgumentList
             {
                 ArgumentBuilder.Build("state", "CA"),
                 ArgumentBuilder.Build("withApartments", false),
                 ArgumentBuilder.Build("distanceFromDc", 300.25)
             };
-            var phoneNumberArguments = new[]
+            var phoneNumberArguments = new ArgumentList
             {
                 ArgumentBuilder.Build("areaCode", "231"),
                 ArgumentBuilder.Build("foobar")
@@ -83,11 +80,11 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                 .AddObjectCollectionField("phones", contact => contact.PhoneNumbers, phoneNumberArguments, phoneSelectionSet)
                 .Build();
 
-            var contactArguments = new[]
+            var contactArguments = new ArgumentList
             {
                 ArgumentBuilder.Build("isActive", true)
             };
-            var favoriteNumberArguments = new[]
+            var favoriteNumberArguments = new ArgumentList
             {
                 ArgumentBuilder.Build("isEven", false),
                 ArgumentBuilder.Build("greaterThan", 10)
@@ -115,7 +112,7 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
             var argument = ArgumentBuilder.Build("description", argumentValue);
 
             var selectionSet = SelectionSetBuilder.For<Customer>()
-                .AddScalarField(customer => customer.Id, new[] {argument})
+                .AddScalarField(customer => customer.Id, new ArgumentList {argument})
                 .Build();
 
             var result = new QueryRenderer().Render(selectionSet);

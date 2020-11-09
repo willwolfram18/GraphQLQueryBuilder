@@ -23,7 +23,7 @@ namespace GraphQLQueryBuilder
         private readonly PropertyInfo[] _properties = typeof(T).GetProperties();
         private readonly List<ISelectionSetItem> _selectionSetItems = new List<ISelectionSetItem>();
 
-        public ISelectionSetBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments)
+        public ISelectionSetBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IArgumentList arguments)
         {
             alias = alias.MustBeValidGraphQLName(nameof(alias));
             
@@ -36,7 +36,7 @@ namespace GraphQLQueryBuilder
             return this;
         }
 
-        public ISelectionSetBuilder<T> AddObjectField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IEnumerable<IArgument> arguments,
+        public ISelectionSetBuilder<T> AddObjectField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IArgumentList arguments,
             ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
             alias = alias.MustBeValidGraphQLName(nameof(alias));
@@ -56,7 +56,7 @@ namespace GraphQLQueryBuilder
             return this;
         }
 
-        public ISelectionSetBuilder<T> AddScalarCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, IEnumerable<IArgument> arguments)
+        public ISelectionSetBuilder<T> AddScalarCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, IArgumentList arguments)
         {
             alias = alias.MustBeValidGraphQLName(nameof(alias));
             
@@ -70,7 +70,7 @@ namespace GraphQLQueryBuilder
         }
 
         /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddObjectCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, IEnumerable<IArgument> arguments,
+        public ISelectionSetBuilder<T> AddObjectCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, IArgumentList arguments,
             ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
             alias = alias.MustBeValidGraphQLName(nameof(alias));

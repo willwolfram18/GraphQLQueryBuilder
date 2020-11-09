@@ -12,15 +12,15 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 {
     public class When_Building_A_Selection_Set
     {
-        public static IEnumerable<List<IArgument>> NullOrEmptyArguments => new[]
+        public static IEnumerable<IArgumentList> NullOrEmptyArguments => new[]
         {
             null,
-            Enumerable.Empty<IArgument>().ToList()
+            new ArgumentList(), 
         };
         
         [TestCaseSource(nameof(NullOrEmptyArguments))]
         public void If_Arguments_For_Scalar_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
-            List<IArgument> arguments)
+            IArgumentList arguments)
         {
             var selectionSet = SelectionSetBuilder.For<Customer>()
                 .AddScalarField(customer => customer.Id, arguments)
@@ -40,7 +40,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         
         [TestCaseSource(nameof(NullOrEmptyArguments))]
         public void If_Arguments_For_Scalar_Collection_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
-            List<IArgument> arguments)
+            IArgumentList arguments)
         {
             var selectionSet = SelectionSetBuilder.For<Customer>()
                 .AddScalarCollectionField(customer => customer.FavoriteNumbers, arguments)
@@ -60,7 +60,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         
         [TestCaseSource(nameof(NullOrEmptyArguments))]
         public void If_Arguments_For_Object_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
-            List<IArgument> arguments)
+            IArgumentList arguments)
         {
             var contactSelection = SelectionSetBuilder.For<Contact>()
                 .AddScalarField(contact => contact.FirstName)
@@ -90,7 +90,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         
         [TestCaseSource(nameof(NullOrEmptyArguments))]
         public void If_Arguments_For_Object_Collection_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
-            List<IArgument> arguments)
+            IArgumentList arguments)
         {
             var phoneNumberSelectionSet = SelectionSetBuilder.For<PhoneNumber>()
                 .AddScalarField(phone => phone.Number)
@@ -119,148 +119,6 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             selectionSet.Selections.Should()
                 .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
         }    
-
-        [Test]
-        public void Then_Arguments_For_Scalar_Field_Selections_Exclude_Nulls()
-        {
-            var arguments = new List<IArgument>
-            {
-                ArgumentBuilder.Build("first", "foo"),
-                ArgumentBuilder.Build("second", 3),
-                null,
-                ArgumentBuilder.Build("fourth", 10.1),
-                ArgumentBuilder.Build("fifth")
-            };
-
-            var expectedArguments = arguments.Where(a => a != null).ToList();
-            
-            var selectionSet = SelectionSetBuilder.For<Customer>()
-                .AddScalarField(customer => customer.Id, arguments)
-                .AddScalarField("foobar", customer => customer.Id, arguments)
-                .Build();
-
-            var expectedSelections = new List<ISelectionSetItem>
-            {
-                new ScalarFieldSelectionItem(null, nameof(Customer.Id), expectedArguments),
-                new ScalarFieldSelectionItem("foobar", nameof(Customer.Id), expectedArguments)
-            };
-            
-            selectionSet.Should().NotBeNull();
-            selectionSet.Selections.Should()
-                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
-        }
-        
-        [Test]
-        public void Then_Arguments_For_Scalar_Collection_Field_Selections_Exclude_Nulls()
-        {
-            var arguments = new List<IArgument>
-            {
-                ArgumentBuilder.Build("first", "foo"),
-                ArgumentBuilder.Build("second", 3),
-                null,
-                ArgumentBuilder.Build("fourth", 10.1),
-                ArgumentBuilder.Build("fifth")
-            };
-
-            var expectedArguments = arguments.Where(a => a != null).ToList();
-            
-            var selectionSet = SelectionSetBuilder.For<Customer>()
-                .AddScalarCollectionField(customer => customer.FavoriteNumbers, arguments)
-                .AddScalarCollectionField("numbers", customer => customer.FavoriteNumbers, arguments)
-                .Build();
-
-            var expectedSelections = new List<ISelectionSetItem>
-            {
-                new ScalarFieldSelectionItem(null, nameof(Customer.FavoriteNumbers), expectedArguments),
-                new ScalarFieldSelectionItem("numbers", nameof(Customer.FavoriteNumbers), expectedArguments)
-            };
-            
-            selectionSet.Should().NotBeNull();
-            selectionSet.Selections.Should()
-                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
-        }
-        
-        [Test]
-        public void Then_Arguments_For_Object_Field_Selections_Exclude_Nulls()
-        {
-            var arguments = new List<IArgument>
-            {
-                ArgumentBuilder.Build("first", "foo"),
-                ArgumentBuilder.Build("second", 3),
-                null,
-                ArgumentBuilder.Build("fourth", 10.1),
-                ArgumentBuilder.Build("fifth")
-            };
-
-            var expectedArguments = arguments.Where(a => a != null).ToList();
-            
-            var contactSelection = SelectionSetBuilder.For<Contact>()
-                .AddScalarField(contact => contact.FirstName)
-                .Build();
-            
-            var selectionSet = SelectionSetBuilder.For<Customer>()
-                .AddObjectField(customer => customer.CustomerContact, arguments, contactSelection)
-                .AddObjectField("foobar", customer => customer.CustomerContact, arguments, contactSelection)
-                .Build();
-            
-            
-            var expectedContactSelectionSet = new SelectionSet<Contact>(
-                new ISelectionSetItem[]
-                {
-                    new ScalarFieldSelectionItem(null, nameof(Contact.FirstName))
-                });
-
-            var expectedSelections = new ISelectionSetItem[]
-            {
-                new ObjectFieldSelectionItem(null, nameof(Customer.CustomerContact), expectedArguments, expectedContactSelectionSet), 
-                new ObjectFieldSelectionItem("foobar", nameof(Customer.CustomerContact), expectedArguments, expectedContactSelectionSet),
-            };
-            
-            selectionSet.Should().NotBeNull();
-            selectionSet.Selections.Should()
-                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
-        }
-        
-        [Test]
-        public void Then_Arguments_For_Object_Collection_Field_Selections_Exclude_Nulls()
-        {
-            var arguments = new List<IArgument>
-            {
-                ArgumentBuilder.Build("first", "foo"),
-                ArgumentBuilder.Build("second", 3),
-                null,
-                ArgumentBuilder.Build("fourth", 10.1),
-                ArgumentBuilder.Build("fifth")
-            };
-
-            var expectedArguments = arguments.Where(a => a != null).ToList();
-            
-            var phoneNumberSelectionSet = SelectionSetBuilder.For<PhoneNumber>()
-                .AddScalarField(phone => phone.Number)
-                .Build();
-            
-            var selectionSet = SelectionSetBuilder.For<Contact>()
-                .AddObjectCollectionField(contact => contact.PhoneNumbers, arguments, phoneNumberSelectionSet)
-                .AddObjectCollectionField("foobar", customer => customer.PhoneNumbers, arguments, phoneNumberSelectionSet)
-                .Build();
-            
-            
-            var expectedPhoneNumberSelectionSet = new SelectionSet<PhoneNumber>(
-                new ISelectionSetItem[]
-                {
-                    new ScalarFieldSelectionItem(null, nameof(PhoneNumber.Number))
-                });
-
-            var expectedSelections = new ISelectionSetItem[]
-            {
-                new ObjectFieldSelectionItem(null, nameof(Contact.PhoneNumbers), expectedArguments, expectedPhoneNumberSelectionSet), 
-                new ObjectFieldSelectionItem("foobar", nameof(Contact.PhoneNumbers), expectedArguments, expectedPhoneNumberSelectionSet),
-            };
-            
-            selectionSet.Should().NotBeNull();
-            selectionSet.Selections.Should()
-                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
-        }
         
         [Test]
         public void Then_Added_Properties_Are_In_The_Selection_Set()

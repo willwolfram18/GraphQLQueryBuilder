@@ -11,6 +11,15 @@ namespace GraphQLQueryBuilder.Implementations.Language
         private readonly List<IArgument> _arguments = new List<IArgument>();
         private readonly HashSet<string> _argumentNames = new HashSet<string>();
 
+        public ArgumentList()
+        {
+        }
+
+        public ArgumentList(IEnumerable<IArgument> arguments)
+        {
+            AddRange(arguments);
+        }
+        
         /// <inheritdoc />
         public IEnumerator<IArgument> GetEnumerator() => _arguments.GetEnumerator();
 
@@ -63,5 +72,14 @@ namespace GraphQLQueryBuilder.Implementations.Language
 
         /// <inheritdoc />
         public bool IsReadOnly => false;
+
+        /// <inheritdoc />
+        public void AddRange(IEnumerable<IArgument> collection)
+        {
+            foreach (var arg in collection)
+            {
+                Add(arg);
+            }
+        }
     }
 }
