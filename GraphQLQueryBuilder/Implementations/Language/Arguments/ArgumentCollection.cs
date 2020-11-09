@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using GraphQLQueryBuilder.Abstractions.Language;
 
@@ -8,8 +9,7 @@ namespace GraphQLQueryBuilder.Implementations.Language
 {
     public class ArgumentCollection : IArgumentCollection
     {
-        private readonly List<IArgument> _arguments = new List<IArgument>();
-        private readonly HashSet<string> _argumentNames = new HashSet<string>();
+        private readonly OrderedDictionary _args = new OrderedDictionary();
 
         public ArgumentCollection()
         {
@@ -19,9 +19,17 @@ namespace GraphQLQueryBuilder.Implementations.Language
         {
             AddRange(arguments);
         }
-        
+
         /// <inheritdoc />
-        public IEnumerator<IArgument> GetEnumerator() => _arguments.GetEnumerator();
+        IEnumerator<KeyValuePair<string, IArgumentValue>> IEnumerable<KeyValuePair<string, IArgumentValue>>.
+            GetEnumerator()
+        {
+            return _args.Keys.Cast<string>().Select(key => new KeyValuePair<string, IArgumentValue>(key, this[key]))
+                .GetEnumerator();
+        }
+
+        /// <inheritdoc />
+        public IEnumerator<IArgument> GetEnumerator() => _args.Values.Cast<IArgument>().GetEnumerator();
 
         /// <inheritdoc />
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -34,25 +42,21 @@ namespace GraphQLQueryBuilder.Implementations.Language
                 throw new InvalidOperationException($"There can be only one argument named '{item.Name}'.");
             }
 
-            _arguments.Add(item);
-            _argumentNames.Add(item.Name);
+            _args.Add(item.Name, item);
         }
 
         /// <inheritdoc />
-        public void Clear()
-        {
-            _arguments.Clear();
-            _argumentNames.Clear();
-        }
+        public void Clear() => _args.Clear();
 
         /// <inheritdoc />
         public bool Contains(IArgument item)
         {
-            return _argumentNames.Contains(item?.Name ?? throw new ArgumentNullException(nameof(item)));
+            return _args.Contains(item?.Name ?? throw new ArgumentNullException(nameof(item)));
         }
 
         /// <inheritdoc />
-        public void CopyTo(IArgument[] array, int arrayIndex) => _arguments.CopyTo(array, arrayIndex);
+        public void CopyTo(IArgument[] array, int arrayIndex) =>
+            _args.Values.Cast<IArgument>().ToList().CopyTo(array, arrayIndex);
 
         /// <inheritdoc />
         public bool Remove(IArgument item)
@@ -62,13 +66,13 @@ namespace GraphQLQueryBuilder.Implementations.Language
                 return false;
             }
 
-            var itemToRemove = _arguments.First(arg => arg.Name == item.Name);
+            _args.Remove(item.Name);
 
-            return _arguments.Remove(itemToRemove) && _argumentNames.Remove(item.Name);
+            return true;
         }
 
-        /// <inheritdoc />
-        public int Count => _arguments.Count;
+        /// <inheritdoc cref="ICollection{T}.Count" />
+        public int Count => _args.Count;
 
         /// <inheritdoc />
         public bool IsReadOnly => false;
@@ -80,10 +84,36 @@ namespace GraphQLQueryBuilder.Implementations.Language
             {
                 throw new ArgumentNullException(nameof(collection));
             }
+
             foreach (var arg in collection)
             {
                 Add(arg);
             }
         }
+
+        /// <inheritdoc />
+        public bool ContainsKey(string key) => _args.Contains(key);
+
+        /// <inheritdoc />
+        public bool TryGetValue(string key, out IArgumentValue value)
+        {
+            if (!ContainsKey(key))
+            {
+                value = default;
+                return false;
+            }
+
+            value = this[key];
+            return true;
+        }
+
+        /// <inheritdoc />
+        public IArgumentValue this[string key] => ((IArgument) _args[key]).Value;
+
+        /// <inheritdoc />
+        public IEnumerable<string> Keys => _args.Keys.Cast<string>();
+
+        /// <inheritdoc />
+        public IEnumerable<IArgumentValue> Values => _args.Values.Cast<IArgument>().Select(arg => arg.Value);
     }
 }

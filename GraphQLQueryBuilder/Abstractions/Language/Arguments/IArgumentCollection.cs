@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GraphQLQueryBuilder.Abstractions.Language
 {
-    public interface IArgumentCollection : ICollection<IArgument>
+    public interface IArgumentCollection : ICollection<IArgument>, IReadOnlyDictionary<string, IArgumentValue>
     {
         /// <summary>Adds the elements of the specified collection to the end of the <see cref="IArgumentCollection" />.</summary>
         /// <param name="collection">
