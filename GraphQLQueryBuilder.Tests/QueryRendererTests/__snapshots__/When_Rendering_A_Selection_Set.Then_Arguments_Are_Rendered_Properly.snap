@@ -1,8 +1,11 @@
 {
   CustomerContact(isActive: true) {
     FirstName(initials: true, length: 3, filter: null)
-    Address(state: CA, withApartments: false, distanceFromDc: 300.25) {
+    Address(state: "CA", withApartments: false, distanceFromDc: 300.25) {
       postalCode: ZipCode
+    }
+    phones: PhoneNumbers(areaCode: "231", foorbar: null) {
+      Number
     }
   }
   favoriteOddNumbersGreaterThan10: FavoriteNumbers(isEven: false, greaterThan: 10)

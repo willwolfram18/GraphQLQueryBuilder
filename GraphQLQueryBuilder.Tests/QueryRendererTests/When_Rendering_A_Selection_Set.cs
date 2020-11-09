@@ -52,6 +52,13 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
         [Test]
         public void Then_Arguments_Are_Rendered_Properly()
         {
+            var addressSelectionSet = SelectionSetBuilder.For<Address>()
+                .AddScalarField("postalCode", address => address.ZipCode)
+                .Build();
+            var phoneSelectionSet = SelectionSetBuilder.For<PhoneNumber>()
+                .AddScalarField(phone => phone.Number)
+                .Build();
+            
             var nameArguments = new []
             {
                 ArgumentBuilder.Build("initials", true),
@@ -64,14 +71,16 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                 ArgumentBuilder.Build("withApartments", false),
                 ArgumentBuilder.Build("distanceFromDc", 300.25)
             };
-
-            var addressSelectionSet = SelectionSetBuilder.For<Address>()
-                .AddScalarField("postalCode", address => address.ZipCode)
-                .Build();
+            var phoneNumberArguments = new[]
+            {
+                ArgumentBuilder.Build("areaCode", "231"),
+                ArgumentBuilder.Build("foobar")
+            };
 
             var contactSelectionSet = SelectionSetBuilder.For<Contact>()
                 .AddScalarField(contact => contact.FirstName, nameArguments)
                 .AddObjectField(contact => contact.Address, addressArguments, addressSelectionSet)
+                .AddObjectCollectionField("phones", contact => contact.PhoneNumbers, phoneNumberArguments, phoneSelectionSet)
                 .Build();
 
             var contactArguments = new[]
