@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace GraphQLQueryBuilder
 {
@@ -126,7 +127,7 @@ namespace GraphQLQueryBuilder
             return literalValue switch
             {
                 INullArgumentValue _ => "null",
-                IStringArgumentValue stringValue => $"\"{stringValue.Value}\"",
+                IStringArgumentValue stringValue => JsonConvert.SerializeObject(stringValue.Value),
                 IIntegerArgumentValue intValue => intValue.Value.ToString(),
                 IFloatArgumentValue floatValue => floatValue.Value.ToString(),
                 IBooleanArgumentValue boolValue => boolValue.Value.ToString().ToLower(),
