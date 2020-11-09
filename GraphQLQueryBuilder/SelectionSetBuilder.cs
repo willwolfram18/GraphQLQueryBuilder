@@ -70,17 +70,6 @@ namespace GraphQLQueryBuilder
         }
 
         /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddObjectCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
-        {
-            return AddObjectCollectionField(null, expression, selectionSet);
-        }
-
-        /// <inheritdoc />
-        public ISelectionSetBuilder<T> AddObjectCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
-        {
-            return AddObjectCollectionField(alias, expression, null, selectionSet);
-        }
-
         public ISelectionSetBuilder<T> AddObjectCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, IEnumerable<IArgument> arguments,
             ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
