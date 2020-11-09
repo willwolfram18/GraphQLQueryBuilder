@@ -143,7 +143,7 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             };
             
             query.Should().NotBeNull();
-            query.SelectionSet.Should()
+            query.SelectionSet.Selections.Should()
                 .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
         }
     }
