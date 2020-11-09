@@ -1,3 +1,4 @@
+using GraphQLQueryBuilder.Implementations.Language;
 using GraphQLQueryBuilder.Tests.Models;
 using NUnit.Framework;
 using Snapshooter.NUnit;
@@ -50,6 +51,50 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
             var result = new QueryRenderer().Render(queryOperation);
 
             Snapshot.Match(result);
+        }
+
+        [Test]
+        public void Then_Field_Arguments_Are_Rendered(
+            [Values] GraphQLOperationType operationType,
+            [Values(null, "", "   ", "MyQuery")] string operationName)
+        {
+            var phoneNumberSelectionSet = SelectionSetBuilder.For<PhoneNumber>()
+                .AddScalarField(phone => phone.Number)
+                .Build();
+
+            var phoneArguments = new[]
+            {
+                ArgumentBuilder.Build("areaCode", "231"),
+                ArgumentBuilder.Build("foobar")
+            };
+
+
+            var contactSelectionSet = SelectionSetBuilder.For<Contact>()
+                .AddObjectCollectionField("michiganNumbers", contact => contact.PhoneNumbers, phoneArguments,
+                    phoneNumberSelectionSet)
+                .Build();
+                
+            var numberArguments = new[]
+            {
+                ArgumentBuilder.Build("isEven", true),
+                ArgumentBuilder.Build("greaterThan", 22)
+            };
+
+            var customerSelectionSet = SelectionSetBuilder.For<Customer>()
+                .AddScalarCollectionField("favEvenNumbersGreaterThan22", customer => customer.FavoriteNumbers,
+                    numberArguments)
+                .Build();
+
+            var customersArguments = new[]
+            {
+                ArgumentBuilder.Build("isActive", false),
+                ArgumentBuilder.Build("lastName", "Smith"),
+                ArgumentBuilder.Build("minRating", 3.2)
+            };
+
+            Assert.Fail("TODO: need to call the methods with arg parameters");
+//            var query = QueryOperationBuilder.ForSchema<SimpleSchema>()
+//                .AddObjectCollectionField(schema => schema)
         }
     }
 }
