@@ -43,20 +43,6 @@ namespace GraphQLQueryBuilder
         public string Name { get; }
 
         /// <inheritdoc />
-        public IQueryOperationBuilder<T> AddScalarField<TProperty>(Expression<Func<T, TProperty>> expression)
-        {
-            _selectionSet.AddScalarField(expression);
-
-            return this;
-        }
-
-        /// <inheritdoc />
-        public IQueryOperationBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression)
-        {
-            return AddScalarField(alias, expression, null);
-        }
-
-        /// <inheritdoc />
         public IQueryOperationBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IArgumentCollection arguments)
         {
             _selectionSet.AddScalarField(alias, expression, arguments);
