@@ -37,7 +37,7 @@ namespace GraphQLQueryBuilder
         {
             return builder.AddScalarCollectionField(null, expression);
         }
-        
+
         public static ISelectionSetBuilder<T> AddScalarCollectionField<T, TProperty>(
             this ISelectionSetBuilder<T> builder,
             string alias,
@@ -46,7 +46,7 @@ namespace GraphQLQueryBuilder
         {
             return builder.AddScalarCollectionField(alias, expression, null);
         }
-        
+
         public static ISelectionSetBuilder<T> AddScalarCollectionField<T, TProperty>(
             this ISelectionSetBuilder<T> builder,
             Expression<Func<T, IEnumerable<TProperty>>> expression,
@@ -81,6 +81,16 @@ namespace GraphQLQueryBuilder
             where TProperty : class
         {
             return builder.AddObjectField(alias, expression, null, selectionSet);
+        }
+
+        public static ISelectionSetBuilder<T> AddObjectCollectionField<T, TProperty>(
+            this ISelectionSetBuilder<T> builder,
+            Expression<Func<T, IEnumerable<TProperty>>> expression, IEnumerable<IArgument> arguments,
+            ISelectionSet<TProperty> selectionSet)
+            where T : class
+            where TProperty : class
+        {
+            return builder.AddObjectCollectionField(null, expression, arguments, selectionSet);
         }
     }
 }

@@ -94,6 +94,12 @@ namespace GraphQLQueryBuilder
             return this;
         }
 
+        public ISelectionSetBuilder<T> AddObjectCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, IEnumerable<IArgument> arguments,
+            ISelectionSet<TProperty> selectionSet) where TProperty : class
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc />
         public ISelectionSet<T> Build()
         {

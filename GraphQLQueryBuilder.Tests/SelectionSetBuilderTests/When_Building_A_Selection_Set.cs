@@ -87,6 +87,38 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             selectionSet.Selections.Should()
                 .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
         }
+        
+        [TestCaseSource(nameof(NullOrEmptyArguments))]
+        public void If_Arguments_For_Object_Collection_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
+            List<IArgument> arguments)
+        {
+            var phoneNumberSelectionSet = SelectionSetBuilder.For<PhoneNumber>()
+                .AddScalarField(phone => phone.Number)
+                .AddScalarField(phone => phone.Extension)
+                .Build();
+            
+            var selectionSet = SelectionSetBuilder.For<Contact>()
+                .AddObjectCollectionField(contact => contact.PhoneNumbers, arguments, phoneNumberSelectionSet)
+                .AddObjectCollectionField("foobar", contact => contact.PhoneNumbers, arguments, phoneNumberSelectionSet)
+                .Build();
+
+            var expectedPhoneNumberSelectionSet = new SelectionSet<PhoneNumber>(
+                new ISelectionSetItem[]
+                {
+                    new ScalarFieldSelectionItem(null, nameof(PhoneNumber.Number)),
+                    new ScalarFieldSelectionItem(null, nameof(PhoneNumber.Extension))
+                });
+
+            var expectedSelections = new ISelectionSetItem[]
+            {
+                new ObjectFieldSelectionItem(null, nameof(Contact.PhoneNumbers), Enumerable.Empty<IArgument>(), expectedPhoneNumberSelectionSet), 
+                new ObjectFieldSelectionItem("foobar", nameof(Contact.PhoneNumbers), Enumerable.Empty<IArgument>(), expectedPhoneNumberSelectionSet),
+            };
+            
+            selectionSet.Should().NotBeNull();
+            selectionSet.Selections.Should()
+                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
+        }    
 
         [Test]
         public void Then_Arguments_For_Scalar_Field_Selections_Exclude_Nulls()
@@ -182,6 +214,47 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             {
                 new ObjectFieldSelectionItem(null, nameof(Customer.CustomerContact), expectedArguments, expectedContactSelectionSet), 
                 new ObjectFieldSelectionItem("foobar", nameof(Customer.CustomerContact), expectedArguments, expectedContactSelectionSet),
+            };
+            
+            selectionSet.Should().NotBeNull();
+            selectionSet.Selections.Should()
+                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
+        }
+        
+        [Test]
+        public void Then_Arguments_For_Object_Collection_Field_Selections_Exclude_Nulls()
+        {
+            var arguments = new List<IArgument>
+            {
+                ArgumentBuilder.Build("first", "foo"),
+                ArgumentBuilder.Build("second", 3),
+                null,
+                ArgumentBuilder.Build("fourth", 10.1),
+                ArgumentBuilder.Build("fifth")
+            };
+
+            var expectedArguments = arguments.Where(a => a != null).ToList();
+            
+            var phoneNumberSelectionSet = SelectionSetBuilder.For<PhoneNumber>()
+                .AddScalarField(phone => phone.Number)
+                .Build();
+            
+            var selectionSet = SelectionSetBuilder.For<Contact>()
+                .AddObjectCollectionField(contact => contact.PhoneNumbers, arguments, phoneNumberSelectionSet)
+                .AddObjectCollectionField("foobar", customer => customer.PhoneNumbers, arguments, phoneNumberSelectionSet)
+                .Build();
+            
+            
+            var expectedPhoneNumberSelectionSet = new SelectionSet<PhoneNumber>(
+                new ISelectionSetItem[]
+                {
+                    new ScalarFieldSelectionItem(null, nameof(PhoneNumber.Number))
+                });
+
+            var expectedSelections = new ISelectionSetItem[]
+            {
+                new ObjectFieldSelectionItem(null, nameof(Contact.PhoneNumbers), expectedArguments, expectedPhoneNumberSelectionSet), 
+                new ObjectFieldSelectionItem("foobar", nameof(Contact.PhoneNumbers), expectedArguments, expectedPhoneNumberSelectionSet),
             };
             
             selectionSet.Should().NotBeNull();
