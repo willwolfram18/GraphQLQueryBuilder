@@ -59,6 +59,12 @@ namespace GraphQLQueryBuilder
         }
 
         /// <inheritdoc />
+        public IQueryOperationBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IArgumentCollection arguments)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
         public IQueryOperationBuilder<T> AddObjectField<TProperty>(Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
             _selectionSet.AddObjectField(expression, selectionSet);

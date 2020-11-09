@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using GraphQLQueryBuilder.Abstractions.Language;
 using GraphQLQueryBuilder.Implementations.Language;
@@ -118,6 +119,32 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 new GraphQLQueryOperation<SimpleSchema>(OperationTypeForFixture, null, expectedQuerySelectionSet);
             
             queryOperation.Should().BeEquivalentTo(expectedQueryOperation, options => options.RespectingRuntimeTypes());
+        }
+
+        public static IEnumerable<IArgumentCollection> NullOrEmptyArguments => new[]
+        {
+            null,
+            new ArgumentCollection(), 
+        };
+        
+        [TestCaseSource(nameof(NullOrEmptyArguments))]
+        public void If_Arguments_For_Scalar_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
+            IArgumentCollection arguments)
+        {
+            var query = QueryOperationBuilder.ForSchema<SimpleSchema>(OperationTypeForFixture)
+                .AddScalarField(schema => schema.Version, arguments)
+                .AddScalarField("foobar", schema => schema.Version, arguments)
+                .Build();
+
+            var expectedSelections = new List<ISelectionSetItem>
+            {
+                new ScalarFieldSelectionItem(null, nameof(SimpleSchema.Version), Enumerable.Empty<IArgument>()), 
+                new ScalarFieldSelectionItem("foobar", nameof(SimpleSchema.Version), Enumerable.Empty<IArgument>()),
+            };
+            
+            query.Should().NotBeNull();
+            query.SelectionSet.Should()
+                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
         }
     }
 }
