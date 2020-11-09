@@ -12,15 +12,15 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 {
     public class When_Building_A_Selection_Set
     {
-        public static IEnumerable<IArgumentList> NullOrEmptyArguments => new[]
+        public static IEnumerable<IArgumentCollection> NullOrEmptyArguments => new[]
         {
             null,
-            new ArgumentList(), 
+            new ArgumentCollection(), 
         };
         
         [TestCaseSource(nameof(NullOrEmptyArguments))]
         public void If_Arguments_For_Scalar_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
-            IArgumentList arguments)
+            IArgumentCollection arguments)
         {
             var selectionSet = SelectionSetBuilder.For<Customer>()
                 .AddScalarField(customer => customer.Id, arguments)
@@ -40,7 +40,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         
         [TestCaseSource(nameof(NullOrEmptyArguments))]
         public void If_Arguments_For_Scalar_Collection_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
-            IArgumentList arguments)
+            IArgumentCollection arguments)
         {
             var selectionSet = SelectionSetBuilder.For<Customer>()
                 .AddScalarCollectionField(customer => customer.FavoriteNumbers, arguments)
@@ -60,7 +60,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         
         [TestCaseSource(nameof(NullOrEmptyArguments))]
         public void If_Arguments_For_Object_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
-            IArgumentList arguments)
+            IArgumentCollection arguments)
         {
             var contactSelection = SelectionSetBuilder.For<Contact>()
                 .AddScalarField(contact => contact.FirstName)
@@ -90,7 +90,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         
         [TestCaseSource(nameof(NullOrEmptyArguments))]
         public void If_Arguments_For_Object_Collection_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
-            IArgumentList arguments)
+            IArgumentCollection arguments)
         {
             var phoneNumberSelectionSet = SelectionSetBuilder.For<PhoneNumber>()
                 .AddScalarField(phone => phone.Number)

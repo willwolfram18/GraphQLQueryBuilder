@@ -62,7 +62,7 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                 .AddScalarField(phone => phone.Number)
                 .Build();
 
-            var phoneArguments = new ArgumentList
+            var phoneArguments = new ArgumentCollection
             {
                 ArgumentBuilder.Build("areaCode", "231"),
                 ArgumentBuilder.Build("foobar")
@@ -74,7 +74,7 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                     phoneNumberSelectionSet)
                 .Build();
                 
-            var numberArguments = new ArgumentList
+            var numberArguments = new ArgumentCollection
             {
                 ArgumentBuilder.Build("isEven", true),
                 ArgumentBuilder.Build("greaterThan", 22)
@@ -85,7 +85,7 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                     numberArguments)
                 .Build();
 
-            var customersArguments = new ArgumentList
+            var customersArguments = new ArgumentCollection
             {
                 ArgumentBuilder.Build("isActive", false),
                 ArgumentBuilder.Build("lastName", "Smith"),

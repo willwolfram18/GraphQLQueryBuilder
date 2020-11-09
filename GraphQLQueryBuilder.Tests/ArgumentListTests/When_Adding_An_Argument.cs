@@ -15,7 +15,7 @@ namespace GraphQLQueryBuilder.Tests.ArgumentListTests
             var argument = ArgumentBuilder.Build("a", 1);
             var duplicate = ArgumentBuilder.Build(argument.Name, "will fail");
 
-            var systemUnderTest = new ArgumentList
+            var systemUnderTest = new ArgumentCollection
             {
                 argument
             };
@@ -36,7 +36,7 @@ namespace GraphQLQueryBuilder.Tests.ArgumentListTests
                 ArgumentBuilder.Build("jorb", false)
             };
 
-            var systemUnderTest = new ArgumentList();
+            var systemUnderTest = new ArgumentCollection();
 
             foreach (var arg in expectedArguments)
             {
@@ -49,7 +49,7 @@ namespace GraphQLQueryBuilder.Tests.ArgumentListTests
         [Test]
         public void Then_Null_Argument_Instances_Are_Not_Allowed()
         {
-            var systemUnderTest = new ArgumentList();
+            var systemUnderTest = new ArgumentCollection();
 
             Invoking(() => systemUnderTest.Add(null)).Should().ThrowExactly<ArgumentNullException>()
                 .Which.ParamName.Should().Be("item");

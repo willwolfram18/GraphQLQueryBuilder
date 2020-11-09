@@ -6,16 +6,16 @@ using GraphQLQueryBuilder.Abstractions.Language;
 
 namespace GraphQLQueryBuilder.Implementations.Language
 {
-    public class ArgumentList : IArgumentList
+    public class ArgumentCollection : IArgumentCollection
     {
         private readonly List<IArgument> _arguments = new List<IArgument>();
         private readonly HashSet<string> _argumentNames = new HashSet<string>();
 
-        public ArgumentList()
+        public ArgumentCollection()
         {
         }
 
-        public ArgumentList(IEnumerable<IArgument> arguments)
+        public ArgumentCollection(IEnumerable<IArgument> arguments)
         {
             AddRange(arguments);
         }
@@ -76,6 +76,10 @@ namespace GraphQLQueryBuilder.Implementations.Language
         /// <inheritdoc />
         public void AddRange(IEnumerable<IArgument> collection)
         {
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
             foreach (var arg in collection)
             {
                 Add(arg);

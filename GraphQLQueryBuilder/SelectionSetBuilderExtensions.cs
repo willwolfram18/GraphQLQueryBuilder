@@ -16,7 +16,7 @@ namespace GraphQLQueryBuilder
         }
 
         public static ISelectionSetBuilder<T> AddScalarField<T, TProperty>(this ISelectionSetBuilder<T> builder,
-            Expression<Func<T, TProperty>> expression, IArgumentList arguments)
+            Expression<Func<T, TProperty>> expression, IArgumentCollection arguments)
             where T : class
         {
             return builder.AddScalarField(null, expression, arguments);
@@ -50,7 +50,7 @@ namespace GraphQLQueryBuilder
         public static ISelectionSetBuilder<T> AddScalarCollectionField<T, TProperty>(
             this ISelectionSetBuilder<T> builder,
             Expression<Func<T, IEnumerable<TProperty>>> expression,
-            IArgumentList arguments)
+            IArgumentCollection arguments)
             where T : class
         {
             return builder.AddScalarCollectionField(null, expression, arguments);
@@ -67,7 +67,7 @@ namespace GraphQLQueryBuilder
 
         public static ISelectionSetBuilder<T> AddObjectField<T, TProperty>(this ISelectionSetBuilder<T> builder,
             Expression<Func<T, TProperty>> expression,
-            IArgumentList arguments, ISelectionSet<TProperty> selectionSet)
+            IArgumentCollection arguments, ISelectionSet<TProperty> selectionSet)
             where T : class
             where TProperty : class
         {
@@ -106,7 +106,7 @@ namespace GraphQLQueryBuilder
 
         public static ISelectionSetBuilder<T> AddObjectCollectionField<T, TProperty>(
             this ISelectionSetBuilder<T> builder,
-            Expression<Func<T, IEnumerable<TProperty>>> expression, IArgumentList arguments,
+            Expression<Func<T, IEnumerable<TProperty>>> expression, IArgumentCollection arguments,
             ISelectionSet<TProperty> selectionSet)
             where T : class
             where TProperty : class
