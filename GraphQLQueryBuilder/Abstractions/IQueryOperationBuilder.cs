@@ -13,9 +13,7 @@ namespace GraphQLQueryBuilder.Abstractions
 
         IQueryOperationBuilder<T> AddScalarField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IArgumentCollection arguments);
 
-        IQueryOperationBuilder<T> AddObjectField<TProperty>(Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class;
-
-        IQueryOperationBuilder<T> AddObjectField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class;
+        IQueryOperationBuilder<T> AddObjectField<TProperty>(string alias, Expression<Func<T, TProperty>> expression, IArgumentCollection arguments, ISelectionSet<TProperty> selectionSet) where TProperty : class;
         
         IQueryOperationBuilder<T> AddScalarCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression);
         

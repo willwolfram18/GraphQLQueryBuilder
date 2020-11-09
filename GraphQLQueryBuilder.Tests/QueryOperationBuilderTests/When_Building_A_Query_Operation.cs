@@ -146,5 +146,33 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             query.SelectionSet.Selections.Should()
                 .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
         }
+        
+        [TestCaseSource(nameof(NullOrEmptyArguments))]
+        public void If_Arguments_For_Object_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
+            IArgumentCollection arguments)
+        {
+            var contactSelectionSet = SelectionSetBuilder.For<Contact>()
+                .AddScalarField(contact => contact.FirstName)
+                .Build();
+            
+            var query = QueryOperationBuilder.ForSchema<SimpleSchema>(OperationTypeForFixture)
+                .AddObjectField(schema => schema.Administrator, arguments, contactSelectionSet)
+                .AddObjectField("foobar", schema => schema.Administrator, arguments, contactSelectionSet)
+                .Build();
+
+            var expectedContactSelectionSet = new SelectionSet<Contact>(new List<ISelectionSetItem>
+            {
+                new ScalarFieldSelectionItem(null, nameof(Contact.FirstName))
+            });
+            var expectedSelections = new List<ISelectionSetItem>
+            {
+                new ObjectFieldSelectionItem(null, nameof(SimpleSchema.Administrator), Enumerable.Empty<IArgument>(), expectedContactSelectionSet), 
+                new ObjectFieldSelectionItem("foobar", nameof(SimpleSchema.Administrator), Enumerable.Empty<IArgument>(), expectedContactSelectionSet),
+            };
+            
+            query.Should().NotBeNull();
+            query.SelectionSet.Selections.Should()
+                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
+        }
     }
 }
