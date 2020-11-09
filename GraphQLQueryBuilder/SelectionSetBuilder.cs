@@ -78,6 +78,12 @@ namespace GraphQLQueryBuilder
         /// <inheritdoc />
         public ISelectionSetBuilder<T> AddObjectCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, ISelectionSet<TProperty> selectionSet) where TProperty : class
         {
+            return AddObjectCollectionField(alias, expression, null, selectionSet);
+        }
+
+        public ISelectionSetBuilder<T> AddObjectCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, IEnumerable<IArgument> arguments,
+            ISelectionSet<TProperty> selectionSet) where TProperty : class
+        {
             alias = alias.MustBeValidGraphQLName(nameof(alias));
 
             if (selectionSet == null)
@@ -89,15 +95,9 @@ namespace GraphQLQueryBuilder
             
             typeof(TProperty).MustBeAGraphQLObject($" Use the {nameof(AddScalarCollectionField)} method.");
             
-            _selectionSetItems.Add(new ObjectFieldSelectionItem(alias, propertyInfo.Name, selectionSet));
+            _selectionSetItems.Add(new ObjectFieldSelectionItem(alias, propertyInfo.Name, arguments, selectionSet));
             
             return this;
-        }
-
-        public ISelectionSetBuilder<T> AddObjectCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression, IEnumerable<IArgument> arguments,
-            ISelectionSet<TProperty> selectionSet) where TProperty : class
-        {
-            throw new NotImplementedException();
         }
 
         /// <inheritdoc />
