@@ -126,7 +126,7 @@ namespace GraphQLQueryBuilder
             return literalValue switch
             {
                 INullArgumentValue _ => "null",
-                IStringArgumentValue stringValue => stringValue.Value,
+                IStringArgumentValue stringValue => $"\"{stringValue.Value}\"",
                 IIntegerArgumentValue intValue => intValue.Value.ToString(),
                 IFloatArgumentValue floatValue => floatValue.Value.ToString(),
                 IBooleanArgumentValue boolValue => boolValue.Value.ToString().ToLower(),

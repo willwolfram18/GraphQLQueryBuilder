@@ -4,7 +4,7 @@
     Address(state: "CA", withApartments: false, distanceFromDc: 300.25) {
       postalCode: ZipCode
     }
-    phones: PhoneNumbers(areaCode: "231", foorbar: null) {
+    phones: PhoneNumbers(areaCode: "231", foobar: null) {
       Number
     }
   }
