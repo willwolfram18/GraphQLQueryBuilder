@@ -9,9 +9,9 @@ using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
 {
-    public class When_Creating_A_Query_Operation : QueryOperationBuilderTest
+    public class When_Building_A_Query_Operation : QueryOperationBuilderTest
     {
-        public When_Creating_A_Query_Operation(GraphQLOperationType operationType) : base(operationType)
+        public When_Building_A_Query_Operation(GraphQLOperationType operationType) : base(operationType)
         {
         }
         
