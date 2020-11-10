@@ -1,0 +1,13 @@
+﻿mutation MyQuery {
+  Customers(isActive: true, lastName: "Smith", minRating: 3.2) {
+    favEvenNumbersGreaterThan22: FavoriteNumbers(isEven: true, greaterThan: 22)
+  }
+  foobar: Customers(isActive: true, lastName: "Smith", minRating: 3.2) {
+    favEvenNumbersGreaterThan22: FavoriteNumbers(isEven: true, greaterThan: 22)
+  }
+  Administrator {
+    michiganNumbers: PhoneNumbers(areaCode: "231", foobar: null) {
+      Number
+    }
+  }
+}

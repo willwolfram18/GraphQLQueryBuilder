@@ -1,9 +1,0 @@
-﻿query CompleteAddressOperation {
-    address {
-        Street1,
-        Street2,
-        City,
-        State,
-        ZipCode
-    }
-}

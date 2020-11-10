@@ -1,123 +1,49 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace GraphQLQueryBuilder
 {
     internal class QueryContentAppender
     {
-        private const char IndentCharacter = ' ';
-        private const uint IndentWidth = 4;
+        private readonly StringBuilder _content = new StringBuilder();
+        
+        private QueryRenderingContext _context;
 
-        private readonly uint _indentationLevel;
-        private readonly StringBuilder _content;
-        private readonly string _queryStart;
-        private readonly List<FragmentBuilder> _fragmentDefinitions;
-
-        internal QueryContentAppender(string queryName, uint indentationLevel)
+        public QueryContentAppender(QueryRenderingContext context)
         {
-            _indentationLevel = indentationLevel;
-            _queryStart = BuildIndentation(_indentationLevel) + queryName + " {";
-            _content = new StringBuilder();
-            _fragmentDefinitions = new List<FragmentBuilder>();
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        internal QueryContentAppender AppendProperty(string property)
+        public QueryContentAppender Append(string content)
         {
-            AppendToContent(property);
-
-            return this;
-        }
-
-        internal QueryContentAppender AppendChildQuery(string alias, QueryBuilder query)
-        {
-            var childQueryContent = query.Build(_indentationLevel + 1);
-
-            AppendToContent(alias, childQueryContent);
-
-            return this;
-        }
-
-        internal QueryContentAppender AddFragmentName(string fragmentName)
-        {
-            AppendToContent($"...{fragmentName}");
-
-            return this;
-        }
-
-        internal QueryContentAppender AddFragmentDefinition(FragmentBuilder fragment)
-        {
-            if (_indentationLevel != 0)
-            {
-                // TODO message
-                throw new InvalidOperationException();
-            }
-            
-            _fragmentDefinitions.Add(fragment);
-
-            return this;
-        }
-
-        public override string ToString()
-        {
-            var indentation = BuildIndentation(_indentationLevel);
-            var result = new StringBuilder()
-                .AppendLine(_queryStart);
-
-            if (_content.Length != 0)
-            {
-                result.AppendLine(_content.ToString());
-            }
-
-            result.Append(indentation + "}");
-
-            foreach (var fragment in _fragmentDefinitions)
-            {
-                result.AppendLine()
-                    .AppendLine()
-                    .Append(fragment.Build());
-            }
-
-            return result.ToString();
-        }
-
-        private void AppendToContent(string content)
-        {
-            AppendToContent(string.Empty, content);
-        }
-
-        private void AppendToContent(string alias, string content)
-        {
-            if (_content.Length != 0)
-            {
-                _content.Append(",\n");
-            }
-
-            var indentation = BuildIndentation(_indentationLevel + 1);
-            var prefix = indentation;
-
-            if (!string.IsNullOrWhiteSpace(alias))
-            {
-                prefix += $"{alias}: ";
-            }
-
-            if (content.StartsWith(indentation))
-            {
-                content = Regex.Replace(content, $"^{indentation}", prefix);
-            }
-            else
-            {
-                content = prefix + content;
-            }
-
             _content.Append(content);
+
+            return this;
         }
 
-        private string BuildIndentation(uint indentationLevel)
+        public QueryContentAppender AppendLineWithIndentation(string content)
         {
-            return new string(IndentCharacter, (int)(indentationLevel * IndentWidth));
+            _content.AppendLine($"{_context.RenderIndentationString()}{content}");
+            
+            return this;
         }
+
+        public (QueryContentAppender appender, QueryRenderingContext context) AppendStartOfSelectionSet()
+        {
+            _content.AppendLine("{");
+            _context = _context.IncreaseIndentationLevel();
+
+            return (this, _context);
+        }
+
+        public QueryContentAppender AppendEndOfSelectionSet()
+        {
+            _context = _context.DecreaseIndentationLevel();
+
+            return Append($"{_context.RenderIndentationString()}}}");
+        }
+
+        /// <inheritdoc />
+        public override string ToString() => _content.ToString();
     }
 }
