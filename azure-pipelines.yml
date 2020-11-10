@@ -4,7 +4,9 @@
 # https://aka.ms/yaml
 
 trigger:
-- feature/revamp
+- master
+- feature/*
+- PR
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -23,6 +25,6 @@ steps:
   displayName: 'Run unit tests - $(buildConfiguration)'
   inputs:
     command: 'test'
-    arguments: '--no-build --configuration $(buildConfiguration)'
+    arguments: '--no-build --configuration $(buildConfiguration) -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura'
     publishTestResults: true
     projects: '**/*.Tests.csproj'
