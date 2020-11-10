@@ -14,6 +14,7 @@ pool:
 variables:
   buildConfiguration: 'Release'
   coverageOutputDir: '$(Build.SourcesDirectory)/TestResults/Coverage/'
+  coverageReportDir: '$(Build.ArtifactStagingDirectory)/TestResults/Reports/'
   disable.coverage.autogenerate: 'true'
 
 steps:
@@ -35,12 +36,12 @@ steps:
   displayName: 'Generate Code Coverage Report'
   inputs:
     reports: '$(coverageOutputDir)coverage.cobertura.xml'
-    targetdir: '$(Build.ArtifactStagingDirectory)/TestResults/'
+    targetdir: '$(coverageReportDir)'
     reporttypes: 'HtmlInline_AzurePipelines;Cobertura;Badges'
 
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish Code Coverage Results'
   inputs:
     codeCoverageTool: cobertura
-    reportDirectory: '$(Build.ArtifactStagingDirectory)'
-    summaryFileLocation: '$(Build.ArtifactStagingDirectory)/TestResults/Cobertura.xml'
+    reportDirectory: '$(coverageReportDir)'
+    summaryFileLocation: '$(coverageReportDir)Cobertura.xml'
