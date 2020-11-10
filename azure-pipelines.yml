@@ -43,5 +43,4 @@ steps:
   inputs:
     codeCoverageTool: cobertura
     reportDirectory: '$(Build.ArtifactStagingDirectory)'
-    summaryFileLocation: '$(Build.ArtifactStagingDirectory)/TestResults/cobertura.xml'
-    failIfCoverageEmpty: true
+    summaryFileLocation: '$(Build.ArtifactStagingDirectory)/TestResults/Cobertura.xml'
