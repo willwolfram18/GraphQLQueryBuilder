@@ -1,7 +1,9 @@
 ﻿using GraphQLQueryBuilder.Implementations.Language;
 using GraphQLQueryBuilder.Tests.Models;
 using NUnit.Framework;
+using Snapshooter;
 using Snapshooter.NUnit;
+using System.Runtime.InteropServices;
 
 namespace GraphQLQueryBuilder.Tests.QueryRendererTests
 {
@@ -116,8 +118,15 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                 .Build();
 
             var result = new QueryRenderer().Render(selectionSet);
-            
-            Snapshot.Match(result);
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Snapshot.Match(result, new SnapshotNameExtension("Windows"));
+            }
+            else
+            {
+                Snapshot.Match(result);
+            }
         }
     }
 }
