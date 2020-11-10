@@ -200,5 +200,33 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             query.SelectionSet.Selections.Should()
                 .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
         }
+
+        [TestCaseSource(nameof(NullOrEmptyArguments))]
+        public void If_Arguments_For_Object_Collection_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
+            IArgumentCollection arguments)
+        {
+            var customerSelectionSet = SelectionSetBuilder.For<Customer>()
+                .AddScalarField(customer => customer.Id)
+                .Build();
+
+            var query = QueryOperationBuilder.ForSchema<SimpleSchema>(OperationTypeForFixture)
+                .AddObjectCollectionField(schema => schema.Customers, arguments, customerSelectionSet)
+                .AddObjectCollectionField("foobar", schema => schema.Customers, arguments, customerSelectionSet)
+                .Build();
+
+            var expectedCustomerSelectionSet = new SelectionSet<Customer>(new List<ISelectionSetItem>
+            {
+                new ScalarFieldSelectionItem(null, nameof(Customer.Id))
+            });
+            var expectedSelections = new List<ISelectionSetItem>
+            {
+                new ObjectFieldSelectionItem(null, nameof(SimpleSchema.Customers), Enumerable.Empty<IArgument>(), expectedCustomerSelectionSet),
+                new ObjectFieldSelectionItem("foobar", nameof(SimpleSchema.Customers), Enumerable.Empty<IArgument>(), expectedCustomerSelectionSet),
+            };
+
+            query.Should().NotBeNull();
+            query.SelectionSet.Selections.Should()
+                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
+        }
     }
 }

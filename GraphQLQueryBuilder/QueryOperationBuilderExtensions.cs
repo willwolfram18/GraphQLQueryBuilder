@@ -1,8 +1,8 @@
+using GraphQLQueryBuilder.Abstractions;
+using GraphQLQueryBuilder.Abstractions.Language;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using GraphQLQueryBuilder.Abstractions;
-using GraphQLQueryBuilder.Abstractions.Language;
 
 namespace GraphQLQueryBuilder
 {
@@ -77,6 +77,38 @@ namespace GraphQLQueryBuilder
             where T : class
         {
             return builder.AddScalarCollectionField(null, expression, arguments);
+        }
+
+        public static IQueryOperationBuilder<T> AddObjectCollectionField<T, TProperty>(
+            this IQueryOperationBuilder<T> builder,
+            Expression<Func<T, IEnumerable<TProperty>>> expression,
+            ISelectionSet<TProperty> selectionSet)
+            where T : class
+            where TProperty : class
+        {
+            return builder.AddObjectCollectionField(null, expression, selectionSet);
+        }
+
+        public static IQueryOperationBuilder<T> AddObjectCollectionField<T, TProperty>(
+            this IQueryOperationBuilder<T> builder,
+            string alias,
+            Expression<Func<T, IEnumerable<TProperty>>> expression,
+            ISelectionSet<TProperty> selectionSet)
+            where T : class
+            where TProperty : class
+        {
+            return builder.AddObjectCollectionField(alias, expression, null, selectionSet);
+        }
+
+        public static IQueryOperationBuilder<T> AddObjectCollectionField<T, TProperty>(
+            this IQueryOperationBuilder<T> builder,
+            Expression<Func<T, IEnumerable<TProperty>>> expression,
+            IArgumentCollection arguments,
+            ISelectionSet<TProperty> selectionSet)
+            where T : class
+            where TProperty : class
+        {
+            return builder.AddObjectCollectionField(null, expression, arguments, selectionSet);
         }
     }
 }
