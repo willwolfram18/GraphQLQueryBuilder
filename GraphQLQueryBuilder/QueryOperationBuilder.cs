@@ -1,10 +1,10 @@
 ﻿using GraphQLQueryBuilder.Abstractions;
 using GraphQLQueryBuilder.Abstractions.Language;
+using GraphQLQueryBuilder.Guards;
+using GraphQLQueryBuilder.Implementations.Language;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using GraphQLQueryBuilder.Guards;
-using GraphQLQueryBuilder.Implementations.Language;
 
 namespace GraphQLQueryBuilder
 {
@@ -59,16 +59,10 @@ namespace GraphQLQueryBuilder
             return this;
         }
 
-        public IQueryOperationBuilder<T> AddScalarCollectionField<TProperty>(Expression<Func<T, IEnumerable<TProperty>>> expression)
+        public IQueryOperationBuilder<T> AddScalarCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression,
+            IArgumentCollection arguments)
         {
-            _selectionSet.AddScalarCollectionField(expression);
-
-            return this;
-        }
-
-        public IQueryOperationBuilder<T> AddScalarCollectionField<TProperty>(string alias, Expression<Func<T, IEnumerable<TProperty>>> expression)
-        {
-            _selectionSet.AddScalarCollectionField(alias, expression);
+            _selectionSet.AddScalarCollectionField(alias, expression, arguments);
 
             return this;
         }

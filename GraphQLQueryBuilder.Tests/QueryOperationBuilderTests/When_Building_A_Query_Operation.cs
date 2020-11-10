@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using GraphQLQueryBuilder.Abstractions.Language;
 using GraphQLQueryBuilder.Implementations.Language;
 using GraphQLQueryBuilder.Tests.Models;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
@@ -121,6 +121,12 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
             queryOperation.Should().BeEquivalentTo(expectedQueryOperation, options => options.RespectingRuntimeTypes());
         }
 
+        [Test]
+        public void Then_Arguments_Are_Included_In_Field_Selections()
+        {
+            Assert.Fail("TODO need to verify arguments are in the selection sets");
+        }
+
         public static IEnumerable<IArgumentCollection> NullOrEmptyArguments => new[]
         {
             null,
@@ -170,6 +176,26 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
                 new ObjectFieldSelectionItem("foobar", nameof(SimpleSchema.Administrator), Enumerable.Empty<IArgument>(), expectedContactSelectionSet),
             };
             
+            query.Should().NotBeNull();
+            query.SelectionSet.Selections.Should()
+                .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
+        }
+
+        [TestCaseSource(nameof(NullOrEmptyArguments))]
+        public void If_Arguments_For_Scalar_Collection_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
+            IArgumentCollection arguments)
+        {
+            var query = QueryOperationBuilder.ForSchema<SimpleSchema>(OperationTypeForFixture)
+                .AddScalarCollectionField(schema => schema.PastVersions, arguments)
+                .AddScalarCollectionField("foobar", schema => schema.PastVersions, arguments)
+                .Build();
+
+            var expectedSelections = new List<ISelectionSetItem>
+            {
+                new ScalarFieldSelectionItem(null, nameof(SimpleSchema.PastVersions), Enumerable.Empty<IArgument>()),
+                new ScalarFieldSelectionItem("foobar", nameof(SimpleSchema.PastVersions), Enumerable.Empty<IArgument>()),
+            };
+
             query.Should().NotBeNull();
             query.SelectionSet.Selections.Should()
                 .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());

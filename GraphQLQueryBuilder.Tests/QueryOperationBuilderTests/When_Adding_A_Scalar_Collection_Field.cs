@@ -19,8 +19,8 @@ namespace GraphQLQueryBuilder.Tests.QueryOperationBuilderTests
         {
             var builder = CreateBuilderFor<SimpleSchema>();
 
-            Action addingFieldWithoutAlias = () => builder.AddScalarCollectionField<Guid>(null);
-            Action addingFieldWithAlias = () => builder.AddScalarCollectionField<Guid>("foo", null);
+            Action addingFieldWithoutAlias = () => builder.AddScalarCollectionField<SimpleSchema, Guid>(null);
+            Action addingFieldWithAlias = () => builder.AddScalarCollectionField<SimpleSchema, Guid>("foo", null);
 
             using (new AssertionScope())
             {
