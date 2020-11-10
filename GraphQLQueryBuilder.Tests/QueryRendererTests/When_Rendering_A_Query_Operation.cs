@@ -24,7 +24,7 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                 .AddScalarField(phone => phone.Number)
                 .AddScalarField("ext", phone => phone.Extension)
                 .Build();
-            
+
             var contactSelectionSet = SelectionSetBuilder.For<Contact>()
                 .AddScalarField(contact => contact.FirstName)
                 .AddScalarField("surname", contact => contact.LastName)
@@ -47,7 +47,7 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                 .AddObjectCollectionField("users", schema => schema.Customers, customerSelectionSet)
                 .AddObjectField("admin", schema => schema.Administrator, contactSelectionSet)
                 .Build();
-            
+
             var result = new QueryRenderer().Render(queryOperation);
 
             Snapshot.Match(result);
@@ -73,7 +73,7 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                 .AddObjectCollectionField("michiganNumbers", contact => contact.PhoneNumbers, phoneArguments,
                     phoneNumberSelectionSet)
                 .Build();
-                
+
             var numberArguments = new ArgumentCollection
             {
                 ArgumentBuilder.Build("isEven", true),
@@ -87,14 +87,21 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
 
             var customersArguments = new ArgumentCollection
             {
-                ArgumentBuilder.Build("isActive", false),
+                ArgumentBuilder.Build("isActive", true),
                 ArgumentBuilder.Build("lastName", "Smith"),
                 ArgumentBuilder.Build("minRating", 3.2)
             };
 
-            Assert.Fail("TODO: need to call the methods with arg parameters");
-//            var query = QueryOperationBuilder.ForSchema<SimpleSchema>()
-//                .AddObjectCollectionField(schema => schema)
+            var query = QueryOperationBuilder.ForSchema<SimpleSchema>(operationType, operationName)
+                .AddObjectCollectionField(schema => schema.Customers, customersArguments, customerSelectionSet)
+                .AddObjectCollectionField("foobar", schema => schema.Customers, customersArguments,
+                    customerSelectionSet)
+                .AddObjectField(schema => schema.Administrator, contactSelectionSet)
+                .Build();
+
+            var result = new QueryRenderer().Render(query);
+
+            Snapshot.Match(result);
         }
     }
 }
