@@ -13,7 +13,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  coverageOutputDir: '"$(Build.SourcesDirectory)/TestResults/Coverage/"'
+  coverageOutputDir: '$(Build.SourcesDirectory)/TestResults/Coverage/'
   disable.coverage.autogenerate: 'true'
 
 steps:
@@ -32,15 +32,16 @@ steps:
     projects: '**/*.Tests.csproj'
 
 - task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
-  displayName: Generate Code Coverage reportDirectory
+  displayName: 'Generate Code Coverage Report'
   inputs:
     reports: '$(coverageOutputDir)coverage.cobertura.xml'
-    targetDir: '$(build.artifactsstagingdirectory)/TestResults/'
+    targetdir: '$(Build.ArtifactStagingDirectory)/TestResults/'
     reporttypes: 'HtmlInline_AzurePipelines;Cobertura;Badges'
 
 - task: PublishCodeCoverageResults@1
+  displayName: 'Publish Code Coverage Results'
   inputs:
     codeCoverageTool: cobertura
-    reportDirectory: '$(build.artifactsstagingdirectory)'
-    summaryFileLocation: '$(build.artifactsstagingdirectory)/TestResults/cobertura.xml'
+    reportDirectory: '$(Build.ArtifactStagingDirectory)'
+    summaryFileLocation: '$(Build.ArtifactStagingDirectory)/TestResults/cobertura.xml'
     failIfCoverageEmpty: true
