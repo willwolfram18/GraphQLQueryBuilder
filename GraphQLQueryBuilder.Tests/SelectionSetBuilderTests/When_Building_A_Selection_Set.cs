@@ -118,8 +118,14 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             selectionSet.Should().NotBeNull();
             selectionSet.Selections.Should()
                 .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
-        }    
-        
+        }
+
+        [Test]
+        public void Then_Arguments_Are_Included_In_Field_Selections()
+        {
+            Assert.Fail("TODO need to verify arguments are in the selection sets");
+        }
+
         [Test]
         public void Then_Added_Properties_Are_In_The_Selection_Set()
         {
