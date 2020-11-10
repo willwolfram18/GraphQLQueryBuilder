@@ -24,7 +24,7 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                 .AddScalarField(phone => phone.Number)
                 .AddScalarField("ext", phone => phone.Extension)
                 .Build();
-            
+
             var contactSelectionSet = SelectionSetBuilder.For<Contact>()
                 .AddScalarField(contact => contact.FirstName)
                 .AddScalarField("surname", contact => contact.LastName)
@@ -57,7 +57,7 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
             var phoneSelectionSet = SelectionSetBuilder.For<PhoneNumber>()
                 .AddScalarField(phone => phone.Number)
                 .Build();
-            
+
             var nameArguments = new ArgumentCollection
             {
                 ArgumentBuilder.Build("initials", true),
@@ -96,7 +96,7 @@ namespace GraphQLQueryBuilder.Tests.QueryRendererTests
                 .AddObjectField(customer => customer.CustomerContact, contactArguments, contactSelectionSet)
                 .AddScalarCollectionField("favoriteOddNumbersGreaterThan10", customer => customer.FavoriteNumbers, favoriteNumberArguments)
                 .Build();
-            
+
             var result = new QueryRenderer().Render(customerSelectionSet);
 
             Snapshot.Match(result);

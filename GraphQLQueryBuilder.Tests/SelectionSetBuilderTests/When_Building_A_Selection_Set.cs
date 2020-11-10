@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using GraphQLQueryBuilder.Abstractions.Language;
 using GraphQLQueryBuilder.Implementations.Language;
 using GraphQLQueryBuilder.Tests.Models;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using static FluentAssertions.FluentActions;
 
 namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
@@ -15,9 +15,9 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         public static IEnumerable<IArgumentCollection> NullOrEmptyArguments => new[]
         {
             null,
-            new ArgumentCollection(), 
+            new ArgumentCollection(),
         };
-        
+
         [TestCaseSource(nameof(NullOrEmptyArguments))]
         public void If_Arguments_For_Scalar_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
             IArgumentCollection arguments)
@@ -29,15 +29,15 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 
             var expectedSelections = new ISelectionSetItem[]
             {
-                new ScalarFieldSelectionItem(null, nameof(Customer.Id)), 
+                new ScalarFieldSelectionItem(null, nameof(Customer.Id)),
                 new ScalarFieldSelectionItem("foobar", nameof(Customer.Id)),
             };
-            
+
             selectionSet.Should().NotBeNull();
             selectionSet.Selections.Should()
                 .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
         }
-        
+
         [TestCaseSource(nameof(NullOrEmptyArguments))]
         public void If_Arguments_For_Scalar_Collection_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
             IArgumentCollection arguments)
@@ -49,15 +49,15 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 
             var expectedSelections = new ISelectionSetItem[]
             {
-                new ScalarFieldSelectionItem(null, nameof(Customer.FavoriteNumbers)), 
+                new ScalarFieldSelectionItem(null, nameof(Customer.FavoriteNumbers)),
                 new ScalarFieldSelectionItem("numbers", nameof(Customer.FavoriteNumbers)),
             };
-            
+
             selectionSet.Should().NotBeNull();
             selectionSet.Selections.Should()
                 .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
         }
-        
+
         [TestCaseSource(nameof(NullOrEmptyArguments))]
         public void If_Arguments_For_Object_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
             IArgumentCollection arguments)
@@ -65,7 +65,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             var contactSelection = SelectionSetBuilder.For<Contact>()
                 .AddScalarField(contact => contact.FirstName)
                 .Build();
-            
+
             var selectionSet = SelectionSetBuilder.For<Customer>()
                 .AddObjectField(customer => customer.CustomerContact, arguments, contactSelection)
                 .AddObjectField("foobar", customer => customer.CustomerContact, arguments, contactSelection)
@@ -79,15 +79,15 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 
             var expectedSelections = new ISelectionSetItem[]
             {
-                new ObjectFieldSelectionItem(null, nameof(Customer.CustomerContact), Enumerable.Empty<IArgument>(), expectedContactSelectionSet), 
+                new ObjectFieldSelectionItem(null, nameof(Customer.CustomerContact), Enumerable.Empty<IArgument>(), expectedContactSelectionSet),
                 new ObjectFieldSelectionItem("foobar", nameof(Customer.CustomerContact), Enumerable.Empty<IArgument>(), expectedContactSelectionSet),
             };
-            
+
             selectionSet.Should().NotBeNull();
             selectionSet.Selections.Should()
                 .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
         }
-        
+
         [TestCaseSource(nameof(NullOrEmptyArguments))]
         public void If_Arguments_For_Object_Collection_Fields_Are_Null_Or_Empty_Then_Arguments_For_Field_Selection_Are_Empty(
             IArgumentCollection arguments)
@@ -96,7 +96,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 .AddScalarField(phone => phone.Number)
                 .AddScalarField(phone => phone.Extension)
                 .Build();
-            
+
             var selectionSet = SelectionSetBuilder.For<Contact>()
                 .AddObjectCollectionField(contact => contact.PhoneNumbers, arguments, phoneNumberSelectionSet)
                 .AddObjectCollectionField("foobar", contact => contact.PhoneNumbers, arguments, phoneNumberSelectionSet)
@@ -111,10 +111,10 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
 
             var expectedSelections = new ISelectionSetItem[]
             {
-                new ObjectFieldSelectionItem(null, nameof(Contact.PhoneNumbers), Enumerable.Empty<IArgument>(), expectedPhoneNumberSelectionSet), 
+                new ObjectFieldSelectionItem(null, nameof(Contact.PhoneNumbers), Enumerable.Empty<IArgument>(), expectedPhoneNumberSelectionSet),
                 new ObjectFieldSelectionItem("foobar", nameof(Contact.PhoneNumbers), Enumerable.Empty<IArgument>(), expectedPhoneNumberSelectionSet),
             };
-            
+
             selectionSet.Should().NotBeNull();
             selectionSet.Selections.Should()
                 .BeEquivalentTo(expectedSelections, options => options.RespectingRuntimeTypes());
@@ -123,7 +123,58 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
         [Test]
         public void Then_Arguments_Are_Included_In_Field_Selections()
         {
-            Assert.Fail("TODO need to verify arguments are in the selection sets");
+            var phoneNumberSelection = SelectionSetBuilder.For<PhoneNumber>()
+                .AddScalarField(phone => phone.Number)
+                .Build();
+            var phoneArgs = new ArgumentCollection
+            {
+                ArgumentBuilder.Build("areaCode", "231")
+            };
+            var expectedPhoneArgs = new IArgument[phoneArgs.Count];
+
+            // copy arguments so we don't contaminate expectations
+            phoneArgs.CopyTo(expectedPhoneArgs,0);
+
+            var contactSelection = SelectionSetBuilder.For<Contact>()
+                .AddObjectCollectionField(contact => contact.PhoneNumbers, phoneArgs, phoneNumberSelection)
+                .AddObjectCollectionField("foobar", contact => contact.PhoneNumbers, phoneArgs, phoneNumberSelection)
+                .Build();
+
+            var numbersArgs = new ArgumentCollection
+            {
+                ArgumentBuilder.Build("greaterThan", 10),
+                ArgumentBuilder.Build("isEven", true)
+            };
+            var expectedNumbersArgs = new IArgument[numbersArgs.Count];
+
+            // copy arguments so we don't contaminate expectations
+            numbersArgs.CopyTo(expectedNumbersArgs, 0);
+
+            var customerSelection = SelectionSetBuilder.For<Customer>()
+                .AddScalarCollectionField(customer => customer.FavoriteNumbers, numbersArgs)
+                .AddScalarCollectionField("myNumbers", customer => customer.FavoriteNumbers, numbersArgs)
+                .AddObjectField(customer => customer.CustomerContact, contactSelection)
+                .Build();
+
+            var expectedPhoneSelection = new SelectionSet<PhoneNumber>(new List<ISelectionSetItem>
+            {
+                new ScalarFieldSelectionItem(null, nameof(PhoneNumber.Number))
+            });
+            var expectedContactSelection = new SelectionSet<Contact>(new List<ISelectionSetItem>
+            {
+                new ObjectFieldSelectionItem(null, nameof(Contact.PhoneNumbers), expectedPhoneArgs, expectedPhoneSelection),
+                new ObjectFieldSelectionItem("foobar", nameof(Contact.PhoneNumbers), expectedPhoneArgs, expectedPhoneSelection),
+            });
+            var expectedCustomerSelections = new List<ISelectionSetItem>
+            {
+                new ScalarFieldSelectionItem(null, nameof(Customer.FavoriteNumbers), expectedNumbersArgs),
+                new ScalarFieldSelectionItem("myNumbers", nameof(Customer.FavoriteNumbers), expectedNumbersArgs),
+                new ObjectFieldSelectionItem(null, nameof(Customer.CustomerContact), expectedContactSelection)
+            };
+
+            customerSelection.Should().NotBeNull();
+            customerSelection.Selections.Should()
+                .BeEquivalentTo(expectedCustomerSelections, options => options.RespectingRuntimeTypes());
         }
 
         [Test]
@@ -157,12 +208,12 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 .AddObjectField(customer => customer.CustomerContact, contactSelectionSet)
                 .AddObjectField("foobar", customer => customer.CustomerContact, contactSelectionSet)
                 .Build();
-            
+
             var expectedContactSelectionSet = new SelectionSet<Contact>(
                 new ISelectionSetItem[]
                 {
-                    new ScalarFieldSelectionItem(null, nameof(Contact.FirstName)), 
-                    new ScalarFieldSelectionItem(null, nameof(Contact.LastName)), 
+                    new ScalarFieldSelectionItem(null, nameof(Contact.FirstName)),
+                    new ScalarFieldSelectionItem(null, nameof(Contact.LastName)),
                 });
             var expectedCustomerSelections = new List<ISelectionSetItem>
             {
@@ -197,7 +248,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
                 .AddScalarCollectionField("baz", customer => customer.FavoriteNumbers)
                 .AddObjectField(customer => customer.CustomerContact, contactSelectionSet)
                 .Build();
-            
+
             var expectedPhoneNumberSelectionSet = new SelectionSet<PhoneNumber>(
                 new List<ISelectionSetItem>
                 {
@@ -226,7 +277,7 @@ namespace GraphQLQueryBuilder.Tests.SelectionSetBuilderTests
             customerSelectionSet.Should().NotBeNull();
             customerSelectionSet.Selections.Should().BeEquivalentTo(expectedCustomerSelections, options => options.RespectingRuntimeTypes());
         }
-        
+
         [Test]
         public void If_No_Fields_Are_Selected_Before_Building_Then_An_InvalidOperationException_Is_Thrown()
         {
