@@ -106,6 +106,11 @@ namespace GraphQLQueryBuilder.Implementations
             {
                 return GraphQLType.InputObject;
             }
+
+            if (type == typeof(Guid))
+            {
+                return GraphQLType.Uuid;
+            }
             
             throw new NotImplementedException($"Unknown CLR type '{type.FullName}'.");
         }

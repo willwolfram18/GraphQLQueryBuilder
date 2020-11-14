@@ -166,6 +166,12 @@ namespace GraphQLQueryBuilder.Tests.Variables.ClrVariableTests
             ClrTypeShouldBe(clrType, GraphQLType.InputObject);
         }
 
+        [Test]
+        public void Then_GraphQL_Type_Is_Uuid()
+        {
+            ClrTypeShouldBe(typeof(Guid), GraphQLType.Uuid);
+        }
+        
         private static void ClrTypeShouldBe(Type clrType, GraphQLType expectedType)
         {
             var variable = new ClrVariable("foo", clrType);

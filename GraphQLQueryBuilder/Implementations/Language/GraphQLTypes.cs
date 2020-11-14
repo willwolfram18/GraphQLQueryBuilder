@@ -1,5 +1,8 @@
 using System;
 using System.Collections;
+using System.Linq;
+using System.Reflection;
+using GraphQLQueryBuilder.Abstractions.Language;
 
 namespace GraphQLQueryBuilder.Implementations.Language
 {
@@ -12,7 +15,8 @@ namespace GraphQLQueryBuilder.Implementations.Language
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return type == typeof(string) || (!type.IsClass && !type.IsInterface);
+            return typeof(GraphQLType).GetMember(type.ToGraphQLType().ToString())
+                .Any(x => x.GetCustomAttributes(typeof(IsScalarAttribute)).Any());
         }
 
         public static bool IsObjectType(Type type)
