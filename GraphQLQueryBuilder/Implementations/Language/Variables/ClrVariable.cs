@@ -18,6 +18,6 @@ namespace GraphQLQueryBuilder.Implementations.Language
         public Type ClrType { get; }
 
         /// <inheritdoc />
-        public GraphQLType Type { get; }
+        public GraphQLType Type => ClrType.ToGraphQLType();
     }
 }

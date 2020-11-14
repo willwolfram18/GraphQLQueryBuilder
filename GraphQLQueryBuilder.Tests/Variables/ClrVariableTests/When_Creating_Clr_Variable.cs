@@ -71,6 +71,8 @@ namespace GraphQLQueryBuilder.Tests.Variables.ClrVariableTests
                 return new Type[]
                 {
                     typeof(float),
+                    typeof(decimal),
+                    typeof(Decimal),
                     typeof(double),
                     typeof(Double)
                 };
