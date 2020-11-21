@@ -6,6 +6,6 @@ namespace GraphQLQueryBuilder.Abstractions.Language
     {
         string Name { get; }
         
-        GraphQLType Type { get; }
+        IVariableType Type { get; }
     }
 }

@@ -1,23 +1,15 @@
 using System;
-using GraphQLQueryBuilder.Abstractions.Language;
 
 namespace GraphQLQueryBuilder.Implementations.Language
 {
-    internal class ClrVariable : IVariable
+    internal class ClrVariable : Variable
     {
-        public ClrVariable(string name, Type clrType)
+        public ClrVariable(string name, Type clrType) : base(name, null)
         {
-            Name = name;
             ClrType = clrType;
         }
-        
-        /// <inheritdoc />
-        public string Name { get; }
 
         /// <inheritdoc />
         public Type ClrType { get; }
-
-        /// <inheritdoc />
-        public GraphQLType Type => ClrType.ToGraphQLType();
     }
 }

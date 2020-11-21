@@ -1,19 +1,21 @@
+using System;
 using GraphQLQueryBuilder.Abstractions.Language;
+using GraphQLQueryBuilder.Guards;
 
 namespace GraphQLQueryBuilder.Implementations.Language
 {
     public class Variable : IVariable
     {
-        public Variable(string name, GraphQLType type)
+        public Variable(string name, IVariableType type)
         {
-            Name = name;
-            Type = type;
+            Name = name.MustBeValidGraphQLName(nameof(name));
+            Type = type ?? throw new ArgumentNullException(nameof(type));
         }
         
         /// <inheritdoc />
         public string Name { get; }
 
         /// <inheritdoc />
-        public GraphQLType Type { get; }
+        public IVariableType Type { get; }
     }
 }
